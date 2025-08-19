@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Verify Email - Thoth Gate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Thuth Gate</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px;">
-<div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-    <div style="text-align: center; padding: 20px;">
-        <img src="{{ asset('storage/pharaoh.png') }}" alt="Thoth Gate Logo" style="width: 80px; height: auto;">
-        <h1 style="margin: 10px 0; color: #333;">Thoth Gate</h1>
+<body class="login-page">
+<div class="login-container">
+    <div class="login-header">
+        <div class="logo-container">
+            <img src="imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
+            <h1 class="site-logo">Thoth Gate</h1>
+        </div>
+        <p class="tagline">Gateway to Ancient Wisdom, Modern Learning</p>
     </div>
-    <div style="padding: 20px; color: #555;">
-        <p>Hello {{ $notifiable->name }},</p>
-        <p>Please click the button below to verify your email address and access Thoth Gate:</p>
-        <p style="text-align: center; margin: 30px 0;">
-            <a href="{{ $url }}" style="background: #6b46c1; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Verify Email</a>
-        </p>
-        <p>If you didn’t create an account, you can safely ignore this email.</p>
+    <div class="login-form-container">
+        <h2 class="section-title">Verify Your Email</h2>
+        <div class="form-group" style="text-align:center;">
+            <p style="font-size:1.2rem;color:#243a6b;margin-bottom:1.5rem;">Hello {{ $notifiable->name }},</p>
+            <p style="font-size:1.1rem;color:#243a6b;margin-bottom:1.5rem;">Please click the button below to verify your email address and access Thoth Gate:</p>
+            <a href="{{ $url }}" class="login-btn" style="margin-bottom:1rem;">Verify Email</a>
+            <p style="margin-top:1rem;color:#d4af37;">If you didn’t create an account, you can safely ignore this email.</p>
+        </div>
     </div>
 </div>
+<div class="hieroglyph-bg"></div>
 </body>
 </html>
