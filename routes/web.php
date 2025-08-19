@@ -25,7 +25,7 @@ Route::post('/register', [RegisterController::class , 'store'])->middleware('gue
 
 
 // Verifications
-Route::get('email/verify', [EmailVerificationRequest::class, 'show'])
+Route::get('email/verify', [EmailController::class, 'waiting'])
     ->middleware('auth')
     ->name('verification.notice');
 
