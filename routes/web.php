@@ -8,16 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/' , 'home');
+Route::view('/' , 'home')->middleware('auth');
 
-Route::get('/dashboard' , function (){
-   dd('this is for verified only');
-})->middleware(['auth' , 'verified']);
-
+// just for test
+Route::get('/user' , function (){
+    dd(Auth::user());
+});
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
 Route::post('/login' , [LoginController::class , 'store'])->middleware('guest');
+Route::delete('/logout' , [LoginController::class , 'destroy'])->middleware('auth');
 
 //register
 Route::get('/register', [RegisterController::class , 'index'])->middleware('guest');
