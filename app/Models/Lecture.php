@@ -12,8 +12,4 @@ class Lecture extends Model
     {
         return $this->belongsTo(Instructor::class);
     }
-    public function purchased_lectures()
-    {
-        return $this->hasMany(Purchased_Lectures::class);
-    }
 }

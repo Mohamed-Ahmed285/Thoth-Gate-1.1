@@ -14,7 +14,6 @@ return new class extends Migration
     {
         Schema::create('lectures', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Instructor::class)->constrained()->cascadeOnDelete();
             $table->string('subject');
             $table->string('description');
             $table->string('grade');
