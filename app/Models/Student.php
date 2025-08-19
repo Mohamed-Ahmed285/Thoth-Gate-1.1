@@ -13,4 +13,8 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function purchased_lectures()
+    {
+        return $this->hasMany(Purchased_Lectures::class);
+    }
 }
