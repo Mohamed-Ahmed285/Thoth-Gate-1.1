@@ -25,8 +25,8 @@ class RegisterController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255',
-            'dateOfBirth' => 'required|date', // accepts YYYY-MM-DD from <input type="date">
+            'phone_number' => 'required|string|max:255',
+            'dateOfBirth' => 'required|date',
             'password' => 'required|string|min:8|confirmed',
             'grade' => 'required|string|in:3prep,1sec',
         ]);
@@ -35,7 +35,7 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'phone_number' => $request->phone,
+            'phone_number' => $request->phone_number,
             'date_of_birth' => $request->dateOfBirth,
             'password' => bcrypt($request->password),
             'is_instructor' => false,
@@ -49,29 +49,5 @@ class RegisterController extends Controller
         $user->sendEmailVerificationNotification();
         Auth::login($user);
         return redirect()->route('verification.notice');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

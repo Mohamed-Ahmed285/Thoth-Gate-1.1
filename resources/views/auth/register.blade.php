@@ -47,7 +47,7 @@
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required value="{{ old('phone') }}">
+                    <input type="text" id="phone_number" name="phone_number" required value="{{ old('phone_number') }}">
                     @error('phone')
                         <span class="error-message">{{ $message }}</span>
                     @enderror

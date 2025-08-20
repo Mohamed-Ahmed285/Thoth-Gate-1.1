@@ -16,4 +16,8 @@ class PurchasedLectures extends Model
     {
         return $this->belongsTo(Lecture::class);
     }
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

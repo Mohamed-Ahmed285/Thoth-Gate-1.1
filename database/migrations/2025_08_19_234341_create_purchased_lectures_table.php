@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\Lecture;
 use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Lecture::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
             $table->boolean('finished')->default(false);
             $table->timestamps();
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchased__lectures');
+        Schema::dropIfExists('purchased_lectures');
     }
 };

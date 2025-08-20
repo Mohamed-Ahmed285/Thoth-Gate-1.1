@@ -28,7 +28,7 @@
                 <li><a href="/">Courses</a></li>
                 <li><a href="/">Chat</a></li>
                 <li><a href="/">Contact</a></li>
-                <li><a href="/">Profile</a></li>
+                <li><a href="/profile">Profile</a></li>
                 <li>
                     <form method="POST" action="/logout" id = "logoutForm">
                         @csrf
@@ -65,12 +65,18 @@
 
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="home.html" class="active">Home</a></li>
-            <li><a href="courses.html">Courses</a></li>
-            <li><a href="chat.html">Chat</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            <li><a href="#" class="logout-btn" onclick="logout()">Logout</a></li>
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/">Courses</a></li>
+            <li><a href="/">Chat</a></li>
+            <li><a href="/">Contact</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li>
+                <form method="POST" action="/logout" id = "logoutForm">
+                    @csrf
+                    @method('DELETE')
+                    <a href="#" class="logout-btn" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                </form>
+            </li>
         </ul>
     </nav>
 

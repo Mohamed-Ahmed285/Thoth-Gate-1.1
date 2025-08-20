@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\Instructor;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('lectures', function (Blueprint $table) {
             $table->id();
-            $table->string('subject');
+            $table->foreignIdFor(Instructor::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->integer('index');
             $table->string('description');
-            $table->string('grade');
             $table->string('video');
             $table->string('image');
             $table->timestamps();
