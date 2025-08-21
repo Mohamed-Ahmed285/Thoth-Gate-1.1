@@ -1,7 +1,7 @@
 let isLoggedIn = false;
 let currentUser = null;
-let currentTheme = localStorage.getItem('thuthGateTheme') || 'light';
-let currentLanguage = localStorage.getItem('thuthGateLanguage') || 'en';
+let currentTheme = localStorage.getItem('ThothGateTheme') || 'light';
+let currentLanguage = localStorage.getItem('ThothGateLanguage') || 'en';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -21,10 +21,10 @@ function initializeApp() {
 
 // Check authentication status
 function checkAuthStatus() {
-    const token = localStorage.getItem('thuthGateToken');
+    const token = localStorage.getItem('ThothGateToken');
     if (token) {
         isLoggedIn = true;
-        currentUser = JSON.parse(localStorage.getItem('thuthGateUser'));
+        currentUser = JSON.parse(localStorage.getItem('ThothGateUser'));
         updateUIForLoggedInUser();
     } else {
         isLoggedIn = false;
@@ -98,7 +98,7 @@ async function simulateLogin(email, password) {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Simple validation
-    return email === 'student@thuthgate.edu.eg' && password === 'password123';
+    return email === 'student@Thothgate.edu.eg' && password === 'password123';
 }
 
 // Simulate register
@@ -113,8 +113,8 @@ async function simulateRegister(userData) {
 // Handle logout
 function logout() {
     // Clear stored data
-    localStorage.removeItem('thuthGateToken');
-    localStorage.removeItem('thuthGateUser');
+    localStorage.removeItem('ThothGateToken');
+    localStorage.removeItem('ThothGateUser');
 
 
     isLoggedIn = false;
@@ -259,7 +259,7 @@ async function saveProfile() {
             // Update local storage
             currentUser.name = newName;
             currentUser.email = newEmail;
-            localStorage.setItem('thuthGateUser', JSON.stringify(currentUser));
+            localStorage.setItem('ThothGateUser', JSON.stringify(currentUser));
 
             // Update display
             updateProfileDisplay();
@@ -307,7 +307,7 @@ function handleImageUpload(event) {
                 profileImage.src = e.target.result;
                 // Update current user avatar
                 currentUser.avatar = e.target.result;
-                localStorage.setItem('thuthGateUser', JSON.stringify(currentUser));
+                localStorage.setItem('ThothGateUser', JSON.stringify(currentUser));
             }
         };
         reader.readAsDataURL(file);
@@ -426,7 +426,7 @@ function toggleTheme() {
         document.body.classList.remove('dark-mode');
     }
 
-    localStorage.setItem('thuthGateTheme', currentTheme);
+    localStorage.setItem('ThothGateTheme', currentTheme);
     updateThemeIcon();
 }
 
@@ -463,7 +463,7 @@ function toggleLanguage() {
         translateToEnglish();
     }
 
-    localStorage.setItem('thuthGateLanguage', currentLanguage);
+    localStorage.setItem('ThothGateLanguage', currentLanguage);
     updateLanguageText();
 }
 
@@ -524,12 +524,13 @@ function translateToArabic() {
     // Comprehensive Arabic translations
     const translations = {
         // General UI
+        'Lecture' : 'المحاضرة',
         'Thoth Gate': 'بوابة تحوت',
         'Gateway to Ancient Wisdom, Modern Learning': 'بوابة الحكمة القديمة، التعلم الحديث',
         'Enter the Gate': 'ادخل البوابة',
         'Email': 'البريد الإلكتروني',
         'Password': 'كلمة المرور',
-        'New to Thuth Gate?': 'جديد في بوابة تحوت؟',
+        'New to Thoth Gate?': 'جديد في بوابة تحوت؟',
         'Register Here': 'سجل هنا',
         'Already have an account?': 'لديك حساب بالفعل؟',
         'Login Here': 'سجل دخولك هنا',
@@ -698,12 +699,12 @@ function translateToEnglish() {
     const translations = {
         // General UI
         'عربي' : 'Arabic',
-        'بوابة تحوت': 'Thuth Gate',
+        'بوابة تحوت': 'Thoth Gate',
         'بوابة الحكمة القديمة، التعلم الحديث': 'Gateway to Ancient Wisdom, Modern Learning',
         'ادخل البوابة': 'Enter the Gate',
         'البريد الإلكتروني': 'Email',
         'كلمة المرور': 'Password',
-        'جديد في بوابة تحوت؟': 'New to Thuth Gate?',
+        'جديد في بوابة تحوت؟': 'New to Thoth Gate?',
         'سجل هنا': 'Register Here',
         'لديك حساب بالفعل؟': 'Already have an account?',
         'سجل دخولك هنا': 'Login Here',
@@ -770,6 +771,7 @@ function translateToEnglish() {
         'مكتمل': 'Completed',
         'النقاط' : 'Points',
         'المستوى' : 'Level',
+        'المحاضرة' : 'Lecture',
 
         // Grades
         'الثالثة إعدادي': '3rd Prep',
@@ -1709,6 +1711,6 @@ if (document.querySelector('.contact-page')) {
 
 // Logout function for navbar
 function logout() {
-    localStorage.removeItem('thuthGateUser');
+    localStorage.removeItem('ThothGateUser');
     window.location.href = 'index.html';
 }

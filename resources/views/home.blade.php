@@ -99,8 +99,8 @@
             <h2 class="hero-title">Unlock Your Potential</h2>
             <p class="hero-subtitle">Discover the ancient wisdom of learning through modern educational excellence</p>
             <div class="hero-buttons">
-                <a href="courses.html" class="btn primary">Explore Courses</a>
-                <a href="chat.html" class="btn secondary">Join Grade Chat</a>
+                <a href="/courses" class="btn primary">Explore Courses</a>
+                <a href="/chat" class="btn secondary">Join Grade Chat</a>
             </div>
         </div>
         <div class="hero-decoration">

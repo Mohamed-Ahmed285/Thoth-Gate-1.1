@@ -100,8 +100,12 @@
                     <a href="/courses/{{ $lecture->course_id }}/{{ $lecture->id }}" style="text-decoration: none;"  >
                         <div class="course-card lecture-card" style="cursor:pointer;">
                             <div class="course-content">
-                                <h3 class="lecture-title">Lecture {{$lecture->index}}:<br> {{$lecture->title}}</h3>
-                                <p class="lecture-description">{{$lecture->descreption}}.</p>
+                                <div style="display: flex;">
+                                    <h3 class="lecture-title">Lecture</h3>
+                                    <h3 class = "lecture-title">&nbsp;{{$lecture->index}} :</h3>
+                                </div>
+                                <h3 class = "lecture-title">{{$lecture->title}}</h3>
+                                <p class="lecture-description">{{$lecture->description}}.</p>
                             </div>
                         </div>
                     </a>

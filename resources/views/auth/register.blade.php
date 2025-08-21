@@ -85,7 +85,7 @@
                         <option value="1sec">1st Secondary</option>
                     </select>
                     @error('grade')
-                        <span class="error-message">{{ $message }}</span>
+                        <span class="error message">{{ $message }}</span>
                     @enderror
                 </div>
 
