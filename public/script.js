@@ -524,7 +524,7 @@ function translateToArabic() {
     // Comprehensive Arabic translations
     const translations = {
         // General UI
-        'Thuth Gate': 'بوابة تحوت',
+        'Thoth Gate': 'بوابة تحوت',
         'Gateway to Ancient Wisdom, Modern Learning': 'بوابة الحكمة القديمة، التعلم الحديث',
         'Enter the Gate': 'ادخل البوابة',
         'Email': 'البريد الإلكتروني',
@@ -560,6 +560,8 @@ function translateToArabic() {
         'Profile updated successfully!': 'تم تحديث الملف الشخصي بنجاح!',
         'Failed to update profile. Please try again.': 'فشل تحديث الملف الشخصي. حاول مرة أخرى.',
         'Please fill in all fields.': 'يرجى ملء جميع الحقول.',
+        'Level':'المستوى',
+        'Points':'النقاط',
 
         // Navigation
         'Home': 'الرئيسية',
@@ -602,20 +604,32 @@ function translateToArabic() {
         'Select your grade': 'اختر مستواك الدراسي',
 
         // Courses
-        'Mathematics': 'الرياضيات',
-        'Master the ancient art of numbers and logic': 'أتقن الفن القديم للأرقام والمنطق',
-        'Science': 'العلوم',
-        'Explore the mysteries of the natural world': 'اكتشف أسرار العالم الطبيعي',
-        'Languages': 'اللغات',
-        'Unlock the power of communication': 'أطلق قوة التواصل',
-        'History': 'التاريخ',
-        'Journey through time and civilizations': 'رحلة عبر الزمن والحضارات',
-        'Learn More': 'اعرف المزيد',
-        'Mathematics & Physics': 'الرياضيات والفيزياء',
-        'Chemistry & Biology': 'الكيمياء والأحياء',
-        'English & Literature': 'الإنجليزية والأدب',
-        'years of teaching experience': 'سنوات من الخبرة في التدريس',
-        'Subjects': 'المواد',
+        'Subjects' : 'المواد',
+        'Mohamed Hamed' : 'محمد حامد',
+        'Enter' : 'إدخل',
+        'Arabic' : 'عربي',
+        'English' : 'إنجليزي',
+        'French' : 'فرنسي',
+        'Math' : 'رياضيات',
+        'Mathematics' : 'رياضيات',
+        'Science' : 'علوم',
+        'Physics' : 'فيزياء',
+        'Chemistry' : 'كيمياء',
+        'Biology' : 'أحياء',
+        'History' : 'تاريخ',
+        'Geography' : 'جغرافيا',
+        'Computer Science' : 'علوم الحاسوب',
+        'Information Technology' : 'تكنولوجيا المعلومات',
+        'Religious Studies' : 'دراسات دينية',
+        'Philosophy' : 'فلسفة',
+        'Sociology' : 'علم الاجتماع',
+        'Psychology' : 'علم النفس',
+        'Economics' : 'اقتصاد',
+        'Business Studies' : 'دراسات الأعمال',
+        'Art' : 'فن',
+        'Music' : 'موسيقى',
+        'Physical Education' : 'تربية بدنية',
+
         // Heritage section
         'Ancient Libraries': 'المكتبات القديمة',
         'Home to the world\'s first great centers of learning': 'موطن أول مراكز التعلم العظيمة في العالم',
@@ -683,6 +697,7 @@ function translateToEnglish() {
     // Comprehensive English translations (reverse of Arabic)
     const translations = {
         // General UI
+        'عربي' : 'Arabic',
         'بوابة تحوت': 'Thuth Gate',
         'بوابة الحكمة القديمة، التعلم الحديث': 'Gateway to Ancient Wisdom, Modern Learning',
         'ادخل البوابة': 'Enter the Gate',
@@ -753,6 +768,8 @@ function translateToEnglish() {
         'المعلم:': 'Instructor:',
         'قيد التقدم': 'In Progress',
         'مكتمل': 'Completed',
+        'النقاط' : 'Points',
+        'المستوى' : 'Level',
 
         // Grades
         'الثالثة إعدادي': '3rd Prep',
@@ -761,20 +778,32 @@ function translateToEnglish() {
         'اختر مستواك الدراسي': 'Select your grade',
 
         // Courses
-        'الرياضيات': 'Mathematics',
-        'أتقن الفن القديم للأرقام والمنطق': 'Master the ancient art of numbers and logic',
-        'العلوم': 'Science',
-        'اكتشف أسرار العالم الطبيعي': 'Explore the mysteries of the natural world',
-        'اللغات': 'Languages',
-        'أطلق قوة التواصل': 'Unlock the power of communication',
-        'التاريخ': 'History',
-        'رحلة عبر الزمن والحضارات': 'Journey through time and civilizations',
-        'اعرف المزيد': 'Learn More',
-        'الرياضيات والفيزياء': 'Mathematics & Physics',
-        'الكيمياء والأحياء': 'Chemistry & Biology',
-        'الإنجليزية والأدب': 'English & Literature',
-        'سنوات من الخبرة في التدريس': 'years of teaching experience',
-         'المواد': 'Subjects',
+        'المواد' : 'Subjects',
+        'محمد حامد' : 'Mohamed Hamed',
+        'إدخل' : 'Enter',
+        'عربي' : 'Arabic',
+        'إنجليزي' : 'English',
+        'فرنسي' : 'French',
+        'رياضيات' : 'Math',
+        'رياضيات' : 'Mathematics',
+        'علوم' : 'Science',
+        'فيزياء' : 'Physics',
+        'كيمياء' : 'Chemistry',
+        'أحياء' : 'Biology',
+        'تاريخ' : 'History',
+        'جغرافيا' : 'Geography',
+        'علوم الحاسوب' : 'Computer Science',
+        'تكنولوجيا المعلومات' : 'Information Technology',
+        'دراسات دينية' : 'Religious Studies',
+        'فلسفة' : 'Philosophy',
+        'علم الاجتماع' : 'Sociology',
+        'علم النفس' : 'Psychology',
+        'اقتصاد' : 'Economics',
+        'دراسات الأعمال' : 'Business Studies',
+        'فن' : 'Art',
+        'موسيقى' : 'Music',
+        'تربية بدنية' : 'Physical Education',
+
 
         // Heritage section
         'المكتبات القديمة': 'Ancient Libraries',

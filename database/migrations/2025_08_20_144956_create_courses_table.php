@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('subject');
             $table->string('grade');
+            $table->string('teacher');
+            $table->string('image');
             $table->timestamps();
         });
     }

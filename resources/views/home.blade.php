@@ -25,9 +25,9 @@
         <nav class="main-nav">
             <ul>
                 <li><a href="/" class="active">Home</a></li>
-                <li><a href="/">Courses</a></li>
-                <li><a href="/">Chat</a></li>
-                <li><a href="/">Contact</a></li>
+                <li><a href="/courses">Courses</a></li>
+                <li><a href="/chat">Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile">Profile</a></li>
                 <li>
                     <form method="POST" action="/logout" id = "logoutForm">
@@ -66,9 +66,9 @@
     <nav class="sidebar-nav">
         <ul>
             <li><a href="/" class="active">Home</a></li>
-            <li><a href="/">Courses</a></li>
-            <li><a href="/">Chat</a></li>
-            <li><a href="/">Contact</a></li>
+            <li><a href="/courses">Courses</a></li>
+            <li><a href="/chat">Chat</a></li>
+            <li><a href="/contact">Contact</a></li>
             <li><a href="/profile">Profile</a></li>
             <li>
                 <form method="POST" action="/logout" id = "logoutForm">
@@ -217,11 +217,11 @@
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="home.html">Home</a></li>
-                    <li><a href="courses.html">Courses</a></li>
-                    <li><a href="chat.html">Chat</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/courses">Courses</a></li>
+                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/profile">Profile</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -244,7 +244,6 @@
         </div>
     </div>
 </footer>
-
 <script src="script.js"></script>
 </body>
 </html>

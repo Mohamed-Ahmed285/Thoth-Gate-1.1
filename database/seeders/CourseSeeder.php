@@ -14,11 +14,36 @@ class CourseSeeder extends Seeder
     public function run(): void
     {
         $courses = [
-            ['subject' => 'Arabic', 'grade' => '3prep'],
-            ['subject' => 'English', 'grade' => '3prep'],
-            ['subject' => 'Math', 'grade' => '3prep'],
-            ['subject' => 'Science', 'grade' => '3prep'],
-            ['subject' => 'History', 'grade' => '3prep'],
+            [
+                'subject' => 'Arabic',
+                'grade' => '3prep',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/language.jpg',
+            ],
+            [
+                'subject' => 'English',
+                'grade' => '3prep',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/language.jpg'
+            ],
+            [
+                'subject' => 'Math',
+                'grade' => '3prep',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/maths.jpg',
+            ],
+            [
+                'subject' => 'Science',
+                'grade' => '3prep',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/science.jpg',
+            ],
+            [
+                'subject' => 'History',
+                'grade' => '3prep',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/history.jpg',
+            ],
 
             // subjects for 1 sec
         ];

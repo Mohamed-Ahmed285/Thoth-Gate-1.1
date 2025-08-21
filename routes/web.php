@@ -1,14 +1,10 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
-use App\Models\Course;
-use App\Models\PurchasedLectures;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // home page
@@ -21,10 +17,14 @@ Route::delete('/logout' , [LoginController::class , 'destroy'])->middleware('aut
 
 //register
 Route::get('/register', [RegisterController::class , 'index'])->middleware('guest');
-Route::post('/register', [RegisterController::class , 'store'])->middleware('guest');;
+Route::post('/register', [RegisterController::class , 'store'])->middleware('guest');
 
 //profile
 Route::get('/profile' , [ProfileController::class , 'index'])->middleware('auth');
+
+// courses
+Route::get('courses' , [CourseController::class , 'main'])->middleware(['auth' , 'verified'])->name('courses');
+Route::get('courses/{subject}' , [CourseController::class , 'index'])->middleware(['auth' , 'verified']);
 
 // Verifications
 Route::get('email/verify', [EmailController::class, 'waiting'])

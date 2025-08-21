@@ -25,10 +25,10 @@
         <nav class="main-nav">
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/">Courses</a></li>
-                <li><a href="/">Chat</a></li>
-                <li><a href="/">Contact</a></li>
-                <li><a href="/" class="active">Profile</a></li>
+                <li><a href="/courses">Courses</a></li>
+                <li><a href="/chat">Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/profile" class="active">Profile</a></li>
                 <li>
                     <form method="POST" action="/logout" id = "logoutForm">
                         @csrf
@@ -66,10 +66,10 @@
     <nav class="sidebar-nav">
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/">Courses</a></li>
-            <li><a href="/">Chat</a></li>
-            <li><a href="/">Contact</a></li>
-            <li><a href="/prfile" class="active">Profile</a></li>
+            <li><a href="/courses">Courses</a></li>
+            <li><a href="/chat">Chat</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/profile" class="active">Profile</a></li>
             <li>
                 <form method="POST" action="/logout" id = "logoutForm">
                     @csrf
@@ -133,11 +133,6 @@
                             <span>{{Auth::user()->student->id}}</span>
                         </div>
                     </div>
-
-                    <div class="profile-actions" id="profileActions" style="display: none;">
-                        <button class="save-btn" onclick="saveProfile()">Save Changes</button>
-                        <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
-                    </div>
                 </div>
             </div>
 
@@ -145,7 +140,8 @@
                 <h3 class="subsection-title">Enrolled Courses</h3>
                 <div class="enrolled-courses-grid">
                     @foreach($finished as $course)
-                        <div class="enrolled-course-card">
+                        @if ($course['total'] != 0)
+                            <div class="enrolled-course-card">
                             <div class="course-progress">
                                 <div class="progress-bar">
                                     @php
@@ -165,6 +161,7 @@
                                 <p class="course-status">In Progress</p>
                             @endif
                         </div>
+                        @endif
                     @endforeach
                 </div>
             </div>
