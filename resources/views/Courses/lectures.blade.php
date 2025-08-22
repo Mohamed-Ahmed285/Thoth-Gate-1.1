@@ -97,18 +97,26 @@
             <div class="lectures-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
                 <!-- Example lectures, replace with dynamic content as needed -->
                 @foreach($lectures as $lecture)
-                    <a href="/courses/{{ $lecture->course_id }}/{{ $lecture->id }}" style="text-decoration: none;"  >
-                        <div class="course-card lecture-card" style="cursor:pointer;">
-                            <div class="course-content">
-                                <div style="display: flex;">
-                                    <h3 class="lecture-title">Lecture</h3>
-                                    <h3 class = "lecture-title">&nbsp;{{$lecture->index}} :</h3>
-                                </div>
-                                <h3 class = "lecture-title">{{$lecture->title}}</h3>
-                                <p class="lecture-description">{{$lecture->description}}.</p>
+                    <div class="course-card lecture-card" style="cursor:pointer;">
+                        <div class="course-image">
+                            <img src="/{{$course->image}}" alt="{{$course->subject}}">
+                        </div>
+                        <div class="course-content">
+                            <div style="display: flex;">
+                                <h3 class="lecture-title">Lecture</h3>
+                                <h3 class = "lecture-title">&nbsp;{{$lecture->index}} :</h3>
+                            </div>
+                            <h3 class = "lecture-title">{{$lecture->title}}</h3>
+                            <p class="lecture-description">{{$lecture->description}}.</p>
+                            <div>
+                                @if($lecture->purchased_lectures->isNotEmpty())
+                                    <a href="/courses/{{$course->id}}/{{$lecture->id}}" class="course-btn">View Lecture</a>
+                                @else
+                                    <a href="/courses/buy/{{$lecture->id}}" class="course-btn">Buy Lecture</a>
+                                @endif
                             </div>
                         </div>
-                    </a>
+                    </div>
                 @endforeach
                 <!-- Add more lectures as needed -->
             </div>

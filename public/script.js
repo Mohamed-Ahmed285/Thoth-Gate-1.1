@@ -524,6 +524,9 @@ function translateToArabic() {
     // Comprehensive Arabic translations
     const translations = {
         // General UI
+        'Course Lectures' : 'محاضرات المادة',
+        'Buy Lecture' : 'اشتري المحاضرة',
+        'View Lecture' : 'إذهب إلى المحاضرة',
         'Lecture' : 'المحاضرة',
         'Thoth Gate': 'بوابة تحوت',
         'Gateway to Ancient Wisdom, Modern Learning': 'بوابة الحكمة القديمة، التعلم الحديث',
@@ -698,6 +701,9 @@ function translateToEnglish() {
     // Comprehensive English translations (reverse of Arabic)
     const translations = {
         // General UI
+        'محاضرات المادة' : 'Course Lectures',
+        'اشتري المحاضرة' : 'Buy Lecture',
+        'إذهب إلى المحاضرة' : 'View Lecture',
         'عربي' : 'Arabic',
         'بوابة تحوت': 'Thoth Gate',
         'بوابة الحكمة القديمة، التعلم الحديث': 'Gateway to Ancient Wisdom, Modern Learning',
