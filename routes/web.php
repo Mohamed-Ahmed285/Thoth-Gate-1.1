@@ -25,8 +25,8 @@ Route::get('/profile' , [ProfileController::class , 'index'])->middleware('auth'
 // courses
 Route::get('courses' , [CourseController::class , 'main'])->middleware(['auth' , 'verified'])->name('courses');
 Route::get('courses/buy/{lecture}' , [CourseController::class , 'buy'])->middleware(['auth' , 'verified'])->name('buy');
-Route::get('courses/{subject}' , [CourseController::class , 'index'])->middleware(['auth' , 'verified'])->name('lectures');
-Route::get('courses/{subject}/{lecture}' , [CourseController::class , 'show'])->middleware(['auth' , 'verified'])->name('lecture');
+Route::get('courses/{course}' , [CourseController::class , 'index'])->middleware(['auth' , 'verified'])->name('lectures');
+Route::get('courses/{course}/{lecture}' , [CourseController::class , 'show'])->middleware(['auth' , 'verified'])->name('lecture');
 
 // Verifications
 Route::get('email/verify', [EmailController::class, 'waiting'])
