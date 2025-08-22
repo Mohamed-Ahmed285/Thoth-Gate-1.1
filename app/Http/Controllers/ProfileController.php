@@ -23,7 +23,7 @@ class ProfileController extends Controller
                 'subject' => $course->subject,
                 'finished' => $finishedCounts[$course->id] ?? 0,
                 'total' => $course->lectures->count(),
-                'instructor' => $course->lectures->first()?->instructor->user->name ?? 'N/A',
+                'teacher' => $course->teacher,
             ];
         }
         return view('profile', ['finished' => $finished]);

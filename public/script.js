@@ -524,6 +524,8 @@ function translateToArabic() {
     // Comprehensive Arabic translations
     const translations = {
         // General UI
+        'Take the Quiz' : 'ابدء الاختبار',
+        'Teacher' : 'المعلم',
         'Course Lectures' : 'محاضرات المادة',
         'Buy Lecture' : 'اشتري المحاضرة',
         'View Lecture' : 'إذهب إلى المحاضرة',
@@ -701,6 +703,8 @@ function translateToEnglish() {
     // Comprehensive English translations (reverse of Arabic)
     const translations = {
         // General UI
+        'ابدء الاختبار' : 'Take the Quiz',
+        'المعلم' : 'Teacher',
         'محاضرات المادة' : 'Course Lectures',
         'اشتري المحاضرة' : 'Buy Lecture',
         'إذهب إلى المحاضرة' : 'View Lecture',
@@ -1237,60 +1241,6 @@ window.logout = logout;
 window.toggleEditMode = toggleEditMode;
 window.saveProfile = saveProfile;
 window.cancelEdit = cancelEdit;
-
-// Course Detail Page Functionality
-function initializeCourseDetailPage() {
-    const lectureItems = document.querySelectorAll('.lecture-item');
-    const videoPlayer = document.getElementById('videoPlayer');
-    const currentLectureTitle = document.getElementById('currentLectureTitle');
-    const currentLectureDescription = document.getElementById('currentLectureDescription');
-    const toggleSidebar = document.getElementById('toggleSidebar');
-    const lecturesSidebar = document.querySelector('.lectures-sidebar');
-    const videoQuizBtn = document.getElementById('videoQuizBtn');
-
-    // Handle lecture item clicks
-    lectureItems.forEach(item => {
-        item.addEventListener('click', function() {
-            lectureItems.forEach(lecture => lecture.classList.remove('active'));
-
-            // Add active class to clicked item
-            this.classList.add('active');
-
-            const lectureId = this.getAttribute('data-lecture-id');
-            const lectureTitle = this.querySelector('.lecture-title').textContent;
-            const lectureDescription = this.querySelector('.lecture-description').textContent;
-
-            const videoElement = videoPlayer.querySelector('.video-element');
-            videoElement.src = `https://example.com/video${lectureId}.mp4`;
-
-            currentLectureTitle.textContent = lectureTitle;
-            currentLectureDescription.textContent = lectureDescription;
-
-            if (videoQuizBtn) {
-                videoQuizBtn.setAttribute('data-lecture-id', lectureId);
-            }
-
-            if (window.innerWidth <= 992) {
-                videoPlayer.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
-
-    if (toggleSidebar) {
-        toggleSidebar.addEventListener('click', function() {
-            lecturesSidebar.classList.toggle('collapsed');
-        });
-    }
-
-    if (videoQuizBtn) {
-        videoQuizBtn.addEventListener('click', function() {
-            const lectureId = this.getAttribute('data-lecture-id');
-            const lectureTitle = currentLectureTitle.textContent;
-
-            showQuizModal(lectureId, lectureTitle);
-        });
-    }
-}
 
 // Quiz Modal Function
 function showQuizModal(lectureId, lectureTitle) {

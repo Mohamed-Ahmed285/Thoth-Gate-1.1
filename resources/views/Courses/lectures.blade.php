@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Lectures - Thoth Gate</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="courses-page">
@@ -91,6 +92,11 @@
 <!-- Sidebar Overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <main class="container">
+    @if(session('error'))
+        <div class="message error">
+            {{ session('error') }}
+        </div>
+    @endif
     <h2 class="section-title" style="margin:revert;">Course Lectures</h2>
     <section class="egyptian-wisdom-section-lectures" style="padding: 3rem 0;">
         <div class="container">

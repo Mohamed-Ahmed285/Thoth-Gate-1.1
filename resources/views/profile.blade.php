@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thoth Gate - Profile</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="profile-page">
@@ -153,7 +154,11 @@
                             </div>
 
                             <h4>{{ $course['subject'] }}</h4>
-                            <p>Instructor: {{ $course['instructor'] }}</p>
+                            <span style="display: flex;">
+                                <p>Teacher</p>
+                                :&nbsp;
+                            <p>{{$course['teacher']}}</p>
+                            </span>
 
                             @if($course['finished'] == $course['total'])
                                 <p class="course-status completed">Completed</p>
