@@ -44,8 +44,43 @@ class CourseSeeder extends Seeder
                 'teacher' => 'Mohamed Hamed',
                 'image' => 'imgs/history.jpg',
             ],
-
-            // subjects for 1 sec
+            // courses for 1 sec
+            [
+                'subject' => 'Arabic',
+                'grade' => '1sec',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/language.jpg',
+            ],
+            [
+                'subject' => 'English',
+                'grade' => '1sec',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/language.jpg',
+            ],
+            [
+                'subject' => 'Philosophy & Logic',
+                'grade' => '1sec',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/philosophy.jpg',
+            ],
+            [
+                'subject' => 'History',
+                'grade' => '1sec',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/history.jpg',
+            ],
+            [
+                'subject' => 'Math',
+                'grade' => '1sec',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/maths.jpg',
+            ],
+            [
+                'subject' => 'Integrated Science',
+                'grade' => '1sec',
+                'teacher' => 'Mohamed Hamed',
+                'image' => 'imgs/science.jpg',
+            ],
         ];
 
         foreach ($courses as $course) {

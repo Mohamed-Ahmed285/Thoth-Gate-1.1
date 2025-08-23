@@ -64,6 +64,8 @@ class CourseController extends Controller
     public function buy(string $id)
     {
         $lec = Lecture::where('id' , $id)->first();
-        dd('this for buying lecture ' . $lec->title);
+        $name = Auth::user()->name;
+        $student_id = Auth::user()->student->id;
+        return view('Courses.buy' , ['lecture' => $lec , 'name' => $name , 'student_id' => $student_id]);;
     }
 }
