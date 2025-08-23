@@ -610,6 +610,8 @@ function translateToArabic() {
         'Select your grade': 'اختر مستواك الدراسي',
 
         // Courses
+        'Philosophy & Logic' : 'الفلسفة والمنطق' ,
+        'Integrated Science' : 'العلوم المتكامله',
         'Subjects' : 'المواد',
         'Mohamed Hamed' : 'محمد حامد',
         'Enter' : 'إدخل',
@@ -703,6 +705,8 @@ function translateToEnglish() {
     // Comprehensive English translations (reverse of Arabic)
     const translations = {
         // General UI
+        'الفلسفة والمنطق' : 'Philosophy & Logic',
+        'العلوم المتكامله' : 'Integrated Science',
         'ابدء الاختبار' : 'Take the Quiz',
         'المعلم' : 'Teacher',
         'محاضرات المادة' : 'Course Lectures',
@@ -1670,3 +1674,18 @@ function logout() {
     localStorage.removeItem('ThothGateUser');
     window.location.href = 'index.html';
 }
+let end = new Date("{{($session->started_at->addMinutes($session->duration))->toIso8601String()}}").getTime();
+let timer = setInterval(function (){
+    let now = new Date().getTime();
+    let rem = end - now;
+    if (rem <= 0){
+        clearInterval(timer);
+        alert("⏰ Time's up!");
+        document.querySelector(".quiz-form").submit();
+    }
+    else {
+        let minutes = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((rem % (1000 * 60)) / 1000);
+        document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
+    }
+} , 1000);

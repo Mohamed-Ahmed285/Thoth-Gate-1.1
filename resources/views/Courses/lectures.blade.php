@@ -116,9 +116,9 @@
                             <p class="lecture-description">{{$lecture->description}}.</p>
                             <div>
                                 @if($lecture->purchased_lectures->isNotEmpty())
-                                    <a href="/courses/{{$course->id}}/{{$lecture->id}}" class="course-btn">View Lecture</a>
+                                    <a href="/lectures/{{$course->id}}/{{$lecture->id}}" class="course-btn">View Lecture</a>
                                 @else
-                                    <a href="/courses/buy/{{$lecture->id}}" class="course-btn">Buy Lecture</a>
+                                    <a href="/lectures/{{$lecture->id}}/buy" class="course-btn">Buy Lecture</a>
                                 @endif
                             </div>
                         </div>

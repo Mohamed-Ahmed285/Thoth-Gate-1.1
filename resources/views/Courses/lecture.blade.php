@@ -169,7 +169,8 @@
                     <div class="video-info">
                         <h2>{{$lec->title}}</h2>
                         <p>{{$lec->description}}</p>
-                        <button class="quiz-btn" id="videoQuizBtn">
+                        <button class="quiz-btn" id="videoQuizBtn"
+                                onclick="window.location.href='{{ route('exam.index' , [$course->id , $lecture->id])}}'">
                             <span class="quiz-icon">📝</span>
                             Take Quiz
                         </button>

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,26 @@ class DatabaseSeeder extends Seeder
             'email' => 'ammar@gmail.com',
             'phone_number' => '01129264191',
             'is_instructor' => false,
+        ]);
+        Student::create([
+            'user_id' => 1,
+            'grade' => '3prep',
+            'points'=> 0,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Mohamed Ahmed',
+            'date_of_birth' => '2005-01-01',
+            'password' => bcrypt('11111111'),
+            'email_verified_at' => now(),
+            'email' => 'mohamed@gmail.com',
+            'phone_number' => '01129264191',
+            'is_instructor' => false,
+        ]);
+        Student::create([
+            'user_id' => 2,
+            'grade' => '1sec',
+            'points'=> 0,
         ]);
     }
 }
