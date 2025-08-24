@@ -1512,44 +1512,31 @@ if (document.querySelector('.course-detail-page')) {
     initializeCourseDetailPage();
 }
 
-function initializeContactForm() {
-    const contactForm = document.getElementById('contactForm');
-
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const subject = formData.get('subject');
-            const message = formData.get('message');
-
-            if (!name || !email || !subject || !message) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address', 'error');
-                return;
-            }
-
-            const submitBtn = this.querySelector('.submit-btn');
-            const originalText = submitBtn.innerHTML;
-
-            submitBtn.innerHTML = '<span class="btn-icon">⏳</span>Sending...';
-            submitBtn.disabled = true;
-
-            setTimeout(() => {
-                showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
-                this.reset();
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 2000);
-        });
-    }
-}
+    // function initializeContactForm() {
+    //     const contactForm = document.getElementById('contactForm');
+    //
+    //     if (contactForm) {
+    //         contactForm.addEventListener('submit', function(e) {
+    //             e.preventDefault();
+    //
+    //             const formData = new FormData(this);
+    //
+    //             const submitBtn = this.querySelector('.submit-btn');
+    //             const originalText = submitBtn.innerHTML;
+    //
+    //             submitBtn.innerHTML = '<span class="btn-icon">⏳</span>Sending...';
+    //             submitBtn.disabled = true;
+    //
+    //             setTimeout(() => {
+    //                 showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+    //                 this.reset();
+    //                 submitBtn.innerHTML = originalText;
+    //                 submitBtn.disabled = false;
+    //             }, 2000);
+    //         });
+    //         contactForm.submit();
+    //     }
+    // }
 
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
