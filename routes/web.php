@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ExamController;
@@ -53,9 +54,18 @@ Route::get('courses/{course}/{lecture}/exams/{exam}', [ExamController::class, 's
 Route::get('info/{session}', [ExamController::class, 'info'])
     ->middleware(['auth' , 'verified' , 'check.exam'])
     ->name('exam.info');
+
 Route::get('info/model/{session}', [ExamController::class, 'model'])
     ->middleware(['auth' , 'verified' , 'check.exam'])
     ->name('exam.model');
+
+// contact
+Route::get('/contact' , [ContactController::class , 'index'])
+    ->middleware(['auth' , 'verified'])
+    ->name('contact.index');
+
+Route::post('/contact' , [ContactController::class , 'store'])
+    ->middleware(['auth' , 'verified']);
 
 // Verifications
 Route::get('email/verify', [EmailController::class, 'waiting'])
