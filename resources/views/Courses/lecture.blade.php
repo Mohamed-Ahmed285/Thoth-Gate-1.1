@@ -169,11 +169,19 @@
                     <div class="video-info">
                         <h2>{{$lec->title}}</h2>
                         <p>{{$lec->description}}</p>
-                        <button class="quiz-btn" id="videoQuizBtn"
-                                onclick="window.location.href='{{ route('exam.index' , [$course->id , $lecture->id])}}'">
-                            <span class="quiz-icon">📝</span>
-                            Take Quiz
-                        </button>
+                        @if($session)
+                            <button class="quiz-btn"
+                                    onclick="window.location.href='{{ route('exam.info' , $session->id)}}'">
+                                <span class="quiz-icon">📝</span>
+                                Show Score
+                            </button>
+                        @else
+                            <button class="quiz-btn"
+                                    onclick="window.location.href='{{ route('exam.prepareExam' , [$course->id , $lecture->id])}}'">
+                                <span class="quiz-icon">📝</span>
+                                Take Quiz
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>

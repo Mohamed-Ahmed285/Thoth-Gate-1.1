@@ -11,8 +11,8 @@
 <div class="login-container">
     <div class="login-header">
         <div class="logo-container">
-            <img src="../imgs/logo.png" alt="Thuth Gate Logo" class="logo-image">
-            <h1 class="site-logo">Thuth Gate</h1>
+            <img src="../imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
+            <h1 class="site-logo">Thoth Gate</h1>
         </div>
         <p class="tagline">Gateway to Ancient Wisdom, Modern Learning</p>
     </div>

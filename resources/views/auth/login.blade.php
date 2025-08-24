@@ -28,7 +28,7 @@
     </div>
 
     <div class="login-form-container">
-        <form id="loginForm" class="login-form" action="/login" method="post">
+        <form class="login-form" action="/login" method="post">
             @csrf
 
             <div class="form-group">

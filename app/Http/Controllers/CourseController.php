@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\ExamSession;
 use App\Models\Lecture;
 use App\Models\PurchasedLectures;
 use Illuminate\Http\Request;
@@ -31,9 +32,9 @@ class CourseController extends Controller
         return view('Courses.lectures' , ['lectures' => $lectures , 'course' => $course]);
     }
 
-    public function show(string $course_id, string $lecture)
+    public function show($course_id, $lecture)
     {
-        $lec = Lecture::find($lecture);
+        $lec = Lecture::findOrFail($lecture);
         if(!$lec){
             return redirect()
                 ->route('lectures' , $course_id)
@@ -58,7 +59,11 @@ class CourseController extends Controller
         }
         $course = Course::findOrFail($lec->course_id);
         $lecs = Lecture::where('course_id' , $lec->course_id)->get();
-        return view('Courses.lecture' , ['lecture' => $lec , 'course' => $course , 'lecs' => $lecs]);
+        $session = ExamSession::where('exam_id', $lec->exam->first()->id)
+            ->where('student_id', Auth::user()->student->id)
+            ->first();
+
+        return view('Courses.lecture' , ['lecture' => $lec , 'course' => $course , 'lecs' => $lecs , 'session' => $session]);
     }
 
     public function buy(string $id)
@@ -66,6 +71,15 @@ class CourseController extends Controller
         $lec = Lecture::where('id' , $id)->first();
         $name = Auth::user()->name;
         $student_id = Auth::user()->student->id;
+
+        $found = PurchasedLectures::where('lecture_id' , $id)
+            ->where('student_id' , $student_id)
+            ->exists();
+
+        if ($found){
+            return redirect()->route('lectures' , $lec->course)->with('error' , 'You have already bought this lecture');
+        }
+
         return view('Courses.buy' , ['lecture' => $lec , 'name' => $name , 'student_id' => $student_id]);;
     }
 }

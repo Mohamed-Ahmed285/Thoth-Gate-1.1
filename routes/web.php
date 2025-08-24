@@ -10,7 +10,9 @@ use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
 
 // home page
-Route::view('/' , 'home')->middleware('auth');
+Route::view('/' , 'home')
+    ->name('home')
+    ->middleware('auth');
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
@@ -33,20 +35,27 @@ Route::middleware(['auth', 'verified', 'check.exam'])->group(function () {
 });
 
 // exam
-Route::get('courses/{course}/{lecture}/exams', [ExamController::class, 'index'])
+Route::get('courses/{course}/{lecture}/exams', [ExamController::class, 'prepareExam'])
     ->middleware(['auth' , 'verified'])
-    ->name('exam.index');
+    ->name('exam.prepareExam');
 
 Route::post('/courses/{course}/{lecture}/exams/{exam}/submit', [ExamController::class, 'submit'])
     ->middleware(['auth' , 'verified']);
 
-Route::post('courses/{course}/{lecture}/exams', [ExamController::class, 'store'])
+Route::post('/submit/{exam}/{session}/{student}', [ExamController::class, 'store'])
     ->middleware(['auth' , 'verified'])
     ->name('exam.store');
 
 Route::get('courses/{course}/{lecture}/exams/{exam}', [ExamController::class, 'show'])
     ->middleware(['auth' , 'verified'])
     ->name('exam.show');
+
+Route::get('info/{session}', [ExamController::class, 'info'])
+    ->middleware(['auth' , 'verified' , 'check.exam'])
+    ->name('exam.info');
+Route::get('info/model/{session}', [ExamController::class, 'model'])
+    ->middleware(['auth' , 'verified' , 'check.exam'])
+    ->name('exam.model');
 
 // Verifications
 Route::get('email/verify', [EmailController::class, 'waiting'])
