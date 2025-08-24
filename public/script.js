@@ -1,7 +1,16 @@
+// Ensure profile edit buttons work even if script loads before DOM
+document.addEventListener('DOMContentLoaded', function() {
+    var saveBtn = document.querySelector('.save-btn');
+    var cancelBtn = document.querySelector('.cancel-btn');
+    var editBtn = document.querySelector('.edit-profile-btn');
+    if (saveBtn) saveBtn.onclick = saveProfile;
+    if (cancelBtn) cancelBtn.onclick = cancelEdit;
+    if (editBtn) editBtn.onclick = toggleEditMode;
+});
 let isLoggedIn = false;
 let currentUser = null;
-let currentTheme = localStorage.getItem('ThothGateTheme') || 'light';
-let currentLanguage = localStorage.getItem('ThothGateLanguage') || 'en';
+let currentTheme = localStorage.getItem('thuthGateTheme') || 'light';
+let currentLanguage = localStorage.getItem('thuthGateLanguage') || 'en';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,21 +19,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeApp() {
     checkAuthStatus();
-
     initializeTheme();
     initializeLanguage();
-
     addEventListeners();
-
     initializePageFunctionality();
 }
 
 // Check authentication status
 function checkAuthStatus() {
-    const token = localStorage.getItem('ThothGateToken');
+    const token = localStorage.getItem('thuthGateToken');
     if (token) {
         isLoggedIn = true;
-        currentUser = JSON.parse(localStorage.getItem('ThothGateUser'));
+        currentUser = JSON.parse(localStorage.getItem('thuthGateUser'));
         updateUIForLoggedInUser();
     } else {
         isLoggedIn = false;
@@ -35,6 +41,16 @@ function checkAuthStatus() {
 
 // Add event listeners
 function addEventListeners() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
+
     const imageInput = document.getElementById('imageInput');
     if (imageInput) {
         imageInput.addEventListener('change', handleImageUpload);
@@ -44,6 +60,8 @@ function addEventListeners() {
     if (themeSwitcher) {
         themeSwitcher.addEventListener('click', toggleTheme);
     }
+
+
 
     initializeMobileSidebar();
 
@@ -90,39 +108,18 @@ function getCurrentPage() {
     return 'login';
 }
 
-// Handle register form submission
 
-// Simulate login
-async function simulateLogin(email, password) {
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Simple validation
-    return email === 'student@Thothgate.edu.eg' && password === 'password123';
+function handleLogin(event) {
+    event.preventDefault();
+    window.location.href = 'home.html';
 }
 
-// Simulate register
-async function simulateRegister(userData) {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    console.log('Registration data:', userData);
-
-    return Math.random() > 0.1;
+function handleRegister(event) {
+    event.preventDefault();
+    showMessage('Registration functionality is disabled. No backend simulation.', 'error');
 }
 
-// Handle logout
-function logout() {
-    // Clear stored data
-    localStorage.removeItem('ThothGateToken');
-    localStorage.removeItem('ThothGateUser');
-
-
-    isLoggedIn = false;
-    currentUser = null;
-
-
-    window.location.href = 'index.html';
-}
+// ...existing code...
 
 // Update UI for logged in user
 function updateUIForLoggedInUser() {
@@ -216,71 +213,50 @@ function cancelEdit() {
     const profileActions = document.getElementById('profileActions');
     const editBtn = document.querySelector('.edit-profile-btn');
 
-    if (nameSpan && emailSpan && nameInput && emailInput) {
-        // Reset input values
-        nameInput.value = currentUser.name;
-        emailInput.value = currentUser.email;
-
-        // Switch back to view mode
-        nameSpan.style.display = 'inline';
-        emailSpan.style.display = 'inline';
-        nameInput.style.display = 'none';
-        emailInput.style.display = 'none';
-        imageUpload.style.display = 'none';
-        profileActions.style.display = 'none';
+    // Always restore view mode, even if currentUser is null
+    if (nameSpan) nameSpan.style.display = 'inline';
+    if (emailSpan) emailSpan.style.display = 'inline';
+    if (nameInput) nameInput.style.display = 'none';
+    if (emailInput) emailInput.style.display = 'none';
+    if (imageUpload) imageUpload.style.display = 'none';
+    if (profileActions) profileActions.style.display = 'none';
+    if (editBtn) {
         editBtn.textContent = 'Edit Profile';
         editBtn.onclick = toggleEditMode;
     }
+
+    // Optionally reset input values if user data exists
+    if (currentUser && nameInput && emailInput) {
+        nameInput.value = currentUser.name;
+        emailInput.value = currentUser.email;
+    }
 }
 
-// Save profile changes
-async function saveProfile() {
+function saveProfile() {
     const nameInput = document.getElementById('nameInput');
     const emailInput = document.getElementById('emailInput');
-
     if (nameInput && emailInput) {
         const newName = nameInput.value.trim();
         const newEmail = emailInput.value.trim();
-
-        // Basic validation
         if (!newName || !newEmail) {
             showMessage('Please fill in all fields.', 'error');
             return;
         }
-
         if (!isValidEmail(newEmail)) {
             showMessage('Please enter a valid email address.', 'error');
             return;
         }
-
-        try {
-            await simulateUpdateProfile(newName, newEmail);
-
-            // Update local storage
+        // Update local storage
+        if (currentUser) {
             currentUser.name = newName;
             currentUser.email = newEmail;
-            localStorage.setItem('ThothGateUser', JSON.stringify(currentUser));
-
-            // Update display
+            localStorage.setItem('thuthGateUser', JSON.stringify(currentUser));
             updateProfileDisplay();
-
-            // Switch back to view mode
-            cancelEdit();
-
-            showMessage('Profile updated successfully!', 'success');
-        } catch (error) {
-            showMessage('Failed to update profile. Please try again.', 'error');
         }
+        showMessage('Profile updated successfully!', 'success');
     }
-}
-
-// Simulate profile update
-async function simulateUpdateProfile(name, email) {
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-
-    return true;
+    // Always exit edit mode after save attempt
+    cancelEdit();
 }
 
 // Handle image upload
@@ -307,7 +283,7 @@ function handleImageUpload(event) {
                 profileImage.src = e.target.result;
                 // Update current user avatar
                 currentUser.avatar = e.target.result;
-                localStorage.setItem('ThothGateUser', JSON.stringify(currentUser));
+                localStorage.setItem('thuthGateUser', JSON.stringify(currentUser));
             }
         };
         reader.readAsDataURL(file);
@@ -426,7 +402,7 @@ function toggleTheme() {
         document.body.classList.remove('dark-mode');
     }
 
-    localStorage.setItem('ThothGateTheme', currentTheme);
+    localStorage.setItem('thuthGateTheme', currentTheme);
     updateThemeIcon();
 }
 
@@ -463,7 +439,7 @@ function toggleLanguage() {
         translateToEnglish();
     }
 
-    localStorage.setItem('ThothGateLanguage', currentLanguage);
+    localStorage.setItem('thuthGateLanguage', currentLanguage);
     updateLanguageText();
 }
 
@@ -524,18 +500,12 @@ function translateToArabic() {
     // Comprehensive Arabic translations
     const translations = {
         // General UI
-        'Take the Quiz' : 'ابدء الاختبار',
-        'Teacher' : 'المعلم',
-        'Course Lectures' : 'محاضرات المادة',
-        'Buy Lecture' : 'اشتري المحاضرة',
-        'View Lecture' : 'إذهب إلى المحاضرة',
-        'Lecture' : 'المحاضرة',
         'Thoth Gate': 'بوابة تحوت',
         'Gateway to Ancient Wisdom, Modern Learning': 'بوابة الحكمة القديمة، التعلم الحديث',
         'Enter the Gate': 'ادخل البوابة',
         'Email': 'البريد الإلكتروني',
         'Password': 'كلمة المرور',
-        'New to Thoth Gate?': 'جديد في بوابة تحوت؟',
+        'New to Thuth Gate?': 'جديد في بوابة تحوت؟',
         'Register Here': 'سجل هنا',
         'Already have an account?': 'لديك حساب بالفعل؟',
         'Login Here': 'سجل دخولك هنا',
@@ -566,8 +536,6 @@ function translateToArabic() {
         'Profile updated successfully!': 'تم تحديث الملف الشخصي بنجاح!',
         'Failed to update profile. Please try again.': 'فشل تحديث الملف الشخصي. حاول مرة أخرى.',
         'Please fill in all fields.': 'يرجى ملء جميع الحقول.',
-        'Level':'المستوى',
-        'Points':'النقاط',
 
         // Navigation
         'Home': 'الرئيسية',
@@ -610,34 +578,30 @@ function translateToArabic() {
         'Select your grade': 'اختر مستواك الدراسي',
 
         // Courses
-        'Philosophy & Logic' : 'الفلسفة والمنطق' ,
+        'Philosophy & Logic' : 'الفلسفة والمنطق',
         'Integrated Science' : 'العلوم المتكامله',
-        'Subjects' : 'المواد',
+        'View Lecture' : 'إدخل المحاضرة',
+        'Buy Lecture' : 'إشتري المحاضرة',
+        'Teacher' : 'المعلم',
+        'Lecture' : 'المحاضرة',
         'Mohamed Hamed' : 'محمد حامد',
         'Enter' : 'إدخل',
-        'Arabic' : 'عربي',
-        'English' : 'إنجليزي',
-        'French' : 'فرنسي',
-        'Math' : 'رياضيات',
-        'Mathematics' : 'رياضيات',
-        'Science' : 'علوم',
-        'Physics' : 'فيزياء',
-        'Chemistry' : 'كيمياء',
-        'Biology' : 'أحياء',
-        'History' : 'تاريخ',
-        'Geography' : 'جغرافيا',
-        'Computer Science' : 'علوم الحاسوب',
-        'Information Technology' : 'تكنولوجيا المعلومات',
-        'Religious Studies' : 'دراسات دينية',
-        'Philosophy' : 'فلسفة',
-        'Sociology' : 'علم الاجتماع',
-        'Psychology' : 'علم النفس',
-        'Economics' : 'اقتصاد',
-        'Business Studies' : 'دراسات الأعمال',
-        'Art' : 'فن',
-        'Music' : 'موسيقى',
-        'Physical Education' : 'تربية بدنية',
-
+        'Arabic': 'عربي',
+        'English':'إنجليزي',
+        'Math':'الرياضيات',
+        'Master the ancient art of numbers and logic': 'أتقن الفن القديم للأرقام والمنطق',
+        'Science': 'العلوم',
+        'Explore the mysteries of the natural world': 'اكتشف أسرار العالم الطبيعي',
+        'Languages': 'اللغات',
+        'Unlock the power of communication': 'أطلق قوة التواصل',
+        'History': 'التاريخ',
+        'Journey through time and civilizations': 'رحلة عبر الزمن والحضارات',
+        'Learn More': 'اعرف المزيد',
+        'Mathematics & Physics': 'الرياضيات والفيزياء',
+        'Chemistry & Biology': 'الكيمياء والأحياء',
+        'English & Literature': 'الإنجليزية والأدب',
+        'years of teaching experience': 'سنوات من الخبرة في التدريس',
+        'Subjects': 'المواد',
         // Heritage section
         'Ancient Libraries': 'المكتبات القديمة',
         'Home to the world\'s first great centers of learning': 'موطن أول مراكز التعلم العظيمة في العالم',
@@ -645,6 +609,19 @@ function translateToArabic() {
         'Pioneers of geometry, algebra, and astronomy': 'رواد الهندسة والجبر وعلم الفلك',
         'Scientific Discovery': 'الاكتشاف العلمي',
         'Advancements in medicine, engineering, and architecture': 'تقدم في الطب والهندسة والعمارة',
+
+
+        // course lectures
+
+        "Course Lectures": "محاضرات المادة",
+        "Lecture 1: Introduction to Mathematics": "المحاضرة 1: مقدمة في الرياضيات",
+        "Lecture 2: Algebraic Foundations": "المحاضرة 2: أسس الجبر",
+        "Lecture 3: Geometry Essentials": "المحاضرة 3: أساسيات الهندسة",
+        "Overview of key concepts and course structure.": "نظرة عامة على المفاهيم الأساسية وهيكل المادة.",
+        "Fundamentals of algebra and problem solving.": "أساسيات الجبر وحل المسائل.",
+        "Shapes, theorems, and geometric reasoning.": "الأشكال، النظريات، والتفكير الهندسي.",
+        "Quick Links": "روابط سريعة",
+
 
         // Chat page
         'Grade Chat': 'دردشة المستوى الدراسي',
@@ -705,20 +682,12 @@ function translateToEnglish() {
     // Comprehensive English translations (reverse of Arabic)
     const translations = {
         // General UI
-        'الفلسفة والمنطق' : 'Philosophy & Logic',
-        'العلوم المتكامله' : 'Integrated Science',
-        'ابدء الاختبار' : 'Take the Quiz',
-        'المعلم' : 'Teacher',
-        'محاضرات المادة' : 'Course Lectures',
-        'اشتري المحاضرة' : 'Buy Lecture',
-        'إذهب إلى المحاضرة' : 'View Lecture',
-        'عربي' : 'Arabic',
         'بوابة تحوت': 'Thoth Gate',
         'بوابة الحكمة القديمة، التعلم الحديث': 'Gateway to Ancient Wisdom, Modern Learning',
         'ادخل البوابة': 'Enter the Gate',
         'البريد الإلكتروني': 'Email',
         'كلمة المرور': 'Password',
-        'جديد في بوابة تحوت؟': 'New to Thoth Gate?',
+        'جديد في بوابة تحوت؟': 'New to Thuth Gate?',
         'سجل هنا': 'Register Here',
         'لديك حساب بالفعل؟': 'Already have an account?',
         'سجل دخولك هنا': 'Login Here',
@@ -783,9 +752,6 @@ function translateToEnglish() {
         'المعلم:': 'Instructor:',
         'قيد التقدم': 'In Progress',
         'مكتمل': 'Completed',
-        'النقاط' : 'Points',
-        'المستوى' : 'Level',
-        'المحاضرة' : 'Lecture',
 
         // Grades
         'الثالثة إعدادي': '3rd Prep',
@@ -794,31 +760,42 @@ function translateToEnglish() {
         'اختر مستواك الدراسي': 'Select your grade',
 
         // Courses
-        'المواد' : 'Subjects',
-        'محمد حامد' : 'Mohamed Hamed',
+        'الفلسفة والمنطق' : 'Philosophy & Logic',
+        'العلوم المتكامله' : 'Integrated Science',
+        'إدخل المحاضرة':'View Lecture' ,
+        'إشتري المحاضرة':'Buy Lecture',
+        'المعلم':'Teacher',
+        'المحاضرة':'Lecture',
+        'محمد حامد':'Mohamed Hamed',
         'إدخل' : 'Enter',
-        'عربي' : 'Arabic',
-        'إنجليزي' : 'English',
-        'فرنسي' : 'French',
-        'رياضيات' : 'Math',
-        'رياضيات' : 'Mathematics',
-        'علوم' : 'Science',
-        'فيزياء' : 'Physics',
-        'كيمياء' : 'Chemistry',
-        'أحياء' : 'Biology',
-        'تاريخ' : 'History',
-        'جغرافيا' : 'Geography',
-        'علوم الحاسوب' : 'Computer Science',
-        'تكنولوجيا المعلومات' : 'Information Technology',
-        'دراسات دينية' : 'Religious Studies',
-        'فلسفة' : 'Philosophy',
-        'علم الاجتماع' : 'Sociology',
-        'علم النفس' : 'Psychology',
-        'اقتصاد' : 'Economics',
-        'دراسات الأعمال' : 'Business Studies',
-        'فن' : 'Art',
-        'موسيقى' : 'Music',
-        'تربية بدنية' : 'Physical Education',
+        'عربي':'Arabic',
+        'إنجليزي':'English',
+        'الرياضيات':'Math',
+        'أتقن الفن القديم للأرقام والمنطق': 'Master the ancient art of numbers and logic',
+        'العلوم': 'Science',
+        'اكتشف أسرار العالم الطبيعي': 'Explore the mysteries of the natural world',
+        'اللغات': 'Languages',
+        'أطلق قوة التواصل': 'Unlock the power of communication',
+        'التاريخ': 'History',
+        'رحلة عبر الزمن والحضارات': 'Journey through time and civilizations',
+        'اعرف المزيد': 'Learn More',
+        'الرياضيات والفيزياء': 'Mathematics & Physics',
+        'الكيمياء والأحياء': 'Chemistry & Biology',
+        'الإنجليزية والأدب': 'English & Literature',
+        'سنوات من الخبرة في التدريس': 'years of teaching experience',
+        'المواد': 'Subjects',
+
+        "محاضرات المادة": "Course Lectures",
+        "المحاضرة 1: مقدمة في الرياضيات": "Lecture 1: Introduction to Mathematics",
+        "المحاضرة 2: أسس الجبر": "Lecture 2: Algebraic Foundations",
+        "المحاضرة 3: أساسيات الهندسة": "Lecture 3: Geometry Essentials",
+        "نظرة عامة على المفاهيم الأساسية وهيكل المادة.": "Overview of key concepts and course structure.",
+        "أساسيات الجبر وحل المسائل.": "Fundamentals of algebra and problem solving.",
+        "الأشكال، النظريات، والتفكير الهندسي.": "Shapes, theorems, and geometric reasoning.",
+        "روابط سريعة": "Quick Links",
+
+
+
 
 
         // Heritage section
@@ -1138,16 +1115,16 @@ function showEmojiPicker() {
         });
 
         emojiOption.addEventListener('click', () => {
-        const cursorPos = messageInput.selectionStart;
-        const textBefore = messageInput.value.substring(0, cursorPos);
-        const textAfter = messageInput.value.substring(cursorPos);
+            const cursorPos = messageInput.selectionStart;
+            const textBefore = messageInput.value.substring(0, cursorPos);
+            const textAfter = messageInput.value.substring(cursorPos);
 
             messageInput.value = textBefore + emoji + textAfter;
             messageInput.selectionStart = messageInput.selectionEnd = cursorPos + emoji.length;
-        messageInput.focus();
+            messageInput.focus();
 
-        // Update character count
-        updateCharCount();
+            // Update character count
+            updateCharCount();
 
             // Hide picker after selection
             pickerElement.style.display = 'none';
@@ -1246,25 +1223,79 @@ window.toggleEditMode = toggleEditMode;
 window.saveProfile = saveProfile;
 window.cancelEdit = cancelEdit;
 
+// Course Detail Page Functionality
+function initializeCourseDetailPage() {
+    const lectureItems = document.querySelectorAll('.lecture-item');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const currentLectureTitle = document.getElementById('currentLectureTitle');
+    const currentLectureDescription = document.getElementById('currentLectureDescription');
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const lecturesSidebar = document.querySelector('.lectures-sidebar');
+    const videoQuizBtn = document.getElementById('videoQuizBtn');
+
+    // Handle lecture item clicks
+    lectureItems.forEach(item => {
+        item.addEventListener('click', function() {
+            lectureItems.forEach(lecture => lecture.classList.remove('active'));
+
+            // Add active class to clicked item
+            this.classList.add('active');
+
+            const lectureId = this.getAttribute('data-lecture-id');
+            const lectureTitle = this.querySelector('.lecture-title').textContent;
+            const lectureDescription = this.querySelector('.lecture-description').textContent;
+
+            const videoElement = videoPlayer.querySelector('.video-element');
+            videoElement.src = `https://example.com/video${lectureId}.mp4`;
+
+            currentLectureTitle.textContent = lectureTitle;
+            currentLectureDescription.textContent = lectureDescription;
+
+            if (videoQuizBtn) {
+                videoQuizBtn.setAttribute('data-lecture-id', lectureId);
+            }
+
+            if (window.innerWidth <= 992) {
+                videoPlayer.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    if (toggleSidebar) {
+        toggleSidebar.addEventListener('click', function() {
+            lecturesSidebar.classList.toggle('collapsed');
+        });
+    }
+
+    if (videoQuizBtn) {
+        videoQuizBtn.addEventListener('click', function() {
+            const lectureId = this.getAttribute('data-lecture-id');
+            const lectureTitle = currentLectureTitle.textContent;
+
+            showQuizModal();
+        });
+    }
+}
+
 // Quiz Modal Function
-function showQuizModal(lectureId, lectureTitle) {
+function showQuizModal() {
     const modalOverlay = document.createElement('div');
     modalOverlay.className = 'quiz-modal-overlay';
-    modalOverlay.innerHTML = `
+    modalOverlay.innerHTML =`
         <div class="quiz-modal">
             <div class="quiz-modal-header">
-                <h3>📝 Quiz: ${lectureTitle}</h3>
+                <h3>📝 Quiz: one</h3>
                 <button class="close-quiz-modal">×</button>
             </div>
             <div class="quiz-modal-content">
                 <div class="quiz-info">
-                    <p><strong>Lecture:</strong> ${lectureTitle}</p>
+                    <p><strong>Lecture:</strong> q</p>
                     <p><strong>Questions:</strong> 10 Multiple Choice</p>
                     <p><strong>Time Limit:</strong> 15 minutes</p>
                     <p><strong>Passing Score:</strong> 70%</p>
                 </div>
                 <div class="quiz-actions">
-                    <button class="start-quiz-btn" data-lecture-id="${lectureId}">
+                    <button class="start-quiz-btn"">
                         <span class="quiz-icon">🚀</span>
                         Start Quiz
                     </button>
@@ -1276,6 +1307,7 @@ function showQuizModal(lectureId, lectureTitle) {
             </div>
         </div>
     `;
+
 
     document.body.appendChild(modalOverlay);
 
@@ -1671,21 +1703,39 @@ if (document.querySelector('.contact-page')) {
 
 // Logout function for navbar
 function logout() {
-    localStorage.removeItem('ThothGateUser');
+    localStorage.removeItem('thuthGateUser');
     window.location.href = 'index.html';
 }
-let end = new Date("{{($session->started_at->addMinutes($session->duration))->toIso8601String()}}").getTime();
-let timer = setInterval(function (){
-    let now = new Date().getTime();
-    let rem = end - now;
-    if (rem <= 0){
-        clearInterval(timer);
-        alert("⏰ Time's up!");
-        document.querySelector(".quiz-form").submit();
+document.addEventListener("DOMContentLoaded", () => {
+    const timerElement = document.getElementById("timer");
+
+    // Parse end time from data attribute and convert to milliseconds
+    const endTime = new Date(timerElement.getAttribute("data-end")).getTime();
+
+    let timerInterval;
+    // Function to update the timer
+    function updateTimer() {
+        const now = new Date().getTime();
+        let diff = Math.floor((endTime - now) / 1000.0);
+        if (diff <= 0) {
+            timerElement.textContent = "00:00";
+            clearInterval(timerInterval);
+            alert("⏰ Time's up!");
+            document.querySelector(".quiz-form").submit();
+            return;
+        }
+
+        const minutes = Math.floor(diff / 60);
+        const seconds = diff % 60;
+
+        timerElement.textContent =
+            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
-    else {
-        let minutes = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((rem % (1000 * 60)) / 1000);
-        document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
-    }
-} , 1000);
+
+    // Initial call to display timer immediately
+    updateTimer();
+
+    // Declare and initialize interval
+    timerInterval = setInterval(updateTimer, 1000);
+});
+

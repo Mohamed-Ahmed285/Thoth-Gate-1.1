@@ -15,28 +15,70 @@ class ExamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($course_id, $lecture_id)
+    public function prepareExam($course_id, $lecture_id)
     {
-        $lecture = Lecture::find($lecture_id);
+        $lecture = Lecture::with('exam', 'course')->findOrFail($lecture_id);
         $course = $lecture->course;
         $exam = $lecture->exam->first();
-        return view('exam.index', ['course' => $course, 'lecture' => $lecture, 'exam' => $exam]);
+
+        if (!$exam) {
+            return redirect()->route('lectures', [$course, $lecture])->with('error', 'No exam found for this lecture');
+        }
+        if($course->grade != Auth::user()->student->grade){
+            return redirect()->route('home')->with('error', 'You are not allowed to access this page');
+        }
+
+        // Check if the student already has a session
+        $session = ExamSession::where('exam_id', $exam->id)
+            ->where('student_id', Auth::user()->student->id)
+            ->first();
+
+        if ($session) {
+            if ($session->submitted_at){
+                return redirect()->route('home')->with('error', 'You have already submitted your exam');
+            }
+            return redirect()->route('exam.info', $session->id);
+        }
+        return view('exam.prepareExam', compact('course', 'lecture', 'exam'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function info($session_id)
     {
-        //
+        $session = ExamSession::findOrFail($session_id);
+        if ($session->student_id != Auth::user()->student->id) {
+            return redirect()->route('home')->with('error' , 'You are not allowed to access this page');
+        }
+        return view( 'exam.info' , ['session' => $session]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request , $exam_id , $session_id , $student_id)
     {
-        //
+        $exam = Exam::with('questions.choices')->findOrFail($exam_id);
+
+        $session = ExamSession::findOrFail($session_id);
+
+        $answers = $request->input('answers' , []);
+
+        $score = 0;
+        foreach ($exam->questions as $question) {
+
+            if (isset($answers[$question->id])) {
+                $selectedChoiceId = $answers[$question->id];
+
+                $correctChoice = $question->choices->firstWhere('is_correct', true);
+                if ($correctChoice && $correctChoice->id == $selectedChoiceId){
+                    $score++;
+                }
+            }
+        }
+        $session->score = $score;
+        $session->submitted_at = now();
+        $session->save();
+
+        return redirect()->route('exam.info', $session->id);
     }
 
     /**
@@ -55,7 +97,7 @@ class ExamController extends Controller
             ->first();
 
         if (!$session) {
-            return redirect()->route('exam.index', [$courseId, $lectureId])
+            return redirect()->route('exam.prepareExam', [$courseId, $lectureId])
                 ->with('error', 'You must start the exam first.');
         }
 
@@ -66,33 +108,17 @@ class ExamController extends Controller
         ]);
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Exam $exam)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Exam $exam)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Exam $exam)
-    {
-        //
-    }
-
     public function submit(Course $course, Lecture $lecture, Exam $exam)
     {
+        $ongoing = ExamSession::where('student_id', Auth::user()->student_id)
+            ->whereNull('submitted_at')
+            ->exists();
+
+        if ($ongoing) {
+            return redirect()->route('lectures', [$course, $lecture, $exam])
+                ->with('error', 'You must finish your ongoing exam before doing anything else.');
+        }
+
         ExamSession::create([
             'student_id' => Auth::user()->student->id,
             'exam_id' => $exam->id,
@@ -102,5 +128,19 @@ class ExamController extends Controller
             'score' => null
         ]);
         return redirect()->route('exam.show' , [$course , $lecture , $exam]);
+    }
+
+    public function model($session_id)
+    {
+        $session = ExamSession::findOrFail($session_id);
+        $student = Auth::user()->student;
+        $exam = $session->exam;
+        $questions = Question::with('choices')->where('exam_id' , $exam->id)->get();
+
+        if($student->grade != $exam->lecture->course->grade || $session->student_id != $student->id){
+            return redirect()->route('home')->with('error' , 'You are not allowed to access this page');
+        }
+
+        return view('exam.ModelAnswer' , ['session' => $session , 'questions' => $questions]);
     }
 }

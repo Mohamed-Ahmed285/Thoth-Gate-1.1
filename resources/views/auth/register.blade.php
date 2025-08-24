@@ -28,7 +28,7 @@
         </div>
 
         <div class="login-form-container">
-            <form id="registerForm" class="login-form register-form" action="/register" method="POST">
+            <form class="login-form register-form" action="/register" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="fullName">Full Name</label>

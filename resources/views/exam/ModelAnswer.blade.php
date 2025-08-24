@@ -32,21 +32,10 @@
     </div>
 </header>
 <main class="quiz-main">
-    @if (session('warning'))
-        <div class="message error" style="margin: 0px 10px;">
-            {{ session('warning') }}
-        </div>
-    @endif
     <div class="container">
-        <h2 class="section-title">Quiz</h2>
+        <h2 class="section-title">Quiz Model Answer</h2>
 
-        <div class="quiz-timer" id="quizTimer">
-            ⏳ Time Left: <span id="timer" data-end="{{ $session->started_at->addMinutes($session->duration+0.03)->toIso8601String() }}"></span>
-        </div>
-
-        <form class="quiz-form" method="POST" action="/submit/{{$exam->id}}/{{ $session->id }}/{{Auth::user()->student->id}}">
-            <!-- Multiple Choice Question Example -->
-            @csrf
+        <div class="quiz-form">
             @foreach($questions as $question)
                 <div class="quiz-question-box">
                     <h3 class="quiz-question">
@@ -57,20 +46,28 @@
                             <img src="{{ $question->image }}" alt="Question Image">
                         @endif
                     </h3>
+
                     <div class="quiz-choices">
                         @foreach($question->choices as $choice)
                             <div class="quiz-answer">
-                                <label style="cursor: pointer;">
-                                    <input type="radio" name="answers[{{ $question->id }}]" value="{{ $choice->id }}" style="cursor: pointer;">
-                                    {{ $choice->text }}
+                                <label>
+                                    <input type="radio" @if($choice->is_correct) checked @endif disabled>
+
+                                    @if($choice->text)
+                                        {{ $choice->text }}
+                                    @else
+                                        <img src="{{ $choice->image }}" alt="Choice Image">
+                                    @endif
                                 </label>
+                                @if($choice->is_correct)
+                                    <span style="color: green; font-weight: bold;">✔</span>
+                                @endif
                             </div>
                         @endforeach
                     </div>
                 </div>
             @endforeach
-            <button type="submit" class="btn quiz-submit-btn">Submit Answers</button>
-        </form>
+        </div>
     </div>
 </main>
 <footer class="main-footer">

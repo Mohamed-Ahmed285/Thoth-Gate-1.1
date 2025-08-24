@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Lectures - Thoth Gate</title>
+    <title>Exam Session Details</title>
     <link rel="stylesheet" href="/styles.css">
-    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
-<body class="courses-page">
+<body class="session-detials">
 <header class="main-header">
     <div class="header-content">
         <div class="logo-container">
@@ -25,8 +25,8 @@
 
         <nav class="main-nav">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/courses" class="active">Courses</a></li>
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/courses">Courses</a></li>
                 <li><a href="/chat">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile">Profile</a></li>
@@ -39,6 +39,7 @@
                 </li>
             </ul>
         </nav>
+
         <div class="switchers-container">
             <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
                 <span class="theme-icon">🌙</span>
@@ -49,6 +50,7 @@
         </div>
     </div>
 </header>
+
 <!-- Mobile Sidebar -->
 <div class="mobile-sidebar" id="mobileSidebar">
     <div class="sidebar-header">
@@ -64,8 +66,8 @@
 
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/courses" class="active">Courses</a></li>
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/courses">Courses</a></li>
             <li><a href="/chat">Chat</a></li>
             <li><a href="/contact">Contact</a></li>
             <li><a href="/profile">Profile</a></li>
@@ -91,44 +93,58 @@
 
 <!-- Sidebar Overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
-<main class="container">
-    @if(session('error'))
-        <div class="message error">
-            {{ session('error') }}
+
+<main class="container" style="max-width:600px; margin-top:3rem;">
+    <h2 class="section-title">Exam Session Details</h2>
+    <div class="profile-card-exam" style="padding:2rem; text-align:left; margin-top:50px;margin-bottom:50px;">
+        <div class="detail-group">
+            <label>Student:</label>
+            <span id="studentName">{{$session->student->user->name}}</span>
         </div>
-    @endif
-    <h2 class="section-title" style="margin:revert;">Course Lectures</h2>
-    <section class="egyptian-wisdom-section-lectures" style="padding: 3rem 0;">
-        <div class="container">
-            <div class="lectures-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 340px)); gap: 2rem;
-                justify-content: center;">
-                <!-- Example lectures, replace with dynamic content as needed -->
-                @foreach($lectures as $lecture)
-                    <div class="course-card lecture-card" style="cursor:pointer;">
-                        <div class="course-image">
-                            <img src="/{{$course->image}}" alt="{{$course->subject}}">
-                        </div>
-                        <div class="course-content">
-                            <div style="display: flex;">
-                                <h3 class="lecture-title">Lecture</h3>
-                                <h3 class = "lecture-title">&nbsp;{{$lecture->index}} :</h3>
-                            </div>
-                            <h3 class = "lecture-title">{{$lecture->title}}</h3>
-                            <p class="lecture-description">{{$lecture->description}}.</p>
-                            <div>
-                                @if($lecture->purchased_lectures->isNotEmpty())
-                                    <a href="/lectures/{{$course->id}}/{{$lecture->id}}" class="course-btn">View Lecture</a>
-                                @else
-                                    <a href="/lectures/{{$lecture->id}}/buy" class="course-btn">Buy Lecture</a>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-                <!-- Add more lectures as needed -->
-            </div>
+
+        <div class="detail-group">
+            <label>Subject:</label>
+            <span id="examName">{{$session->exam->lecture->course->subject}}</span>
         </div>
-    </section>
+
+        <div class="detail-group">
+            <label>Lecture:</label>
+            <span id="examName">{{$session->exam->lecture->title}}</span>
+        </div>
+
+        <div class="detail-group">
+            <label>Score:</label>
+            <span id="examScore"> {{$session->score}} /  {{$session->exam->questions->count()}}</span>
+        </div>
+        <div class="detail-group">
+            <label>Status:</label>
+            <span id="examStatus">Submitted</span>
+        </div>
+        <div class="detail-group">
+            <label>Time Taken:</label>
+            @php
+                $diffInSeconds = $session->started_at->diffInSeconds($session->submitted_at);
+                if($diffInSeconds > $session->duration*60){
+                    $diffInSeconds = $session->duration * 60;
+                }
+                $hours = intdiv($diffInSeconds, 3600);
+                $minutes = intdiv($diffInSeconds % 3600, 60);
+                $seconds = $diffInSeconds % 60;
+            @endphp
+            <span id="timeTaken">
+                @if($hours > 0)
+                    {{ $hours }}h
+                @endif
+                @if($minutes > 0)
+                    {{ $minutes }}m
+                @endif
+                {{$seconds}}s
+            </span>
+        </div>
+
+        <a href="/info/model/{{$session->id}}" class="course-btn" style="width: max-content; justify-self: center; margin-top:15px">Model Answer</a>
+
+    </div>
 </main>
 <footer class="main-footer">
     <div class="container">
@@ -167,6 +183,7 @@
         </div>
     </div>
 </footer>
+
 <script src="/script.js"></script>
 </body>
 </html>

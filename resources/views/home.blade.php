@@ -95,6 +95,11 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <main>
+    @if (session('error'))
+        <div class="message error" style="margin: 0px 10px;">
+            {{ session('error') }}
+        </div>
+    @endif
     <section class="hero-section">
         <div class="hero-content">
             <h2 class="hero-title">Unlock Your Potential</h2>
