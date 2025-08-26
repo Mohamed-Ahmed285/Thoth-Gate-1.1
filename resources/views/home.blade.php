@@ -27,7 +27,7 @@
             <ul>
                 <li><a href="/" class="active">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
-                <li><a href="/chat">Chat</a></li>
+                <li><a href="/community">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile">Profile</a></li>
                 <li>
@@ -68,7 +68,7 @@
         <ul>
             <li><a href="/" class="active">Home</a></li>
             <li><a href="/courses">Courses</a></li>
-            <li><a href="/chat">Chat</a></li>
+            <li><a href="/community">Chat</a></li>
             <li><a href="/contact">Contact</a></li>
             <li><a href="/profile">Profile</a></li>
             <li>
@@ -106,7 +106,7 @@
             <p class="hero-subtitle">Discover the ancient wisdom of learning through modern educational excellence</p>
             <div class="hero-buttons">
                 <a href="/courses" class="btn primary">Explore Courses</a>
-                <a href="/chat" class="btn secondary">Join Grade Chat</a>
+                <a href="/community" class="btn secondary">Join Grade Chat</a>
             </div>
         </div>
         <div class="hero-decoration">
@@ -225,7 +225,7 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/courses">Courses</a></li>
-                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/community">Chat</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/profile">Profile</a></li>
                 </ul>

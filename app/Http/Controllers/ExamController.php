@@ -86,10 +86,19 @@ class ExamController extends Controller
      */
     public function show($courseId, $lectureId, $examId)
     {
+
         $exam = Exam::findOrFail($examId);
         $questions = Question::where('exam_id', $examId)->get();
-
         $student = Auth::user();
+
+        ExamSession::create([
+            'student_id' => Auth::user()->student->id,
+            'exam_id' => $exam->id,
+            'started_at' => now(),
+            'duration' => $exam->duration,
+            'submitted_at' => null,
+            'score' => null
+        ]);
 
         $session = ExamSession::where('student_id', $student->id)
             ->where('exam_id', $exam->id)
@@ -118,15 +127,6 @@ class ExamController extends Controller
             return redirect()->route('lectures', [$course, $lecture, $exam])
                 ->with('error', 'You must finish your ongoing exam before doing anything else.');
         }
-
-        ExamSession::create([
-            'student_id' => Auth::user()->student->id,
-            'exam_id' => $exam->id,
-            'started_at' => now(),
-            'duration' => $exam->duration,
-            'submitted_at' => null,
-            'score' => null
-        ]);
         return redirect()->route('exam.show' , [$course , $lecture , $exam]);
     }
 

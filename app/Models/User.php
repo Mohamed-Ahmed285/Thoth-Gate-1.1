@@ -44,7 +44,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function contact(){
         return $this->hasMany(Contact::class);
     }
-
+    public function messages(){
+        return $this->hasMany(CommunityMessage::class);
+    }
     /**
      * Get the attributes that should be cast.
      *

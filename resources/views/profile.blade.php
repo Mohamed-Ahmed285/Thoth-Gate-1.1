@@ -27,7 +27,7 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
-                <li><a href="/chat">Chat</a></li>
+                <li><a href="/community">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile" class="active">Profile</a></li>
                 <li>
@@ -68,7 +68,7 @@
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/courses">Courses</a></li>
-            <li><a href="/chat">Chat</a></li>
+            <li><a href="/community">Chat</a></li>
             <li><a href="/contact">Contact</a></li>
             <li><a href="/profile" class="active">Profile</a></li>
             <li>
@@ -200,7 +200,7 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/courses">Courses</a></li>
-                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/community">Chat</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/profile">Profile</a></li>
                 </ul>

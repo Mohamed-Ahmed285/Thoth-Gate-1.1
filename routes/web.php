@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmailController;
@@ -7,13 +8,9 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
-use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
 
-// home page
-Route::view('/' , 'home')
-    ->name('home')
-    ->middleware('auth');
+
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
@@ -24,48 +21,59 @@ Route::delete('/logout' , [LoginController::class , 'destroy'])->middleware('aut
 Route::get('/register', [RegisterController::class , 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class , 'store'])->middleware('guest');
 
-//profile
-Route::get('/profile' , [ProfileController::class , 'index'])->middleware('auth');
+Route::middleware(['auth' , 'student'])->group(function () {
+    // home page
+    Route::view('/' , 'home')
+        ->name('home');
 
-// courses
-Route::middleware(['auth', 'verified', 'check.exam'])->group(function () {
-    Route::get('courses', [CourseController::class, 'main'])->name('courses');
-    Route::get('courses/{course}', [CourseController::class, 'index'])->name('lectures');
-    Route::get('lectures/{lecture}/buy', [CourseController::class, 'buy'])->name('lectures.buy');
-    Route::get('lectures/{course}/{lecture}', [CourseController::class, 'show'])->name('lectures.show');
+    //profile
+    Route::get('/profile' , [ProfileController::class , 'index'])
+        ->name('profile');
+
+    // courses
+    Route::middleware(['verified', 'check.exam'])->group(function () {
+        Route::get('courses', [CourseController::class, 'main'])->name('courses');
+        Route::get('courses/{course}', [CourseController::class, 'index'])->name('lectures');
+        Route::get('lectures/{lecture}/buy', [CourseController::class, 'buy'])->name('lectures.buy');
+        Route::get('lectures/{course}/{lecture}', [CourseController::class, 'show'])->name('lectures.show');
+    });
+
+    // exams
+    Route::prefix('courses/{course}/{lecture}/exams')->middleware('verified')->group(function () {
+        Route::get('/', [ExamController::class, 'prepareExam'])->name('exam.prepareExam');
+        Route::get('{exam}', [ExamController::class, 'show'])->name('exam.show');
+        Route::post('{exam}/submit', [ExamController::class, 'submit']);
+    });
+    Route::post('/submit/{exam}/{session}/{student}', [ExamController::class, 'store'])
+        ->middleware('verified')
+        ->name('exam.store');
+
+    Route::get('info/{session}', [ExamController::class, 'info'])
+        ->middleware(['verified', 'check.exam'])
+        ->name('exam.info');
+
+    Route::get('info/model/{session}', [ExamController::class, 'model'])
+        ->middleware(['verified', 'check.exam'])
+        ->name('exam.model');
+
+    // contact
+    Route::get('/contact' , [ContactController::class , 'index'])
+        ->middleware('verified')
+        ->name('contact.index');
+    Route::post('/contact' , [ContactController::class , 'store'])
+        ->middleware('verified');
+
+    // community
+    Route::get('/community' , [CommunityController::class , 'index'])
+        ->middleware('verified')
+        ->name('community');
+
+    // AJAX fetch
+    Route::get('/community/messages', [CommunityController::class, 'fetchMessages']);
+
+    // AJAX store
+    Route::post('/community/messages', [CommunityController::class, 'store']);
 });
-
-// exam
-Route::get('courses/{course}/{lecture}/exams', [ExamController::class, 'prepareExam'])
-    ->middleware(['auth' , 'verified'])
-    ->name('exam.prepareExam');
-
-Route::post('/courses/{course}/{lecture}/exams/{exam}/submit', [ExamController::class, 'submit'])
-    ->middleware(['auth' , 'verified']);
-
-Route::post('/submit/{exam}/{session}/{student}', [ExamController::class, 'store'])
-    ->middleware(['auth' , 'verified'])
-    ->name('exam.store');
-
-Route::get('courses/{course}/{lecture}/exams/{exam}', [ExamController::class, 'show'])
-    ->middleware(['auth' , 'verified'])
-    ->name('exam.show');
-
-Route::get('info/{session}', [ExamController::class, 'info'])
-    ->middleware(['auth' , 'verified' , 'check.exam'])
-    ->name('exam.info');
-
-Route::get('info/model/{session}', [ExamController::class, 'model'])
-    ->middleware(['auth' , 'verified' , 'check.exam'])
-    ->name('exam.model');
-
-// contact
-Route::get('/contact' , [ContactController::class , 'index'])
-    ->middleware(['auth' , 'verified'])
-    ->name('contact.index');
-
-Route::post('/contact' , [ContactController::class , 'store'])
-    ->middleware(['auth' , 'verified']);
 
 // Verifications
 Route::get('email/verify', [EmailController::class, 'waiting'])
