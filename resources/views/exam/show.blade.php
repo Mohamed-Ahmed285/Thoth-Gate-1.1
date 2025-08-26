@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
-                <li><a href="/chat">Chat</a></li>
+                <li><a href="/community">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile">Profile</a></li>
             </ul>
@@ -44,7 +44,7 @@
             ⏳ Time Left: <span id="timer" data-end="{{ $session->started_at->addMinutes($session->duration+0.03)->toIso8601String() }}"></span>
         </div>
 
-        <form class="quiz-form" method="POST" action="/submit/{{$exam->id}}/{{ $session->id }}/{{Auth::user()->student->id}}">
+        <form class="quiz-form" method="POST" action="/submit/{{$exam->id}}/{{ $session->id }}/{{Auth::user()->student->id}}" id = "exam-Form">
             <!-- Multiple Choice Question Example -->
             @csrf
             @foreach($questions as $question)
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             @endforeach
-            <button type="submit" class="btn quiz-submit-btn">Submit Answers</button>
+            <button type="submit" class="btn quiz-submit-btn" onclick="examSubmitted = true">Submit Answers</button>
         </form>
     </div>
 </main>
@@ -85,7 +85,7 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/courses">Courses</a></li>
-                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/community">Chat</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/profile">Profile</a></li>
                 </ul>
@@ -110,6 +110,18 @@
         </div>
     </div>
 </footer>
+<script>
+    let examSubmitted = false;
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden && !examSubmitted){
+            examSubmitted = true;
+
+            alert("You switched tabs! Your exam will be submitted.");
+
+            document.getElementById("exam-Form").submit();
+        }
+    });
+</script>
 <script src = "/script.js"></script>
 </body>
 </html>

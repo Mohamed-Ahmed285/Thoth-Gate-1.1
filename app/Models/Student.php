@@ -13,12 +13,16 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function purchased_lectures()
+    public function lectures()
     {
-        return $this->hasMany(Purchased_Lectures::class);
+        return $this->hasMany(PurchasedLectures::class);
     }
-    public function exam_sessions()
+    public function sessions()
     {
         return $this->hasMany(ExamSession::class);
+    }
+    public function messages()
+    {
+        return $this->hasMany(CommunityMessage::class);
     }
 }

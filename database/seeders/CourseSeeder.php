@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Community;
 use App\Models\Course;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -83,8 +84,20 @@ class CourseSeeder extends Seeder
             ],
         ];
 
+        $communities = [
+            [
+                'grade' => '3prep',
+            ],
+            [
+                'grade' => '1sec',
+            ]
+        ];
+
         foreach ($courses as $course) {
             Course::create($course);
+        }
+        foreach ($communities as $community) {
+            Community::create($community);
         }
     }
 }

@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'email' => 'ammar@gmail.com',
             'phone_number' => '01129264191',
-            'is_instructor' => false,
+            'type' => 0,
         ]);
         Student::create([
             'user_id' => 1,
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'email' => 'mohamed@gmail.com',
             'phone_number' => '01129264191',
-            'is_instructor' => false,
+            'type' => 0,
         ]);
         Student::create([
             'user_id' => 2,

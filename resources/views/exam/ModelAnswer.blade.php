@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
-                <li><a href="/chat">Chat</a></li>
+                <li><a href="/community">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile">Profile</a></li>
             </ul>
@@ -34,7 +34,9 @@
 <main class="quiz-main">
     <div class="container">
         <h2 class="section-title">Quiz Model Answer</h2>
-
+        <div class="quiz-timer">
+            Your score: <span>{{$session->score}}/{{$questions->count()}}</span>
+        </div>
         <div class="quiz-form">
             @foreach($questions as $question)
                 <div class="quiz-question-box">
@@ -49,19 +51,15 @@
 
                     <div class="quiz-choices">
                         @foreach($question->choices as $choice)
-                            <div class="quiz-answer">
-                                <label>
+                            <div class="quiz-answer" @if($choice->is_correct) style="background-color: #3E7B27; border-radius: 10px; padding: 10px" @endif>
+                                <label style="color: white">
                                     <input type="radio" @if($choice->is_correct) checked @endif disabled>
-
                                     @if($choice->text)
                                         {{ $choice->text }}
                                     @else
                                         <img src="{{ $choice->image }}" alt="Choice Image">
                                     @endif
                                 </label>
-                                @if($choice->is_correct)
-                                    <span style="color: green; font-weight: bold;">✔</span>
-                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -82,7 +80,7 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/courses">Courses</a></li>
-                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/community">Chat</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/profile">Profile</a></li>
                 </ul>

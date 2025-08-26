@@ -19,7 +19,7 @@ class CheckExamSession
         $student = Auth::user()->student;
 
         if ($student) {
-            $session = $student->exam_sessions()
+            $session = $student->sessions()
                 ->whereNull('submitted_at')
                 ->where('started_at', '<=', now())
                 ->whereRaw("datetime(started_at, '+' || duration || ' minutes') > datetime('now')")
@@ -34,9 +34,7 @@ class CheckExamSession
                     ])->with('warning', 'You must finish your ongoing exam before doing anything else.');
                 }
             }
-
         }
-
         return $next($request);
     }
 }
