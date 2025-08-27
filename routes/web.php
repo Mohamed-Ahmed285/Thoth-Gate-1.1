@@ -62,18 +62,15 @@ Route::middleware(['auth' , 'student'])->group(function () {
         ->name('contact.index');
     Route::post('/contact' , [ContactController::class , 'store'])
         ->middleware('verified');
-
-    // community
-    Route::get('/community' , [CommunityController::class , 'index'])
-        ->middleware('verified')
-        ->name('community');
-
-    // AJAX fetch
-    Route::get('/community/messages', [CommunityController::class, 'fetchMessages']);
-
-    // AJAX store
-    Route::post('/community/messages', [CommunityController::class, 'store']);
 });
+// community
+Route::get('/community' , [CommunityController::class , 'index'])
+    ->middleware('verified')
+    ->name('community');
+
+Route::post('/community' , [CommunityController::class , 'store'])
+    ->name('community.store');
+
 
 // Verifications
 Route::get('email/verify', [EmailController::class, 'waiting'])
