@@ -148,7 +148,7 @@
                         </div>
                     </form>
                 </div>
-                <button class="scroll-button" id="scrollBtn">
+                <button class="scroll-button" id="scrollBtn" style="display: none;">
                     ↓
                 </button>
             </section>
@@ -211,34 +211,41 @@
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    window.Echo.channel('MessageChannel')
-        .listen('.App\\Events\\MessageEvent', (e) => {
-            const msg = e.message;
-            const div = document.createElement('div');
-            div.className = msg.user.id === parseInt(document.querySelector('meta[name="user-id"]')?.content) 
-                ? 'message user-message' 
-                : 'message other-message';
+        window.Echo.channel('MessageChannel')
+            .listen('.App\\Events\\MessageEvent', (e) => {
+                const msg = e.message;
 
-            div.innerHTML = `
-                <div class="message-avatar">
-                    <img src="/imgs/profile.png" alt="User">
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-author">${msg.user.type === 1 ? 'Mr.' : ''}${msg.user.name}</span>
-                        <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                // Check if user is near the bottom BEFORE adding the new message
+                const nearBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 50;
+
+                const div = document.createElement('div');
+                div.className = msg.user.id === parseInt(document.querySelector('meta[name="user-id"]')?.content)
+                    ? 'message user-message'
+                    : 'message other-message';
+
+                div.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="/imgs/profile.png" alt="User">
                     </div>
-                    <p>${msg.message}</p>
-                </div>
-            `;
-            chatMessages.appendChild(div);
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">${msg.user.type === 1 ? 'Mr.' : ''}${msg.user.name}</span>
+                            <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <p>${msg.message}</p>
+                    </div>
+                `;
 
-            if (chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10) {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-        });
+                chatMessages.appendChild(div);
 
-    chatMessages.addEventListener('scroll', () => {
+                // Only scroll if user was near the bottom
+                if (nearBottom) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            });
+
+
+        chatMessages.addEventListener('scroll', () => {
         if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 50) {
             scrollBtn.style.display = 'block';
         } else {
@@ -252,6 +259,6 @@
 });
 </script>
 
-<script src="/script.js"></script> 
+<script src="/script.js"></script>
 </body>
 </html>
