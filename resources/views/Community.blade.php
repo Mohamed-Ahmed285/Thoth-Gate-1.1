@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Thoth Gate - Grade Chat</title>
+    <meta name="user-id" content="{{ Auth::id() }}">
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    @vite(['resources/js/app.js'])
 </head>
 <body class="chat-page">
 <header class="main-header">
@@ -107,6 +109,7 @@
             <h2 class="section-title">Grade Chat</h2>
             <div class="grade-info">
                 <span class="grade-badge" id="gradeBadge">{{$fullCommunity->grade}}</span>
+                <span class="online-count">Online: <span id="onlineCount">0</span></span>
             </div>
         </div>
 
@@ -116,7 +119,7 @@
             <section class="chat-column">
                 <div class="chat-messages" id="chatMessages">
                     @foreach($messages as $message)
-                        <div class="message {{($message->user == Auth::user() ? "user-message" : (Auth::user()->type == 2 ? "system-message" : "other-message"))}}">
+                        <div class="message {{($message->user_id === Auth::id() ? 'user-message' : (Auth::user()->type === 2 ? 'system-message' : 'other-message'))}}">
                             <div class="message-avatar">
                                 <img src="/imgs/profile.png" alt="Student">
                             </div>
@@ -166,74 +169,89 @@
         </div>
     </div>
 </main>
+
 <script>
-    const chatMessages = document.getElementById("chatMessages");
-    const scrollBtn = document.getElementById("scrollBtn");
-    const chatForm = document.getElementById("chatForm");
-    const messageInput = document.getElementById("messageInput");
 
-    function scrollToBottom() {
+    window.addEventListener('DOMContentLoaded', () => {
+        const chatMessages = document.getElementById('chatMessages');
         chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    chatMessages.addEventListener('scroll', () => {
-        const distanceFromBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight;
-        scrollBtn.style.display = distanceFromBottom > 50 ? "block" : "none";
     });
 
-    scrollBtn.addEventListener('click', scrollToBottom);
+    const chatForm = document.getElementById('chatForm');
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const scrollBtn = document.getElementById('scrollBtn');
 
-
-
-    window.addEventListener('load', () => {
-        scrollToBottom();
-    });
-
-    let isSending = false;
-
-    chatForm.addEventListener('submit', async function(e) {
+    chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const sendBtn = chatForm.querySelector('.send-btn');
-        const sendIcon = sendBtn.querySelector('.send-icon');
+        const message = messageInput.value.trim();
+        if (!message) return;
 
-        sendIcon.textContent = "⏳";
-        sendBtn.disabled = true;
-
-        const formData = new FormData(chatForm);
-        messageInput.value = "";
-        isSending = true;
+        const community_id = chatForm.querySelector('input[name="community_id"]').value;
+        messageInput.value = '';
 
         try {
-            const res = await fetch('/community/messages', {
+            await fetch('/community', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 },
-                body: formData
+                body: JSON.stringify({ message, community_id })
             });
-
-            const data = await res.json();
-            chatMessages.insertAdjacentHTML('beforeend', data.html);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         } catch (err) {
             console.error(err);
-        } finally {
-            sendIcon.textContent = "📤";
-            sendBtn.disabled = false;
-            isSending = false;
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+    const chatMessages = document.getElementById('chatMessages');
+    const scrollBtn = document.getElementById('scrollBtn');
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    window.Echo.channel('MessageChannel')
+        .listen('.App\\Events\\MessageEvent', (e) => {
+            const msg = e.message;
+            const div = document.createElement('div');
+            div.className = msg.user.id === parseInt(document.querySelector('meta[name="user-id"]')?.content) 
+                ? 'message user-message' 
+                : 'message other-message';
+
+            div.innerHTML = `
+                <div class="message-avatar">
+                    <img src="/imgs/profile.png" alt="User">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">${msg.user.type === 1 ? 'Mr.' : ''}${msg.user.name}</span>
+                        <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <p>${msg.message}</p>
+                </div>
+            `;
+            chatMessages.appendChild(div);
+
+            if (chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+
+    chatMessages.addEventListener('scroll', () => {
+        if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 50) {
+            scrollBtn.style.display = 'block';
+        } else {
+            scrollBtn.style.display = 'none';
         }
     });
 
-    async function fetchMessages() {
-        if (isSending) return; // skip fetching while sending
-        const communityId = document.querySelector('[name="community_id"]').value;
-        const res = await fetch(`/community/messages?community_id=${communityId}`);
-        const html = await res.text();
-        chatMessages.innerHTML = html;
-    }
-
-    setInterval(fetchMessages, 500);
+    scrollBtn.addEventListener('click', () => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+});
 </script>
-<script src="/script.js"></script>
+
+<script src="/script.js"></script> 
 </body>
 </html>

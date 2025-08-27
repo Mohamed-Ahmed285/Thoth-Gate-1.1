@@ -7,7 +7,7 @@ use App\Models\CommunityMessage;
 use App\Models\PurchasedCommunity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Events\MessageEvent;
 class CommunityController extends Controller
 {
     public function index()
@@ -34,7 +34,6 @@ class CommunityController extends Controller
             'messages' => $messages
         ]);
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -42,56 +41,18 @@ class CommunityController extends Controller
         ]);
 
         $message = CommunityMessage::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::user()->id,
             'message' => $request->message,
             'community_id' => $request->community_id,
             'created_at' => now('Africa/Cairo'),
         ]);
 
-        $user = $message->user;
+        // Load the user relationship before broadcasting
+        $message->load('user');
 
-        // Return HTML for AJAX (single message)
-        return response()->json([
-            'html' => '
-        <div class="message '.($user->id === auth()->id() ? 'user-message' : 'other-message').'">
-            <div class="message-avatar">
-                <img src="/imgs/profile.png" alt="Student">
-            </div>
-            <div class="message-content">
-                <div class="message-header">
-                    <span class="message-author">'.($user->type == 1 ? 'Mr.' : '').$user->name.'</span>
-                    <span class="message-time">'. $message->created_at->format('h:i A').'</span>
+        // Broadcast the event to the correct channel and exclude the sender
+        broadcast(new \App\Events\MessageEvent($message))->toOthers();
 
-                </div>
-                <p>'.$message->message.'</p>
-            </div>
-        </div>'
-        ]);
-    }
-
-    public function fetchMessages(Request $request)
-    {
-        $community_id = $request->community_id;
-        $messages = CommunityMessage::where('community_id', $community_id)
-            ->with('user')
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        $html = '';
-        foreach ($messages as $message) {
-            $html .= '<div class="message '.($message->user_id === auth()->id() ? 'user-message' : (Auth::user()->type == 2 ? "system-message" : "other-message")).'">
-            <div class="message-avatar">
-                <img src="/imgs/profile.png" alt="Student">
-            </div>
-            <div class="message-content">
-                <div class="message-header">
-                    <span class="message-author">'.($message->user->type == 1 ? 'Mr. ' : '').$message->user->name.'</span>
-                    <span class="message-time">'. $message->created_at->format('h:i A').'</span>
-                </div>
-                <p>'.$message->message.'</p>
-            </div>
-          </div>';
-        }
-        return response($html);
+        return response()->json(['status' => 'Message Sent!']);
     }
 }
