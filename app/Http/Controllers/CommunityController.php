@@ -59,7 +59,7 @@ class CommunityController extends Controller
             'message' => $request->message,
             'community_id' => $request->community_id,
             'image' => $imagePath, 
-            'created_at' => now(),
+            'time' => now('Africa/Cairo')->format('h:i A'),
         ]);
 
         $message->load('user');

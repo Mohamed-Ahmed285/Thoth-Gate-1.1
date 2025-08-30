@@ -20,6 +20,7 @@ return new class extends Migration
             $table->index('community_id');
             $table->text('message')->nullable();
             $table->string('image')->nullable();
+            $table->string('time');
             $table->timestamps();
         });
     }

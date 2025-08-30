@@ -43,9 +43,9 @@ class MessageEvent implements ShouldBroadcast
                 'id' => $this->message->id,
                 'user_id' => $this->message->user_id,
                 'message' => $this->message->message,
-                'image' => $this->message->image, // Include the image
+                'image' => $this->message->image,
                 'community_id' => $this->message->community_id,
-                'created_at' => $this->message->created_at,
+                'time' => $this->message->time,
                 'user' => [
                     'id' => $this->message->user->id,
                     'name' => $this->message->user->name,

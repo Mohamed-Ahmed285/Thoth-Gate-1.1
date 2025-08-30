@@ -103,7 +103,7 @@
             <div class="message-content">
                 <div class="message-header">
                     <span class="message-author">{{($message->user->type == 1 ? 'Mr.' : '').$message->user->name}}</span>
-                    <span class="message-time">{{ $message->created_at->format('h:i A') }}</span>
+                    <span class="message-time">{{ $message->time }}</span>
                 </div>
                 @if($message->message)
                     <p>{{$message->message}}</p>
@@ -183,7 +183,7 @@
         sendbtn.disabled = true;
         messageInput.value = '';
         imagePreview.innerHTML = '';
-        document.getElementById('imageIn').value = ''; // reset file input
+        document.getElementById('imageIn').value = ''; 
 
         try {
             await fetch('/community', {
@@ -193,9 +193,12 @@
                 },
                 body: formData
             });
+
         } catch (err) {
             console.error(err);
         }
+
+
         chatMessages.scrollTop = chatMessages.scrollHeight;
         icon.textContent = '📤';
         sendbtn.disabled = false;
@@ -208,10 +211,14 @@
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
+    
     window.Echo.channel('MessageChannel')
         .listen('.App\\Events\\MessageEvent', (e) => {
             const msg = e.message;
             const div = document.createElement('div');
+
+            const isNearBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
+            
             div.className = msg.user.id === parseInt(document.querySelector('meta[name="user-id"]')?.content) 
                 ? 'message user-message' 
                 : 'message other-message';
@@ -223,7 +230,7 @@
                 <div class="message-content">
                     <div class="message-header">
                         <span class="message-author">${msg.user.type === 1 ? 'Mr.' : ''}${msg.user.name}</span>
-                        <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span class="message-time">${msg.time}</span>
                     </div>
                     ${msg.message ? `<p>${msg.message}</p>` : ''}
                     ${msg.image ? `<img src="/${msg.image}" alt="Image" style="max-width:100%; margin-top:8px;">` : ''}
@@ -232,9 +239,21 @@
 
             chatMessages.appendChild(div);
 
-            if (chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10) {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+            // handle scrolling
+            const scrollToBottom = () => {
+                if (isNearBottom) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            };
+
+            const img = div.querySelector("img[alt='Image']");
+            if (img) {
+                img.addEventListener("load", scrollToBottom);
+                img.addEventListener("error", scrollToBottom);
+            } else {
+                scrollToBottom();
             }
+
         });
 
 
