@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckExamSession;
 use App\Http\Middleware\EnsureUserIsStudent;
+use App\Http\Middleware\PreventMultipleLogins;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'check.exam' => CheckExamSession::class,
             'student' => EnsureUserIsStudent::class,
+            'prevent.multiple.logins' => PreventMultipleLogins::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

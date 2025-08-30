@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class RegisterController extends Controller
 {
@@ -38,7 +39,7 @@ class RegisterController extends Controller
             'phone_number' => $request->phone_number,
             'date_of_birth' => $request->dateOfBirth,
             'password' => bcrypt($request->password),
-            'is_instructor' => false,
+            'type' => 0,
         ]);
 
         $user->student()->create([
@@ -48,6 +49,10 @@ class RegisterController extends Controller
 
         $user->sendEmailVerificationNotification();
         Auth::login($user);
+        $request->session()->regenerate();
+        $user->session_id = Session::getId();
+        $user->save();
+
         return redirect()->route('verification.notice');
     }
 }

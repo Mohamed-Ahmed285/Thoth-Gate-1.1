@@ -8,6 +8,7 @@ use App\Models\PurchasedCommunity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageEvent;
+
 class CommunityController extends Controller
 {
     public function index()
@@ -37,22 +38,38 @@ class CommunityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'message' => 'required|string|max:500',
+            'message' => 'nullable|string|max:500',
+            'image' => 'nullable|image|max:2048',
         ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('community_images'), $imageName);
+            $imagePath = 'community_images/' . $imageName;
+        }
+
+        if (!$request->message && !$imagePath) {
+            return response()->json(['status' => 'Message or image is required!'], 422);
+        }
 
         $message = CommunityMessage::create([
             'user_id' => Auth::user()->id,
             'message' => $request->message,
             'community_id' => $request->community_id,
-            'created_at' => now('Africa/Cairo'),
+            'image' => $imagePath, 
+            'created_at' => now(),
         ]);
 
-        // Load the user relationship before broadcasting
         $message->load('user');
 
-        // Broadcast the event to the correct channel and exclude the sender
-        broadcast(new \App\Events\MessageEvent($message))->toOthers();
+        broadcast(new MessageEvent($message))->toOthers();
 
-        return response()->json(['status' => 'Message Sent!']);
+        return response()->json([
+            'status' => 'success',
+            'message' => $message
+        ]);
     }
+
 }

@@ -51,7 +51,12 @@
 
                     <div class="quiz-choices">
                         @foreach($question->choices as $choice)
-                            <div class="quiz-answer" @if($choice->is_correct) style="background-color: #3E7B27; border-radius: 10px; padding: 10px" @endif>
+                            <div class="quiz-answer"
+                                @if($choice->is_correct)
+                                    style="background-color: #3E7B27; border-radius: 10px; padding: 10px"
+                                @elseif($last_choice->firstWhere('question_id', $question->id)->choice_id === $choice->id)
+                                    style="background-color: #E62727; border-radius: 10px; padding: 10px"
+                                @endif>
                                 <label style="color: white">
                                     <input type="radio" @if($choice->is_correct) checked @endif disabled>
                                     @if($choice->text)

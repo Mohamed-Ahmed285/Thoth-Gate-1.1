@@ -20,4 +20,8 @@ class ExamSession extends Model
     {
         return $this->belongsTo(Student::class);
     }
+    public function choices()
+    {
+        return $this->hasMany(SessionChoice::class, 'session_id');
+    }
 }

@@ -9,8 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="login-page">
+
 <div class="login-container">
     <div class="login-header">
+        @if (session('error'))
+            <div class="message error" style="margin-bottom: 15px">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="logo-container">
             <img src="imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
             <h1 class="site-logo">Thoth Gate</h1>
@@ -30,7 +36,6 @@
     <div class="login-form-container">
         <form class="login-form" action="/login" method="post">
             @csrf
-
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>

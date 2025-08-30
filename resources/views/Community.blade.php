@@ -1,5 +1,5 @@
 @php use Illuminate\Support\Facades\Auth; @endphp
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,14 +21,11 @@
             <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
             <h1 class="site-logo">Thoth Gate</h1>
         </div>
-
-        <!-- Hamburger Menu Button -->
         <button class="hamburger-menu" id="hamburgerMenu">
             <span></span>
             <span></span>
             <span></span>
         </button>
-
         <nav class="main-nav">
             <ul>
                 <li><a href="/">Home</a></li>
@@ -46,7 +43,6 @@
                 </li>
             </ul>
         </nav>
-
         <div class="switchers-container">
             <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
                 <span class="theme-icon">🌙</span>
@@ -57,8 +53,6 @@
         </div>
     </div>
 </header>
-
-<!-- Mobile Sidebar -->
 <div class="mobile-sidebar" id="mobileSidebar">
     <div class="sidebar-header">
         <div class="logo-container">
@@ -70,7 +64,6 @@
             <span></span>
         </button>
     </div>
-
     <nav class="sidebar-nav">
         <ul>
             <li><a href="/">Home</a></li>
@@ -88,7 +81,6 @@
             </li>
         </ul>
     </nav>
-
     <div class="sidebar-switchers">
         <button class="theme-switcher" id="sidebarThemeSwitcher" title="Toggle Dark Mode">
             <span class="theme-icon">🌙</span>
@@ -98,80 +90,74 @@
         </button>
     </div>
 </div>
-
-<!-- Sidebar Overlay -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<main class="chat-main">
-    <div class="container">
-        <!-- Header -->
-        <div class="chat-header">
-            <h2 class="section-title">Grade Chat</h2>
-            <div class="grade-info">
-                <span class="grade-badge" id="gradeBadge">{{$fullCommunity->grade}}</span>
-                <span class="online-count">Online: <span id="onlineCount">0</span></span>
+<section class="chat-column">
+    <button class="scroll-button" id="scrollBtn" style="display: none;">
+        ↓
+    </button>
+    <div class="chat-messages" id="chatMessages">
+        @foreach($messages as $message)
+        <div class="message {{($message->user_id === Auth::id() ? 'user-message' : (Auth::user()->type === 2 ? 'system-message' : 'other-message'))}}">
+            <div class="message-avatar">
+                <img src="/imgs/profile.png" alt="Student">
+            </div>
+            <div class="message-content">
+                <div class="message-header">
+                    <span class="message-author">{{($message->user->type == 1 ? 'Mr.' : '').$message->user->name}}</span>
+                    <span class="message-time">{{ $message->created_at->format('h:i A') }}</span>
+                </div>
+                @if($message->message)
+                    <p>{{$message->message}}</p>
+                @endif
+                @if($message->image)
+                    <img src="{{ asset($message->image) }}" alt="Community Image" style="max-width: 100%; height: auto; margin-top: 8px;">
+                @endif
             </div>
         </div>
-
-        <!-- Layout: left = chat, right = sidebar -->
-        <div class="chat-container">
-            <!-- LEFT COLUMN: messages + input -->
-            <section class="chat-column">
-                <div class="chat-messages" id="chatMessages">
-                    @foreach($messages as $message)
-                        <div class="message {{($message->user_id === Auth::id() ? 'user-message' : (Auth::user()->type === 2 ? 'system-message' : 'other-message'))}}">
-                            <div class="message-avatar">
-                                <img src="/imgs/profile.png" alt="Student">
-                            </div>
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-author">{{($message->user->type == 1 ? 'Mr.' : '').$message->user->name}}</span>
-                                    <span class="message-time">{{ $message->created_at->format('h:i A') }}</span>
-                                </div>
-                                <p>{{$message->message}}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- Composer (sticky at viewport bottom) -->
-                <div class="chat-input-container sticky-composer" style="margin-top: 16px;">
-                    <form id="chatForm" class="chat-form">
-                        <div class="input-group">
-                            <input type="hidden" name="community_id" value="{{$fullCommunity->id}}">
-                            <input type="text" name="message" id="messageInput" placeholder="Type your message." maxlength="500" required autocomplete="off">
-                            <button type="submit" class="send-btn"><span class="send-icon">📤</span></button>
-                        </div>
-                        <div class="message-actions">
-                            <span class="char-count">0/500</span>
-                            <button type="button" class="emoji-btn" id="emojiBtn">😊</button>
-                        </div>
-                    </form>
-                </div>
-                <button class="scroll-button" id="scrollBtn" style="display: none;">
-                    ↓
-                </button>
-            </section>
-
-            <!-- RIGHT COLUMN: sidebar (now inside the grid) -->
-            <aside class="chat-sidebar">
-                <div class="sidebar-section">
-                    <h3>Chat Rules</h3>
-                    <ul class="chat-rules">
-                        <li>Be respectful to all members</li>
-                        <li>No inappropriate content</li>
-                        <li>Stay on topic - academic discussions</li>
-                        <li>Use appropriate language</li>
-                        <li>Report any violations</li>
-                    </ul>
-                </div>
-            </aside>
-        </div>
+        @endforeach
     </div>
-</main>
+    
+    <div class="chat-input-container sticky-composer" style="margin-top: 16px;">
+        <div id="imagePreview" class="preview-container" style="margin: 10px; display:flex; gap:10px; flex-wrap:wrap;"></div>
+        <form id="chatForm" class="chat-form" enctype="multipart/form-data">
+            <div class="input-group">
+                <input type="hidden" name="community_id" value="{{$fullCommunity->id}}">
+                <input type="text" name="message" id="messageInput" placeholder="Type your message." maxlength="500" autocomplete="off">
+                <button type="submit" class="send-btn"><span class="send-icon" id = "send-span">📤</span></button>
+                <input type="file" id="imageIn" name="image" accept="image/*" style="display: none;">
+                <button type = "button" onclick="document.getElementById('imageIn').click()" class="image-btn"><span>🔗</span></button>
+            </div>
+        </form>
+    </div>
+</section>
+<script>
+    const imageInput = document.getElementById('imageIn');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageInput.addEventListener('change', () => {
+        imagePreview.innerHTML = "";
+
+        const files = imageInput.files;
+        if (!files.length) return;
+
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith("image/")) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.style.maxWidth = "200px";
+                img.style.maxHeight = "150px";
+                img.style.borderRadius = "8px";
+                img.style.objectFit = "cover";
+                imagePreview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 
 <script>
-
     window.addEventListener('DOMContentLoaded', () => {
         const chatMessages = document.getElementById('chatMessages');
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -181,29 +167,40 @@
     const chatMessages = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
     const scrollBtn = document.getElementById('scrollBtn');
+    let icon = document.getElementById('send-span');
+    let sendbtn = document.querySelector('.send-btn');
 
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const message = messageInput.value.trim();
-        if (!message) return;
 
-        const community_id = chatForm.querySelector('input[name="community_id"]').value;
+        const formData = new FormData(chatForm);
+        const message = messageInput.value.trim();
+        const image = document.getElementById('imageIn').files[0];
+
+        if (!message && !image) return;
+
+        icon.textContent = '⏳';
+        sendbtn.disabled = true;
         messageInput.value = '';
+        imagePreview.innerHTML = '';
+        document.getElementById('imageIn').value = ''; // reset file input
 
         try {
             await fetch('/community', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 },
-                body: JSON.stringify({ message, community_id })
+                body: formData
             });
         } catch (err) {
             console.error(err);
         }
         chatMessages.scrollTop = chatMessages.scrollHeight;
+        icon.textContent = '📤';
+        sendbtn.disabled = false;
     });
+
 
     window.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
@@ -211,41 +208,37 @@
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        window.Echo.channel('MessageChannel')
-            .listen('.App\\Events\\MessageEvent', (e) => {
-                const msg = e.message;
+    window.Echo.channel('MessageChannel')
+        .listen('.App\\Events\\MessageEvent', (e) => {
+            const msg = e.message;
+            const div = document.createElement('div');
+            div.className = msg.user.id === parseInt(document.querySelector('meta[name="user-id"]')?.content) 
+                ? 'message user-message' 
+                : 'message other-message';
 
-                // Check if user is near the bottom BEFORE adding the new message
-                const nearBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 50;
-
-                const div = document.createElement('div');
-                div.className = msg.user.id === parseInt(document.querySelector('meta[name="user-id"]')?.content)
-                    ? 'message user-message'
-                    : 'message other-message';
-
-                div.innerHTML = `
-                    <div class="message-avatar">
-                        <img src="/imgs/profile.png" alt="User">
+            div.innerHTML = `
+                <div class="message-avatar">
+                    <img src="/imgs/profile.png" alt="User">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">${msg.user.type === 1 ? 'Mr.' : ''}${msg.user.name}</span>
+                        <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="message-author">${msg.user.type === 1 ? 'Mr.' : ''}${msg.user.name}</span>
-                            <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        </div>
-                        <p>${msg.message}</p>
-                    </div>
-                `;
+                    ${msg.message ? `<p>${msg.message}</p>` : ''}
+                    ${msg.image ? `<img src="/${msg.image}" alt="Image" style="max-width:100%; margin-top:8px;">` : ''}
+                </div>
+            `;
 
-                chatMessages.appendChild(div);
+            chatMessages.appendChild(div);
 
-                // Only scroll if user was near the bottom
-                if (nearBottom) {
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
-            });
+            if (chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
 
 
-        chatMessages.addEventListener('scroll', () => {
+    chatMessages.addEventListener('scroll', () => {
         if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 50) {
             scrollBtn.style.display = 'block';
         } else {

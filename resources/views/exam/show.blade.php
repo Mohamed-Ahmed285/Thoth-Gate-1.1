@@ -111,16 +111,25 @@
     </div>
 </footer>
 <script>
-    let examSubmitted = false;
-    document.addEventListener("visibilitychange", function() {
-        if (document.hidden && !examSubmitted){
-            examSubmitted = true;
 
-            alert("You switched tabs! Your exam will be submitted.");
+    document.addEventListener('visibilitychange', () => {
+    // Check if the page is hidden (i.e., user switched tabs or minimized the window).
+    if (document.hidden) {
+        // Find the exam form on the page.
+        const examForm = document.getElementById('exam-form');
 
-            document.getElementById("exam-Form").submit();
+        // Check if the form exists to prevent errors.
+        if (examForm) {
+            // Inform the user why the exam is ending.
+            alert("You have left the exam page. Your attempt is being submitted automatically.");
+            
+            // Immediately submit the form.
+            examForm.submit();
         }
-    });
+    }
+});
+
+
 </script>
 <script src = "/script.js"></script>
 </body>

@@ -16,4 +16,8 @@ class Question extends Model
     {
         return $this->hasMany(Choice::class);
     }
+    public function sessions()
+    {
+        return $this->hasMany(SessionChoice::class);
+    }
 }
