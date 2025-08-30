@@ -138,7 +138,7 @@
 
                 <div class="lectures-list">
                     @foreach($lecs as $lec)
-                        <a href="/courses/{{$course->id}}/{{$lec->id}}" style="text-decoration: none;">
+                        <a href="/lectures/{{$course->id}}/{{$lec->id}}" style="text-decoration: none;">
                             <div class="lecture-item {{$lec->id == $lecture->id ? 'active' : ''}}">
                                 <div class="lecture-thumbnail">
                                     <img src="/{{$course->image}}" alt="{{$lec->title}}">

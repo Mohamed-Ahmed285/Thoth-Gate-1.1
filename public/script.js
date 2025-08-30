@@ -51,10 +51,10 @@ function addEventListeners() {
         registerForm.addEventListener('submit', handleRegister);
     }
 
-    const imageInput = document.getElementById('imageInput');
-    if (imageInput) {
-        imageInput.addEventListener('change', handleImageUpload);
-    }
+    // const imageInput = document.getElementById('imageInput');
+    // if (imageInput) {
+    //     imageInput.addEventListener('change', handleImageUpload);
+    // }
 
     const themeSwitcher = document.getElementById('themeSwitcher');
     if (themeSwitcher) {
