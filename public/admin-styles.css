@@ -1092,3 +1092,38 @@ body.dark-mode #chatEndDate {
 .add-btn{
     text-align: center;
 }
+
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 18px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.4s, visibility 0.4s;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.unread-notification {
+    font-weight: bold;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 7px;
+}
+.notif-dot {
+    color: red;
+    font-size: 12px;
+    margin-left: 4px;
+    opacity: 50%;   
+}

@@ -1,3 +1,6 @@
+@php
+use App\Models\AdminNotification;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +11,7 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../admin-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
     <header class="main-header">
@@ -29,7 +32,12 @@
                     <li><a href="/admin/instructors" class="active">Instructors</a></li>
                     <li><a href="/admin/students">Students</a></li>
                     <li><a href="/admin/messages">Messages</a></li>
-                    <li><a href="/admin/notifications">Notifications</a></li>
+                    <li><a href="/admin/notifications" id="notifLink">
+                        @if (AdminNotification::where('is_read', false)->count() > 0)
+                            <span class="notif-dot" id = "notif-dot">🔴</span>
+                        @endif
+                        Notifications
+                    </a></li>
 
                 </ul>
             </nav>
@@ -60,7 +68,12 @@
                 <li><a href="/admin/instructors"  class="active">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
-                <li><a href="/admin/notifications">Notifications</a></li>
+                <li><a href="/admin/notifications" id="notifLink">
+                    @if (AdminNotification::where('is_read' , false)->count() > 0)
+                        <span class="notif-dot" id = "notif-dot">🔴</span>
+                    @endif
+                    Notifications
+                </a></li>
 
             </ul>
         </nav>
@@ -78,7 +91,7 @@
    
         <main class="admin-main-content">
             @if (session('success'))
-            <div class="alert alert-success">
+                <div class="message success">
                     {{ session('success') }}
                 </div>
             @endif
@@ -163,6 +176,34 @@
             </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.Echo.channel('admin.notifications')
+                .listen('AdminNotificationEvent', (e) => {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = "📢 New Notification Received!";
+                    toast.classList.add("show");
+
+                    let notifLink = document.getElementById("notifLink");
+                    if (!document.getElementById("notif-dot")) {
+                        let dot = document.createElement("span");
+                        dot.id = "notif-dot";
+                        dot.className = "notif-dot";
+                        dot.textContent = "🔴";
+                        notifLink.insertBefore(dot, notifLink.childNodes[0]); 
+                    }
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 2000);
+                });
+                
+        });
+    </script>
+
+    <div id="toast" class="toast"></div>
+
+
     <script src="../admin.js"></script>
     <script src="../script.js"></script>
 
