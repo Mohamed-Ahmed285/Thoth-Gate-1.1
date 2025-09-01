@@ -98,4 +98,12 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::get('/admin/instructors' , [AdminController::class , 'instructors'])
         ->name('admin.instructors');
+
+    Route::get('/admin/instructors/create' , [AdminController::class , 'createInstructorIndex'])
+        ->name('instructors.create');
+
+    Route::post('/admin/instructors/create' , [AdminController::class , 'createInstructor']);
+
+    Route::delete('admin/instructors/{instructor}' , [AdminController::class , 'destroyInstructor'])
+        ->name('instructors.destroy');
 });

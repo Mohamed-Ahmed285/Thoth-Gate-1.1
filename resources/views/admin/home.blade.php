@@ -64,6 +64,7 @@
           <li><a href="/admin/instructors">Instructors</a></li>
           <li><a href="admin-students.html">Students</a></li>
           <li><a href="admin-messages.html">Messages</a></li>
+          <li><a href="/admin/notifications">Notifications</a></li>
           <li>
               <form method="POST" action="/logout" id="logoutForm">
                   @csrf
@@ -101,6 +102,7 @@
                 <li><a href="/admin/instructors">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
+                <li><a href="/admin/notifications">Notifications</a></li>
             </ul>
         </nav>
         <div class="sidebar-switchers">

@@ -25,11 +25,11 @@
             <nav class="main-nav">
                 <ul>
                     <!-- <li><a href="../home.html">Main Site</a></li> -->
-                    <li><a href="admin-home.html">Dashboard</a></li>
-                    <li><a href="admin-instructors.html" class="active">Instructors</a></li>
-                    <li><a href="admin-students.html">Students</a></li>
-                    <li><a href="admin-messages.html">Messages</a></li>
-                    <li><a href="admin-notifications.html">Notifications</a></li>
+                    <li><a href="/admin/home">Dashboard</a></li>
+                    <li><a href="/admin/instructors" class="active">Instructors</a></li>
+                    <li><a href="/admin/students">Students</a></li>
+                    <li><a href="/admin/messages">Messages</a></li>
+                    <li><a href="/admin/notifications">Notifications</a></li>
 
                 </ul>
             </nav>
@@ -56,11 +56,11 @@
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="admin-home.html">Home</a></li>
-                <li><a href="admin-instructors.html"  class="active">Instructors</a></li>
-                <li><a href="admin-students.html">Students</a></li>
-                <li><a href="admin-messages.html">Messages</a></li>
-                                    <li><a href="admin-notifications.html">Notifications</a></li>
+                <li><a href="/admin/home">Home</a></li>
+                <li><a href="/admin/instructors"  class="active">Instructors</a></li>
+                <li><a href="/admin/students">Students</a></li>
+                <li><a href="/admin/messages">Messages</a></li>
+                <li><a href="/admin/notifications">Notifications</a></li>
 
             </ul>
         </nav>
@@ -77,10 +77,15 @@
     <div class="admin-layout ">
    
         <main class="admin-main-content">
+            @if (session('success'))
+            <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <section class="admin-section">
                 <div class="admin-section-header">
                     <h2 class="section-title">Instructors</h2>
-                    <button class="btn" onclick="  window.location.href = 'admin-add-instructor.html';">Add Instructor</button>
+                    <button class="btn" onclick="  window.location.href = '/admin/instructors/create';">Add Instructor</button>
                 </div>
                 <div class="admin-table-responsive">
                     <table class="admin-table">
@@ -93,31 +98,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Jane Doe</td>
-                            <td>jane@example.com</td>
-                            <td>Maths</td>
-                            <td>
-                                <button class="btn btn-delete">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>John Smith</td>
-                            <td>john@example.com</td>
-                            <td>Science</td>
-                            <td>
-                                <button class="btn btn-delete">Delete</button>
-                            </td>
-                        </tr>
-                        <!-- More rows as needed -->
+                        @foreach ($instructors as $ins)
+                            <tr>
+                                <td>{{$ins->user->name}}</td>
+                                <td>{{$ins->user->email}}</td>
+                                <td>{{$ins->subject}}</td>
+                                <td>
+                                    <form action="/admin/instructors/{{$ins->id}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this instructor?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-delete">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                     </table>
                 </div>
-                <div class="pagination">
+
+                <div>
+                    {{ $instructors->links('vendor.pagination.custom') }}
+                </div>
+
+                {{-- <div class="pagination">
                     <button class="btn">Previous</button>
                     <span class="page-numbers">1 | 2 | 3</span>
                     <button class="btn">Next</button>
-                </div>
+                </div> --}}
             </section>
         </main>
     </div>
@@ -131,9 +138,9 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="admin-home.html">Dashboard</a></li>
-                        <li><a href="admin-instructors.html">Instructors</a></li>
-                        <li><a href="admin-students.html">Students</a></li>
+                        <li><a href="/admin/home">Dashboard</a></li>
+                        <li><a href="/admin/instructors">Instructors</a></li>
+                        <li><a href="/admin/students">Students</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
