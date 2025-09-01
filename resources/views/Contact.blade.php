@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Truth Gate Academy</title>
+    <title>Contact Us - Thoth Gate Academy</title>
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -32,7 +32,14 @@
                 <li><a href="/community">Chat</a></li>
                 <li><a href="/contact" class="active">Contact</a></li>
                 <li><a href="/profile">Profile</a></li>
-                <li><a href="#" class="logout-btn" onclick="logout()">Logout</a></li>
+                <li>
+                    <form method="POST" action="/logout" id="logoutForm">
+                        @csrf
+                        @method('DELETE')
+                        <a href="#" class="logout-btn"
+                            onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                    </form>
+                </li>
             </ul>
         </nav>
 
@@ -67,7 +74,14 @@
             <li><a href="/community">Chat</a></li>
             <li><a href="/contact" class="active">Contact</a></li>
             <li><a href="/profile">Profile</a></li>
-            <li><a href="#" class="logout-btn" onclick="logout()">Logout</a></li>
+            <li>
+                <form method="POST" action="/logout" id="logoutForm">
+                    @csrf
+                    @method('DELETE')
+                    <a href="#" class="logout-btn"
+                        onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                </form>
+            </li>
         </ul>
     </nav>
 
@@ -166,7 +180,7 @@
                         </div>
                         <div class="info-content">
                             <h3>Email</h3>
-                            <p>info@truthgateacademy.com<br>support@truthgateacademy.com</p>
+                            <p>info@thothgateacademy.com<br>support@thothgateacademy.com</p>
                         </div>
                     </div>
                     <div class="info-item">

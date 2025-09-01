@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -27,10 +28,16 @@ class LoginController extends Controller
         ]);
         if (Auth::attempt($request->only('email', 'password'))){
             $request->session()->regenerate();
-            $user = Auth::user();
+            $user = User::find(Auth::id());
             $user->session_id = Session::getId();
             $user->save();
-
+            
+            if ($user->type == 2) {
+                return redirect()->route('admin.home');
+            }
+            else if ($user->type == 1) {
+                return redirect('/instructor/home');
+            }
             return redirect()->route('home');
         }
         return back()->withErrors([

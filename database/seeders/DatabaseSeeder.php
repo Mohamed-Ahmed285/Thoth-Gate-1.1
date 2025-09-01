@@ -45,5 +45,16 @@ class DatabaseSeeder extends Seeder
             'grade' => '1sec',
             'points'=> 0,
         ]);
+
+        User::factory()->create([
+            'name' => 'Admin',
+            'date_of_birth' => '2000-01-01',
+            'password' => bcrypt('11111111'),
+            'email_verified_at' => now(),
+            'email' => 'admin@gmail.com',
+            'phone_number' => '01129264191',
+            'type' => 2,
+        ]);
+
     }
 }
