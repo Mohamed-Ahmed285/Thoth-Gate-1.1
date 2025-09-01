@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/admin-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
     <header class="main-header">
@@ -27,7 +28,12 @@
                     <li><a href="/admin/instructors" class="active">Instructors</a></li>
                     <li><a href="/admin/students">Students</a></li>
                     <li><a href="/admin/messages">Messages</a></li>
-                    <li><a href="/admin/notifications">Notifications</a></li>
+                    <li><a href="/admin/notifications" id="notifLink">
+                        @if (App\Models\AdminNotification::where('is_read' , false)->count() > 0)
+                            <span class="notif-dot" id = "notif-dot">🔴</span>
+                        @endif
+                        Notifications
+                    </a></li>
                 </ul>
             </nav>
             <div class="switchers-container">
@@ -45,7 +51,7 @@
        <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="logo-container">
-                <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
+                <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
                 <h1 class="site-logo">Th𝕆th Gate</h1>
             </div>
             <button class="close-sidebar" id="closeSidebar">
@@ -59,7 +65,12 @@
                 <li><a href="/admin/instructors">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages" class="active">Messages</a></li>
-                <li><a href="/admin/notifications">Notifications</a></li>
+                <li><a href="/admin/notifications" id="notifLink">
+                    @if (App\Models\AdminNotification::where('is_read' , false)->count() > 0)
+                        <span class="notif-dot" id = "  ">🔴</span>
+                    @endif
+                    Notifications
+                </a></li>
             </ul>
         </nav>
         <div class="sidebar-switchers">
@@ -181,7 +192,35 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.Echo.channel('admin.notifications')
+                .listen('AdminNotificationEvent', (e) => {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = "📢 New Notification Received!";
+                    toast.classList.add("show");
+
+                    let notifLink = document.getElementById("notifLink");
+                    if (!document.getElementById("notif-dot")) {
+                        let dot = document.createElement("span");
+                        dot.id = "notif-dot";
+                        dot.className = "notif-dot";
+                        dot.textContent = "🔴";
+                        notifLink.insertBefore(dot, notifLink.childNodes[0]); 
+                    }
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 2000);
+                });
+                
+        });
+    </script>
+
     <script src="/admin.js"></script>
     <script src="/script.js"></script>
+    <div id="toast" class="toast"></div>
+
 </body>
 </html>

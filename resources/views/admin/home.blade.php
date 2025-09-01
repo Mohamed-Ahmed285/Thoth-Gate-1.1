@@ -14,36 +14,6 @@
   @vite(['resources/js/app.js'])
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    .toast {
-      visibility: hidden;
-      min-width: 250px;
-      background: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 8px;
-      padding: 18px;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.4s, visibility 0.4s;
-    }
-
-    .toast.show {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .unread-notification {
-      font-weight: bold;
-      background-color: #333;
-      border: none;
-      border-radius: 5px;
-    }
-
-  </style>
 </head>
 
 <body>
@@ -64,7 +34,12 @@
           <li><a href="/admin/instructors">Instructors</a></li>
           <li><a href="admin-students.html">Students</a></li>
           <li><a href="admin-messages.html">Messages</a></li>
-          <li><a href="/admin/notifications">Notifications</a></li>
+          <li><a href="/admin/notifications" id="notifLink">
+              @if (App\Models\AdminNotification::where('is_read' , false)->count() > 0)
+                  <span class="notif-dot" id = "notif-dot">🔴</span>
+              @endif
+              Notifications
+          </a></li>
           <li>
               <form method="POST" action="/logout" id="logoutForm">
                   @csrf
@@ -102,7 +77,12 @@
                 <li><a href="/admin/instructors">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
-                <li><a href="/admin/notifications">Notifications</a></li>
+                <li><a href="/admin/notifications" id="notifLink">
+                    @if (App\Models\AdminNotification::where('is_read' , false)->count() > 0)
+                        <span class="notif-dot" id = "notif-dot">🔴</span>
+                    @endif
+                    Notifications
+                </a></li>
             </ul>
         </nav>
         <div class="sidebar-switchers">
@@ -174,7 +154,7 @@
             @endif
             @foreach ($notifications as $notification)
             <li class="{{ $notification->is_read ? '' : 'unread-notification' }}">
-              <strong>📢{{ $notification->title }}</strong><br>
+              <strong>📢 {{ $notification->title }}</strong><br>
               <span>{{ $notification->message }}</span><br>
             </li>
             @endforeach
@@ -300,6 +280,15 @@
           let toast = document.getElementById("toast");
           toast.textContent = "📢 New Notification Received!";
           toast.classList.add("show");
+
+          let notifLink = document.getElementById("notifLink");
+          if (!document.getElementById("notif-dot")) {
+              let dot = document.createElement("span");
+              dot.id = "notif-dot";
+              dot.className = "notif-dot";
+              dot.textContent = "🔴";
+              notifLink.insertBefore(dot, notifLink.childNodes[0]); 
+          }
 
           setTimeout(() => {
             toast.classList.remove("show");
