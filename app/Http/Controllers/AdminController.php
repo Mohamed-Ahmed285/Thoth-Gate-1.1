@@ -76,6 +76,51 @@ class AdminController extends Controller
     }
     public function instructors()
     {
-        return view('admin.instructors');
+        $instructores = Instructor::with('user')->paginate(10);
+        return view('admin.instructors' , ['instructors' => $instructores]);
     }
+    
+    public function createInstructor(Request $request)
+    {
+        $request->validate([
+            'instructorName' => 'required|string|max:255',
+            'instructorEmail' => 'required|string|email|max:255|unique:users,email',
+            'instructorPassword' => 'required|string|min:8',
+            'instructorCourse' => 'required|string|max:255',
+            'instructorPhone' => 'required|numeric',
+            'dateOfBirth' => 'required|date|before:2006-01-01',
+        ]);
+
+        $user = User::create([
+            'name' => $request->input('instructorName'),
+            'email' => $request->input('instructorEmail'),
+            'password' => bcrypt($request->input('instructorPassword')),
+            'type' => 1,
+            'email_verified_at' => now(),
+            'phone_number' => $request->input('instructorPhone'),
+            'date_of_birth' => $request->input('dateOfBirth'),
+        ]);
+
+        Instructor::create([
+            'user_id' => $user->id,
+            'subject' => $request->input('instructorCourse'),
+        ]);
+
+        return redirect()->route('admin.instructors')->with('success', 'Instructor Created Successfully');
+    }
+
+    public function createInstructorIndex(){
+        return view('admin.create-instructor');
+    }
+    
+    public function destroyInstructor(Instructor $instructor)
+    {
+        $user = User::find($instructor->user_id);
+        $instructor->delete();
+        if ($user) {
+            $user->delete();
+        }
+        return redirect()->route('admin.instructors')->with('success', 'Instructor Deleted Successfully');
+    }
+
 }
