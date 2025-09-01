@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Events\AdminNotificationEvent;
+use App\Models\AdminNotification;
 
 class RegisterController extends Controller
 {
@@ -52,6 +54,14 @@ class RegisterController extends Controller
         $request->session()->regenerate();
         $user->session_id = Session::getId();
         $user->save();
+
+        $notification = AdminNotification::create([
+            'title' => "New student registered",
+            'message' => "Student Name: " . $user->name . ", Email: " . $user->email,
+            'is_read' => false,
+        ]);
+
+        event(new AdminNotificationEvent($notification));
 
         return redirect()->route('verification.notice');
     }

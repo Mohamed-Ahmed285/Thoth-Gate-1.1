@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
@@ -82,5 +83,19 @@ Route::middleware(['auth' , 'student' , 'prevent.multiple.logins'])->group(funct
     Route::get('info/model/{session}', [ExamController::class, 'model'])
         ->middleware('verified')
         ->name('exam.model');
+});
 
+// Admin routes
+Route::middleware(['auth', 'check.admin'])->group(function () {
+    Route::get('/admin/home' , [AdminController::class , 'home'])
+        ->name('admin.home');
+
+    Route::get('/students/export' , [AdminController::class , 'exportStudents'])
+        ->name('students.export');
+
+    Route::get('/instructors/export' , [AdminController::class , 'exportInstructors'])
+        ->name('instructors.export');
+
+    Route::get('/admin/instructors' , [AdminController::class , 'instructors'])
+        ->name('admin.instructors');
 });
