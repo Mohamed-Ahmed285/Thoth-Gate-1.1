@@ -207,18 +207,24 @@
 ">
   <h3 class="stats-title">Quick Actions</h3>
   <div class="actions-grid">
-    <div class="action-tile">
-      <span class="icon">👨‍🏫</span>
-      <p>Add Instructor</p>
-    </div>
-    <div class="action-tile">
-      <span class="icon">🎓</span>
-      <p>View Students</p>
-    </div>
-    <div class="action-tile">
-      <span class="icon">✉️</span>
-      <p>View Messages</p>
-    </div>
+    <a href="/admin/instructors/create" style="text-decoration: none;">
+      <div class="action-tile">
+        <span class="icon">👨‍🏫</span>
+        <p>Add Instructor</p>
+      </div>
+    </a>
+    <a href="/admin/students" style="text-decoration: none;">
+      <div class="action-tile">
+        <span class="icon">🎓</span>
+        <p>View Students</p>
+      </div>
+    </a>
+    <a href="/admin/messages" style="text-decoration: none;">
+      <div class="action-tile">
+        <span class="icon">✉️</span>
+        <p>View Messages</p>
+      </div>
+    </a>
   </div>
 </div>
 
@@ -239,14 +245,14 @@
         <div class="footer-section">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="admin-home.html">Dashboard</a></li>
-            <li><a href="admin-instructors.html">Instructors</a></li>
-            <li><a href="admin-students.html">Students</a></li>
+            <li><a href="/admin/home">Dashboard</a></li>
+            <li><a href="/admin/instructors">Instructors</a></li>
+            <li><a href="/admin/students">Students</a></li>
           </ul>
         </div>
         <div class="footer-section">
           <h4>Contact</h4>
-          <p>Email: info@thuthgate.edu.eg</p>
+          <p>Email: info@thothgate.edu.eg</p>
           <p>Phone: +20 123 456 789</p>
         </div>
         <div class="footer-section">

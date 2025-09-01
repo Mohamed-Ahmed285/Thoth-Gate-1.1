@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Instructor;
 use App\Models\PurchasedLectures;
 use App\Models\Lecture;
 
@@ -18,7 +19,7 @@ class AdminController extends Controller
     {
         $totalCorses = Course::count();
         $totalStudents = Student::count();
-        $totalInstructors = User::where('type' , 1)->count();
+        $totalInstructors = Instructor::count();
         $totalPurchased = PurchasedLectures::count();
 
         $notifications = AdminNotification::orderBy('created_at', 'desc')->take(3)->get();
