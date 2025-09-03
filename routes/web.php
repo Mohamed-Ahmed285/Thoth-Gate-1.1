@@ -129,4 +129,11 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/export/exmas/{student}', [AdminController::class, 'exportStudentsExams'])
         ->name('students.exams.export');
 
+    Route::get('/admin/notifications' , [AdminController::class , 'notifications'])->name('admin.notifications');
+
+    Route::post('/read-all' , [AdminController::class , 'readAll']);
+
+    Route::post('/read/{notification}', [AdminController::class , 'readNotification']);
+
+    Route::delete('delete/{notifiaction}' , [AdminController::class , 'deleteNotification']);
 });

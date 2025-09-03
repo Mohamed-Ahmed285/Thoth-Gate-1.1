@@ -15,7 +15,6 @@ use App\Models\SessionChoice;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
-use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -304,5 +303,45 @@ class AdminController extends Controller
 
         return response()->download($filename)->deleteFileAfterSend(true);
     
+    }
+
+    public function notifications(){
+        $unseen = AdminNotification::where('is_read' , false)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $seen = AdminNotification::where('is_read' , true)
+            ->orderBy('created_at' , 'desc')
+            ->get();
+
+        return view('admin.notifications',[
+            'unseen' => $unseen,
+            'seen' => $seen,
+        ]);
+    }
+
+    public function readAll(){
+        $notifi = AdminNotification::where('is_read' , false)->get();
+        foreach($notifi as $n){
+            $n->is_read = true;
+            $n->save();
+        } 
+        return redirect()->route('admin.notifications');
+    }
+
+    public function readNotification($notification_id){
+        $notification = AdminNotification::findOrFail($notification_id);
+
+        $notification->is_read = true;
+
+        $notification->save();
+
+        return redirect()->route('admin.notifications');
+    }
+
+    public function deleteNotification($notification_id){
+        $notification = AdminNotification::findOrFail($notification_id);
+        $notification->delete();
+        return redirect()->route('admin.notifications');
     }
 }

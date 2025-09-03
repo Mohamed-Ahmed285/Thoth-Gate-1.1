@@ -30,7 +30,6 @@ class ContactController extends Controller
         
         $notification = AdminNotification::create([
             'title' => "New contact message from " . Auth::user()->name,
-            'message' => "Subject: " . $validated['subject'] . ", Message: " . $validated['message'],
             'is_read' => false,
         ]);
 

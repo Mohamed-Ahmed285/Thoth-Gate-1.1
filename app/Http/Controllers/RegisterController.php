@@ -57,7 +57,6 @@ class RegisterController extends Controller
 
         $notification = AdminNotification::create([
             'title' => "New student registered",
-            'message' => "Student Name: " . $user->name . ", Email: " . $user->email,
             'is_read' => false,
         ]);
 

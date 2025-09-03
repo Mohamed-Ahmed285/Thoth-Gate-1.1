@@ -253,7 +253,6 @@
                     const li = document.createElement("li");
                     li.innerHTML = `
               <strong>📢 ${e.notification.title}</strong><br>
-              <span>${e.notification.message}</span><br>
           `;
                     li.classList.add("unread-notification");
                     ul.prepend(li);
