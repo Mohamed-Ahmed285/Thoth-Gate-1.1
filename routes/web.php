@@ -136,4 +136,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::post('/read/{notification}', [AdminController::class , 'readNotification']);
 
     Route::delete('delete/{notifiaction}' , [AdminController::class , 'deleteNotification']);
+
+    Route::get('admin/messages' , [AdminController::class , 'messagesView'])->name('admin.messages');
+
+    Route::delete('/message/delete/{message}' , [AdminController::class , 'deleteMessage']); 
+
 });

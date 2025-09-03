@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AdminNotification;
 use App\Models\Community;
+use App\Models\Contact;
 use App\Models\Course;
 use App\Models\ExamSession;
 use App\Models\Instructor;
@@ -343,5 +344,18 @@ class AdminController extends Controller
         $notification = AdminNotification::findOrFail($notification_id);
         $notification->delete();
         return redirect()->route('admin.notifications');
+    }
+
+    public function messagesView(){
+        $messages = Contact::orderBy('created_at' , 'desc')
+            ->paginate(4);
+        return view('admin.messages' , ['messages' => $messages]);
+    }
+
+    public function deleteMessage($message_id){
+        $message = Contact::findOrFail($message_id);
+        $message->delete();
+
+        return redirect()->route('admin.messages')->with('success' , 'Message deleted successfully!');
     }
 }

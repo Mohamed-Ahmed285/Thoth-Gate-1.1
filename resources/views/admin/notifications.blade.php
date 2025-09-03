@@ -112,7 +112,7 @@
                 <div class="widgets-not">
                     <ul class="widget new-notifications" id="newNoitifiactionList">
                         @if ($unseen->isEmpty())
-                            <p>There is no Notifications at this moment</p>
+                            <li class="no-notifications">There are no Notifications at this moment</li>
                         @endif
                         @foreach ($unseen as $u)
                             <li>
@@ -217,9 +217,9 @@
 
                     let unseenList = document.getElementById('newNoitifiactionList');
                     if (unseenList) {
-                        let p = unseenList.querySelector('p');
-                        if (p) {
-                            p.remove();
+                        let noNotif = unseenList.querySelector('.no-notifications');
+                        if (noNotif) {
+                            noNotif.remove();
                         }
                         let main = document.getElementById('admin-section');
                         let button = main.querySelector('form');
@@ -239,15 +239,20 @@
                             main.appendChild(form);
                         }
 
+                        let csrf = document.querySelector('meta[name="csrf-token"]').content;
+
                         let li = document.createElement("li");
                         li.innerHTML = `
                             <div class="notification-list">
                                 <p>📢 <strong>${e.notification.title}</strong></p>
                                 <div class="notification-actions">
                                     <form action="/read/${e.notification.id}" method="POST">
+                                        <input type="hidden" name="_token" value="${csrf}">
                                         <button type="submit" class="btn read-btn" title="Read">Read</button>
                                     </form>
                                     <form action="/delete/${e.notification.id}" method="POST">
+                                        <input type="hidden" name="_token" value="${csrf}">
+                                        <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-delete" title="Delete" style="padding: 9px">Delete</button>
                                     </form>
                                 </div>
