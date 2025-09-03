@@ -1,23 +1,22 @@
-@php
-    use App\Models\Course;
-@endphp
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin - View Student</title>
+    <title>Admin Notifications</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/admin-styles.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 </head>
 
-<body class="view-student">
+<body class="notifications">
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">
@@ -29,19 +28,21 @@
                 <span></span>
                 <span></span>
             </button>
+
             <nav class="main-nav">
                 <ul>
                     <li><a href="/admin/home">Dashboard</a></li>
                     <li><a href="/admin/instructors">Instructors</a></li>
-                    <li><a href="/admin/students" class="active">Students</a></li>
+                    <li><a href="/admin/students">Students</a></li>
                     <li><a href="/admin/messages">Messages</a></li>
-                    <li><a href="/admin/notifications" id="notifLink">
+                    <li>
+                        <a href="/admin/notifications" id="notifLink" class="active">
                             @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
                                 <span class="notif-dot" id = "notif-dot">🔴</span>
                             @endif
                             Notifications
-                        </a></li>
-
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <div class="switchers-container">
@@ -52,6 +53,7 @@
                     <span class="language-text">EN</span>
                 </button>
             </div>
+
         </div>
     </header>
     <div class="mobile-sidebar" id="mobileSidebar">
@@ -72,7 +74,7 @@
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
                 <li>
-                    <a href="/admin/notifications" id="notifLink">
+                    <a href="/admin/notifications" id="notifLink" class="active">
                         @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
                             <span class="notif-dot" id = "notif-dot">🔴</span>
                         @endif
@@ -91,49 +93,72 @@
         </div>
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-
     <div class="admin-layout">
         <main class="admin-main-content">
-            <div class="container">
-                <h2 class="section-title">Quiz Model Answer</h2>
-                <div class="quiz-timer">
-                    Student score: <span>{{ $session->score }}/{{ $questions->count() }}</span>
+            <h2 class="section-title">Notifications</h2>
+            <section class="admin-section" style="    height: auto;">
+                <div class="admin-section-header" id = "admin-section"
+                    style="justify-content: space-between; align-items: center; display: flex;">
+                    <h3>Recent Notifications</h3>
+                    @if (!$unseen->isEmpty())
+                        <form action="/read-all" method="POST">
+                            @csrf
+                            <button type="submit" class="btn" style="width: fit-content;" title="Read All">
+                                Read All
+                            </button>
+                        </form>
+                    @endif
                 </div>
-                <div class="quiz-form">
-                    @foreach ($questions as $question)
-                        <div class="quiz-question-box">
-                            <h3 class="quiz-question">
-                                @if ($question->text)
-                                    {{ $loop->iteration }}. {{ $question->text }}
-                                @else
-                                    {{ $loop->iteration }}.
-                                    <img src="{{ $question->image }}" alt="Question Image">
-                                @endif
-                            </h3>
+                <div class="widgets-not">
+                    <ul class="widget new-notifications" id="newNoitifiactionList">
+                        @if ($unseen->isEmpty())
+                            <p>There is no Notifications at this moment</p>
+                        @endif
+                        @foreach ($unseen as $u)
+                            <li>
+                                <div class="notification-list">
+                                    <p>📢 <strong>{{ $u->title }}</strong></p>
+                                    <div class="notification-actions">
+                                        <form action="/read/{{ $u->id }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn read-btn" title="Read">Read</button>
+                                        </form>
+                                        <form action="/delete/{{ $u->id }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-delete" title="Delete"
+                                                style="padding: 9px">
+                                                Delete
+                                            </button>
+                                        </form>
 
-                            <div class="quiz-choices">
-                                @foreach ($question->choices as $choice)
-                                    <div class="quiz-answer"
-                                        @if ($choice->is_correct) style="background-color: #3E7B27; border-radius: 10px; padding: 10px"
-                                @elseif($last_choice->firstWhere('question_id', $question->id)->choice_id === $choice->id)
-                                    style="background-color: #E62727; border-radius: 10px; padding: 10px" @endif>
-                                        <label style="color: white">
-                                            <input type="radio" @if ($choice->is_correct) checked @endif
-                                                disabled>
-                                            @if ($choice->text)
-                                                {{ $choice->text }}
-                                            @else
-                                                <img src="{{ $choice->image }}" alt="Choice Image">
-                                            @endif
-                                        </label>
                                     </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @if (!$seen->isEmpty())
+                        <ul class="widget read-notifications">
+                            @foreach ($seen as $s)
+                                <li>
+                                    <div class="notification-list">
+                                        <p>📢 <strong>{{ $s->title }}</strong></p>
+                                        <div class="notification-actions">
+                                            <form action="/delete/{{ $s->id }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type= "submit" class="btn btn-delete" title="Delete">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
-            </div>
+            </section>
         </main>
     </div>
     <footer class="main-footer">
@@ -149,6 +174,8 @@
                         <li><a href="/admin/home">Dashboard</a></li>
                         <li><a href="/admin/instructors">Instructors</a></li>
                         <li><a href="/admin/students">Students</a></li>
+                        <li><a href="/admin/messages">Messages</a></li>
+                        <li><a href="/admin/notifications" class="active">Notifications</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -188,6 +215,47 @@
                         notifLink.insertBefore(dot, notifLink.childNodes[0]);
                     }
 
+                    let unseenList = document.getElementById('newNoitifiactionList');
+                    if (unseenList) {
+                        let p = unseenList.querySelector('p');
+                        if (p) {
+                            p.remove();
+                        }
+                        let main = document.getElementById('admin-section');
+                        let button = main.querySelector('form');
+
+                        if (!button) {
+                            let csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+                            let form = document.createElement("form");
+                            form.action = "/read-all";
+                            form.method = "POST";
+                            form.innerHTML = `
+                                <input type="hidden" name="_token" value="${csrf}">
+                                <button type="submit" class="btn" style="width: fit-content;" title="Read All">
+                                    Read All
+                                </button>
+                            `;
+                            main.appendChild(form);
+                        }
+
+                        let li = document.createElement("li");
+                        li.innerHTML = `
+                            <div class="notification-list">
+                                <p>📢 <strong>${e.notification.title}</strong></p>
+                                <div class="notification-actions">
+                                    <form action="/read/${e.notification.id}" method="POST">
+                                        <button type="submit" class="btn read-btn" title="Read">Read</button>
+                                    </form>
+                                    <form action="/delete/${e.notification.id}" method="POST">
+                                        <button type="submit" class="btn btn-delete" title="Delete" style="padding: 9px">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        `;
+                        unseenList.prepend(li);
+                    }
+
                     setTimeout(() => {
                         toast.classList.remove("show");
                     }, 2000);
@@ -197,6 +265,7 @@
     </script>
     <script src="/admin.js"></script>
     <script src="/script.js"></script>
+
     <div id="toast" class="toast"></div>
 
 </body>
