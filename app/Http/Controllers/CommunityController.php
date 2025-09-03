@@ -8,6 +8,7 @@ use App\Models\PurchasedCommunity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageEvent;
+use Carbon\Carbon;
 
 class CommunityController extends Controller
 {
@@ -37,6 +38,19 @@ class CommunityController extends Controller
     }
     public function store(Request $request)
     {
+
+        $std = Auth::user()->student;
+        $valid = PurchasedCommunity::where('student_id', $std->id)
+            ->where('end_date', '>', Carbon::now()) // end date must be in future
+            ->whereHas('community', function ($q) use ($std) {
+                $q->where('grade', $std->grade);
+            })
+            ->exists();
+
+        if (!$valid){
+            return redirect()->route('home')->with('error' , 'You don\'t have access to this community');
+        }
+
         $request->validate([
             'message' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:2048',

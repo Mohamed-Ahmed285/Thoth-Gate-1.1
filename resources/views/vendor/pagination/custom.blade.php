@@ -3,12 +3,16 @@
         display: flex;
         align-items: center;
         padding: 1rem 0;
-        flex-direction: column;
+        /* flex-direction: column; */
     }
 </style>
 @if ($paginator->hasPages())
     <div class="pagination">
         {{-- Page Numbers --}}
+        
+        @if (!$paginator->onFirstPage())
+            <a href="{{ $paginator->previousPageUrl() }}" class="btn">Previous</a>
+        @endif            
         <span class="page-numbers">
             @foreach ($elements as $element)
                 {{-- "Three Dots" Separator --}}
@@ -26,13 +30,8 @@
                 @endif
             @endforeach
         </span>
-        <div style="gap: 0.5rem; display: flex;">
-            @if (!$paginator->onFirstPage())
-                <a href="{{ $paginator->previousPageUrl() }}" class="btn">Previous</a>
-            @endif            
-            @if ($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" class="btn">Next</a>
-            @endif
-        </div>
+        @if ($paginator->hasMorePages())
+            <a href="{{ $paginator->nextPageUrl() }}" class="btn">Next</a>
+        @endif
     </div>
 @endif

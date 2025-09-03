@@ -106,4 +106,27 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::delete('admin/instructors/{instructor}' , [AdminController::class , 'destroyInstructor'])
         ->name('instructors.destroy');
+
+    Route::get('/admin/students' , [AdminController::class , 'students'])
+        ->name('admin.students');
+    
+    Route::get('/admin/students/{student}' , [AdminController::class , 'showStudent'])
+        ->name('students.show');
+
+    Route::delete('/admin/students/{student}' , [AdminController::class , 'destroyStudent'])
+        ->name('students.destroy');
+
+    Route::post('/open/lecture/{student}' , [AdminController::class , 'grantAccess']);
+
+    Route::delete('/remove/lecture/{student}' , [AdminController::class , 'removeAccess']);
+
+    Route::post('/edit-end-date/{student}' , [AdminController::class , 'editEndDate']);
+
+    Route::get('/admin/exams/{student}' , [AdminController::class , 'StudentExams']);
+
+    Route::get('/admin/model/{session}' , [AdminController::class , 'StudentModel']);
+
+    Route::get('/export/exmas/{student}', [AdminController::class, 'exportStudentsExams'])
+        ->name('students.exams.export');
+
 });
