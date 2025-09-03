@@ -5278,7 +5278,7 @@ body.dark-mode .chat-sidebar {
 }
 
 .message {
-  max-width: 70%;
+  max-width: 100%;
   margin: 8px 0;
   padding: 8px 12px;
   border-radius: 12px;

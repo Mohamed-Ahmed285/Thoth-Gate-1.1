@@ -1,47 +1,46 @@
-@php
-use App\Models\AdminNotification;
-@endphp
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Instructors</title>
-    <link rel="icon" href="../imgs/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="../admin-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Quiz History</title>
+    <link rel="icon" href="/imgs/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/admin-styles.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    @vite('resources/js/app.js')
 </head>
-<body>
+
+<body class="view-student">
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">
-                <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
+                <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
                 <h1 class="site-logo">Thoth Gate</h1>
             </div>
-                <button class="hamburger-menu" id="hamburgerMenu">
+            <button class="hamburger-menu" id="hamburgerMenu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
             <nav class="main-nav">
                 <ul>
-                    <!-- <li><a href="../home.html">Main Site</a></li> -->
                     <li><a href="/admin/home">Dashboard</a></li>
-                    <li><a href="/admin/instructors" class="active">Instructors</a></li>
-                    <li><a href="/admin/students">Students</a></li>
+                    <li><a href="/admin/instructors">Instructors</a></li>
+                    <li><a href="/admin/students" class="active">Students</a></li>
                     <li><a href="/admin/messages">Messages</a></li>
                     <li><a href="/admin/notifications" id="notifLink">
-                        @if (AdminNotification::where('is_read', false)->count() > 0)
-                            <span class="notif-dot" id = "notif-dot">🔴</span>
-                        @endif
-                        Notifications
-                    </a></li>
-
+                            @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
+                                <span class="notif-dot" id = "notif-dot">🔴</span>
+                            @endif
+                            Notifications
+                        </a></li>
                 </ul>
             </nav>
-             <div class="switchers-container">
+            <div class="switchers-container">
                 <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
                     <span class="theme-icon">🌙</span>
                 </button>
@@ -51,11 +50,11 @@ use App\Models\AdminNotification;
             </div>
         </div>
     </header>
-   <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="logo-container">
-                <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
-                <h1 class="site-logo">Thoth Gate</h1>
+                <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
+                <h1 class="site-logo">Th𝕆th Gate</h1>
             </div>
             <button class="close-sidebar" id="closeSidebar">
                 <span></span>
@@ -65,16 +64,15 @@ use App\Models\AdminNotification;
         <nav class="sidebar-nav">
             <ul>
                 <li><a href="/admin/home">Home</a></li>
-                <li><a href="/admin/instructors"  class="active">Instructors</a></li>
+                <li><a href="/admin/instructors">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
                 <li><a href="/admin/notifications" id="notifLink">
-                    @if (AdminNotification::where('is_read' , false)->count() > 0)
-                        <span class="notif-dot" id = "notif-dot">🔴</span>
-                    @endif
-                    Notifications
-                </a></li>
-
+                        @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
+                            <span class="notif-dot" id = "notif-dot">🔴</span>
+                        @endif
+                        Notifications
+                    </a></li>
             </ul>
         </nav>
         <div class="sidebar-switchers">
@@ -87,52 +85,43 @@ use App\Models\AdminNotification;
         </div>
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="admin-layout ">
-   
+
+    <div class="admin-layout">
         <main class="admin-main-content">
-            @if (session('success'))
-                <div class="message success">
-                    {{ session('success') }}
-                </div>
-            @endif
             <section class="admin-section">
                 <div class="admin-section-header">
-                    <h2 class="section-title">Instructors</h2>
-                    <button class="btn" onclick="  window.location.href = '/admin/instructors/create';">Add Instructor</button>
-                </div>
-                <div class="admin-table-responsive">
-                    <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Subject</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($instructors as $ins)
-                            <tr>
-                                <td>{{$ins->user->name}}</td>
-                                <td>{{$ins->user->email}}</td>
-                                <td>{{$ins->subject}}</td>
-                                <td>
-                                    <form action="/admin/instructors/{{$ins->id}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this instructor?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-delete">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    </table>
-                </div>
+                    <h2 class="section-title">Quiz History</h2>
 
-                <div>
-                    {{ $instructors->links('vendor.pagination.custom') }}
+                    <div>
+
+                        <a href="{{ route('students.exams.export', [$student]) }}" class="btn"
+                            style="max-width: fit-content;">
+                            Export Data
+                        </a>
+
+                        <a href="/admin/students/{{ $student }}" class="btn" style="max-width: fit-content;">
+                            Back to Student
+                        </a>
+                    </div>
+
                 </div>
-                
+                <div class="quiz-history-list">
+                    <!-- Example quiz card -->
+                    @foreach ($ExamSessions as $ex)
+                        <div class="quiz-card">
+                            <div class="quiz-info">
+                                <p><strong>Course:</strong> {{ $ex->exam->lecture->course->subject }}</p>
+                                <p><strong>Lecture Number:</strong> {{ $ex->exam->lecture->index }}</p>
+                                <p><strong>Lecture Title:</strong> {{ $ex->exam->lecture->title }}</p>
+                                <p><strong>Score:</strong> {{ $ex->score }}/{{ $ex->exam->questions->count() }}</p>
+                            </div>
+                            <button class="btn btn-view"
+                                onclick=" window.location.href = '/admin/model/{{ $ex->id }}';">
+                                View Answers
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
             </section>
         </main>
     </div>
@@ -167,7 +156,7 @@ use App\Models\AdminNotification;
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Th𝕆th Gate Admin. All rights reserved.</p>
+                <p>© 2025 Th𝕆th Gate Admin. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -185,22 +174,19 @@ use App\Models\AdminNotification;
                         dot.id = "notif-dot";
                         dot.className = "notif-dot";
                         dot.textContent = "🔴";
-                        notifLink.insertBefore(dot, notifLink.childNodes[0]); 
+                        notifLink.insertBefore(dot, notifLink.childNodes[0]);
                     }
 
                     setTimeout(() => {
                         toast.classList.remove("show");
                     }, 2000);
                 });
-                
         });
     </script>
-
+    <script src="/admin.js"></script>
+    <script src="/script.js"></script>
     <div id="toast" class="toast"></div>
 
-
-    <script src="../admin.js"></script>
-    <script src="../script.js"></script>
-
 </body>
+
 </html>
