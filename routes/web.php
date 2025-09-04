@@ -87,6 +87,7 @@ Route::middleware(['auth' , 'student' , 'prevent.multiple.logins'])->group(funct
 
 // Admin routes
 Route::middleware(['auth', 'check.admin'])->group(function () {
+    // home
     Route::get('/admin/home' , [AdminController::class , 'home'])
         ->name('admin.home');
 
@@ -96,6 +97,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/instructors/export' , [AdminController::class , 'exportInstructors'])
         ->name('instructors.export');
 
+    //instructors
     Route::get('/admin/instructors' , [AdminController::class , 'instructors'])
         ->name('admin.instructors');
 
@@ -107,9 +109,10 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::delete('admin/instructors/{instructor}' , [AdminController::class , 'destroyInstructor'])
         ->name('instructors.destroy');
 
+    //students
     Route::get('/admin/students' , [AdminController::class , 'students'])
         ->name('admin.students');
-    
+
     Route::get('/admin/students/{student}' , [AdminController::class , 'showStudent'])
         ->name('students.show');
 
@@ -126,9 +129,10 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::get('/admin/model/{session}' , [AdminController::class , 'StudentModel']);
 
-    Route::get('/export/exmas/{student}', [AdminController::class, 'exportStudentsExams'])
+    Route::get('/export/exams/{student}', [AdminController::class, 'exportStudentsExams'])
         ->name('students.exams.export');
 
+    //notifications
     Route::get('/admin/notifications' , [AdminController::class , 'notifications'])->name('admin.notifications');
 
     Route::post('/read-all' , [AdminController::class , 'readAll']);
@@ -137,8 +141,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::delete('delete/{notifiaction}' , [AdminController::class , 'deleteNotification']);
 
+    //messages
     Route::get('admin/messages' , [AdminController::class , 'messagesView'])->name('admin.messages');
 
-    Route::delete('/message/delete/{message}' , [AdminController::class , 'deleteMessage']); 
+    Route::delete('/message/delete/{message}' , [AdminController::class , 'deleteMessage']);
 
 });
