@@ -250,7 +250,11 @@ class AdminController extends Controller
         return redirect()->route('students.show' , $std)->with('success' , 'community granted successfully'); 
     }
     public function StudentExams($student){
-        $ExamSessions = ExamSession::with('exam.lecture')->where('student_id' , $student)->get();
+        $ExamSessions = ExamSession::with('exam.lecture')
+            ->where('student_id' , $student)
+            ->whereNotNull('submitted_at')
+            ->get();
+            
         return view('admin.student-exams', ['ExamSessions'=> $ExamSessions , 'student'=>$student]);
     }
     public function StudentModel($session_id){
