@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
- use App\Notifications\CustomVerifyEmail;
- use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\CustomVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\Models\Instructor;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -39,7 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function instructor(){
-        return $this->hasOne(Student::class);
+        return $this->hasOne(instructor::class);
     }
     public function contact(){
         return $this->hasMany(Contact::class);

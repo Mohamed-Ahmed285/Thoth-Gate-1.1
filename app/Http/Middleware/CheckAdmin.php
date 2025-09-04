@@ -16,8 +16,14 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->type !== 2){
-            abort(403);
+        if (Auth::check()) {
+            if (Auth::user()->type == 1) {
+                return redirect()->route('instructors.home')->with('error', 'You are not allowed to view this page');
+            } else if (Auth::user()->type == 0) {
+                return redirect()->route('home')->with('error', 'You are not allowed to view this page');
+            }
+        } else {
+            return redirect()->route('login');
         }
         return $next($request);
     }
