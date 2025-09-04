@@ -1,4 +1,3 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,22 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Thoth Gate - Grade Chat</title>
     <meta name="user-id" content="{{ Auth::id() }}">
+    <title>Instructor Chat</title>
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
+
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/instructor.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+
     @vite(['resources/js/app.js'])
 </head>
 
-<body class="chat-page">
+<body class="instructor-home">
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">
-                <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
-                <h1 class="site-logo">Thoth Gate</h1>
+                <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
+                <h1 class="site-logo">Th𝕆th Gate</h1>
             </div>
             <button class="hamburger-menu" id="hamburgerMenu">
                 <span></span>
@@ -30,11 +33,10 @@
             </button>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/courses">Courses</a></li>
-                    <li><a href="/community" class="active">Chat</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/instructor/home">Home</a></li>
+                    <li><a href="/instructor/create/exam">Create Exam</a></li>
+                    <li><a href="/instructor/add/lecture">Add Lecture</a></li>
+                    <li><a href="/instructor/chats" class="active">Chats</a></li>
                     <li>
                         <form method="POST" action="/logout" id="logoutForm">
                             @csrf
@@ -58,8 +60,8 @@
     <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="logo-container">
-                <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
-                <h1 class="site-logo">Thoth Gate</h1>
+                <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
+                <h1 class="site-logo">Th𝕆th Gate</h1>
             </div>
             <button class="close-sidebar" id="closeSidebar">
                 <span></span>
@@ -68,11 +70,10 @@
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/courses">Courses</a></li>
-                <li><a href="/community" class="active">Chat</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/profile">Profile</a></li>
+                <li><a href="/instructor/home">Home</a></li>
+                <li><a href="/instructor/create/exam">Create Exam</a></li>
+                <li><a href="/instructor/add/lecture">Add Lecture</a></li>
+                <li><a href="/instructor/chats" class="active">Chats</a></li>
                 <li>
                     <form method="POST" action="/logout" id="logoutForm">
                         @csrf
@@ -137,6 +138,7 @@
             </form>
         </div>
     </section>
+
     <script>
         const imageInput = document.getElementById('imageIn');
         const imagePreview = document.getElementById('imagePreview');
@@ -194,7 +196,7 @@
             document.getElementById('imageIn').value = '';
 
             try {
-                await fetch('/community', {
+                await fetch('/instructor/chats', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -282,6 +284,7 @@
     </script>
 
     <script src="/script.js"></script>
+    <script src="/instructor.js"></script>
 </body>
 
 </html>

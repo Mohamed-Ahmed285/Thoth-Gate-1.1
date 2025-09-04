@@ -34,18 +34,18 @@ class CourseController extends Controller
 
     public function show($course_id, $lecture)
     {
-        $lec = Lecture::findOrFail($lecture);
-        if(!$lec){
+        $currentLecture = Lecture::findOrFail($lecture);
+        if(!$currentLecture){
             return redirect()
                 ->route('lectures' , $course_id)
                 ->with('error' , 'Lecture not found');
         }
-        if ($lec->course->id != $course_id){
+        if ($currentLecture->course->id != $course_id){
             return redirect()
                 ->route('lectures' , $course_id)
                 ->with('error' , 'this lecture is not for this course');
         }
-        if ($lec->course->grade != Auth::user()->student->grade){
+        if ($currentLecture->course->grade != Auth::user()->student->grade){
             return redirect()
                 ->route('courses' , $course_id)
                 ->with('error' , 'This Lecture is not for you');
@@ -55,15 +55,16 @@ class CourseController extends Controller
             ->first();
 
         if(!$valid){
-            return redirect()->route('buy' , $lec->id);
+            return redirect()->route('buy' , $currentLecture->id);
         }
-        $course = Course::findOrFail($lec->course_id);
-        $lecs = Lecture::where('course_id' , $lec->course_id)->get();
-        $session = ExamSession::where('exam_id', $lec->exam->first()->id)
+        
+        $course = Course::findOrFail($course_id);
+        $lectures = Lecture::where('course_id' , $course_id)->get();
+        $session = ExamSession::where('exam_id', $currentLecture->exam->first()->id)
             ->where('student_id', Auth::user()->student->id)
             ->first();
 
-        return view('Courses.lecture' , ['lecture' => $lec , 'course' => $course , 'lecs' => $lecs , 'session' => $session]);
+        return view('Courses.lecture' , ['currentLecture' => $currentLecture , 'course' => $course , 'lectures' => $lectures , 'session' => $session]);
     }
 
     public function buy(string $id)

@@ -1225,7 +1225,6 @@ window.cancelEdit = cancelEdit;
 
 // Course Detail Page Functionality
 function initializeCourseDetailPage() {
-    const lectureItems = document.querySelectorAll('.lecture-item');
     const videoPlayer = document.getElementById('videoPlayer');
     const currentLectureTitle = document.getElementById('currentLectureTitle');
     const currentLectureDescription = document.getElementById('currentLectureDescription');
@@ -1233,27 +1232,26 @@ function initializeCourseDetailPage() {
     const lecturesSidebar = document.querySelector('.lectures-sidebar');
     const videoQuizBtn = document.getElementById('videoQuizBtn');
 
-    // Handle lecture item clicks
+    // // Handle lecture item clicks
     lectureItems.forEach(item => {
         item.addEventListener('click', function() {
             lectureItems.forEach(lecture => lecture.classList.remove('active'));
 
             // Add active class to clicked item
-            this.classList.add('active');
 
-            const lectureId = this.getAttribute('data-lecture-id');
-            const lectureTitle = this.querySelector('.lecture-title').textContent;
-            const lectureDescription = this.querySelector('.lecture-description').textContent;
+            // const lectureId = this.getAttribute('data-lecture-id');
+            // const lectureTitle = this.querySelector('.lecture-title').textContent;
+            // const lectureDescription = this.querySelector('.lecture-description').textContent;
 
-            const videoElement = videoPlayer.querySelector('.video-element');
-            videoElement.src = `https://example.com/video${lectureId}.mp4`;
+            // const videoElement = videoPlayer.querySelector('.video-element');
+            // videoElement.src = `https://example.com/video${lectureId}.mp4`;
 
-            currentLectureTitle.textContent = lectureTitle;
-            currentLectureDescription.textContent = lectureDescription;
+            // currentLectureTitle.textContent = lectureTitle;
+            // currentLectureDescription.textContent = lectureDescription;
 
-            if (videoQuizBtn) {
-                videoQuizBtn.setAttribute('data-lecture-id', lectureId);
-            }
+            // if (videoQuizBtn) {
+            //     videoQuizBtn.setAttribute('data-lecture-id', lectureId);
+            // }
 
             if (window.innerWidth <= 992) {
                 videoPlayer.scrollIntoView({ behavior: 'smooth' });
@@ -1267,14 +1265,14 @@ function initializeCourseDetailPage() {
         });
     }
 
-    if (videoQuizBtn) {
-        videoQuizBtn.addEventListener('click', function() {
-            const lectureId = this.getAttribute('data-lecture-id');
-            const lectureTitle = currentLectureTitle.textContent;
+    // if (videoQuizBtn) {
+    //     videoQuizBtn.addEventListener('click', function() {
+    //         const lectureId = this.getAttribute('data-lecture-id');
+    //         const lectureTitle = currentLectureTitle.textContent;
 
-            showQuizModal();
-        });
-    }
+    //         showQuizModal();
+    //     });
+    // }
 }
 
 // Quiz Modal Function

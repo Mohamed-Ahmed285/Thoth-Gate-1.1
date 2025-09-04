@@ -8,6 +8,7 @@ use App\Models\Contact;
 use App\Models\Course;
 use App\Models\ExamSession;
 use App\Models\Instructor;
+use App\Models\InstructorCourse;
 use App\Models\Lecture;
 use App\Models\PurchasedCommunity;
 use App\Models\PurchasedLectures;
@@ -70,14 +71,28 @@ class AdminController extends Controller
     {
         $instructors = DB::table('instructors')
             ->join('users', 'instructors.user_id', '=', 'users.id')
-            ->select('users.name', 'users.email' , 'instructors.subject')
+            ->select('instructors.id' , 'users.name', 'users.email')
             ->get();
 
+        
         $filename = 'instructors.csv';
         $handle = fopen($filename, 'w+');
-        fputcsv($handle, ['Name', 'Email' , 'Subject']);
+        fputcsv($handle, ['Name', 'Email' , 'Subject 1' , 'Subject 2']);
         foreach ($instructors as $instructor) {
-            fputcsv($handle, [(string) $instructor->name, (string) $instructor->email , (string) $instructor->subject]);
+            $subjects = DB::table('instructor_courses')
+                ->join('courses', 'instructor_courses.course_id', '=', 'courses.id')
+                ->where('instructor_courses.instructor_id', $instructor->id)
+                ->pluck('courses.subject');
+
+            $subject1 = $subjects[0] ?? '';
+            $subject2 = $subjects[1] ?? '';
+
+            fputcsv($handle, [
+                (string) $instructor->name,
+                (string) $instructor->email,
+                (string) $subject1,
+                (string) $subject2
+            ]);
         }
         fclose($handle);
 
@@ -98,6 +113,7 @@ class AdminController extends Controller
             'instructorEmail' => 'required|string|email|max:255|unique:users,email',
             'instructorPassword' => 'required|string|min:8',
             'instructorCourse' => 'required|string|max:255',
+            'instructorCourse2' => 'nullable|string|max:255',
             'instructorPhone' => 'required|numeric',
             'dateOfBirth' => 'required|date|before:2006-01-01',
         ]);
@@ -112,17 +128,30 @@ class AdminController extends Controller
             'date_of_birth' => $request->input('dateOfBirth'),
         ]);
 
-        Instructor::create([
+        $ins = Instructor::create([
             'user_id' => $user->id,
-            'subject' => $request->input('instructorCourse'),
         ]);
+
+        InstructorCourse::create([
+            'instructor_id' => $ins->id,
+            'course_id' => $request->input('instructorCourse'),
+        ]);
+
+        if ($request->filled('instructorCourse2')) {
+            InstructorCourse::create([
+                'instructor_id' => $ins->id,
+                'course_id' => $request->input('instructorCourse2'),
+            ]);
+        }
+
 
         return redirect()->route('admin.instructors')->with('success', 'Instructor Created Successfully');
     }
 
     public function createInstructorIndex()
     {
-        return view('admin.create-instructor');
+        $courses = Course::all();
+        return view('admin.create-instructor' , ['courses' => $courses]);
     }
 
     public function destroyInstructor(Instructor $instructor)

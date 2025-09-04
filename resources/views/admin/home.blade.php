@@ -98,10 +98,13 @@
 
     <div class="admin-layout">
         <main class="admin-main-content">
+            @if (session('error'))
+                <div class="message error">
+                    {{ session('error') }}
+                </div>
+            @endif
             <!-- Section Title -->
             <h2 class="section-title">Dashboard</h2>
-
-
 
             <!-- Top Stats Cards -->
             <div class="dashboard-stats-cards">

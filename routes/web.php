@@ -10,6 +10,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InstructorController;
+use App\Models\Instructor;
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
@@ -145,5 +147,34 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('admin/messages' , [AdminController::class , 'messagesView'])->name('admin.messages');
 
     Route::delete('/message/delete/{message}' , [AdminController::class , 'deleteMessage']);
+
+});
+// Instructor routes
+Route::middleware(['auth' , 'check.instructor'])->group(function(){
+    // home
+    Route::get('/instructor/home' , [InstructorController::class , 'home'])
+        ->name('instructors.home');
+
+    //add lecture
+    Route::get('/instructor/add/lecture' , [InstructorController::class , 'addLecture'])
+        ->name('instructor.addLecture');
+
+    Route::post('/instructor/add/lecture' , [InstructorController::class , 'saveLecture']);
+
+
+    //create exam
+    Route::get('/instructor/create/exam', [InstructorController::class, 'createExam'])
+        ->name('instructor.addExam');
+
+    Route::post('/instructor/create/exam' , [InstructorController::class , 'saveExam']);
+
+    // chats
+    Route::get('/instructor/chats', [InstructorController::class, 'chatsIndex'])
+        ->name('instructor.chats');
+
+    Route::post('/instructor/chats', [InstructorController::class, 'MessageStore'])
+        ->name('chat.store');
+
+    Route::get('instructor/chats/{community}', [InstructorController::class, 'chatShow']);
 
 });

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Instructor;
 use App\Models\Student;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -56,5 +57,17 @@ class DatabaseSeeder extends Seeder
             'type' => 2,
         ]);
 
+        user::factory()->create([
+            'name' => 'Daniel Ayman',
+            'date_of_birth' => '2000-01-01',
+            'password' => bcrypt('11111111'),
+            'email_verified_at' => now(),
+            'email' => 'daniel@gmail.com',
+            'phone_number' => '01129264191',
+            'type' => 1,
+        ]);
+        Instructor::create([
+            'user_id' => 4,
+        ]);
     }
 }

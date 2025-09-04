@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckAdmin;
+use App\Http\Middleware\EnsureInstructor;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,7 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'student' => EnsureUserIsStudent::class,
             'prevent.multiple.logins' => PreventMultipleLogins::class,
             'check.admin' => CheckAdmin::class,
-        ]);
+            'check.instructor' => EnsureInstructor::class,
+         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

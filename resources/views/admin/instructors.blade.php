@@ -1,8 +1,9 @@
 @php
-use App\Models\AdminNotification;
+    use App\Models\AdminNotification;
 @endphp
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +11,12 @@ use App\Models\AdminNotification;
     <link rel="icon" href="../imgs/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../admin-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body>
     <header class="main-header">
         <div class="header-content">
@@ -20,7 +24,7 @@ use App\Models\AdminNotification;
                 <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
                 <h1 class="site-logo">Thoth Gate</h1>
             </div>
-                <button class="hamburger-menu" id="hamburgerMenu">
+            <button class="hamburger-menu" id="hamburgerMenu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -33,15 +37,15 @@ use App\Models\AdminNotification;
                     <li><a href="/admin/students">Students</a></li>
                     <li><a href="/admin/messages">Messages</a></li>
                     <li><a href="/admin/notifications" id="notifLink">
-                        @if (AdminNotification::where('is_read', false)->count() > 0)
-                            <span class="notif-dot" id = "notif-dot">🔴</span>
-                        @endif
-                        Notifications
-                    </a></li>
+                            @if (AdminNotification::where('is_read', false)->count() > 0)
+                                <span class="notif-dot" id = "notif-dot">🔴</span>
+                            @endif
+                            Notifications
+                        </a></li>
 
                 </ul>
             </nav>
-             <div class="switchers-container">
+            <div class="switchers-container">
                 <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
                     <span class="theme-icon">🌙</span>
                 </button>
@@ -51,7 +55,7 @@ use App\Models\AdminNotification;
             </div>
         </div>
     </header>
-   <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="logo-container">
                 <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
@@ -65,15 +69,15 @@ use App\Models\AdminNotification;
         <nav class="sidebar-nav">
             <ul>
                 <li><a href="/admin/home">Home</a></li>
-                <li><a href="/admin/instructors"  class="active">Instructors</a></li>
+                <li><a href="/admin/instructors" class="active">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
                 <li><a href="/admin/notifications" id="notifLink">
-                    @if (AdminNotification::where('is_read' , false)->count() > 0)
-                        <span class="notif-dot" id = "notif-dot">🔴</span>
-                    @endif
-                    Notifications
-                </a></li>
+                        @if (AdminNotification::where('is_read', false)->count() > 0)
+                            <span class="notif-dot" id = "notif-dot">🔴</span>
+                        @endif
+                        Notifications
+                    </a></li>
 
             </ul>
         </nav>
@@ -88,7 +92,7 @@ use App\Models\AdminNotification;
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="admin-layout ">
-   
+
         <main class="admin-main-content">
             @if (session('success'))
                 <div class="message success">
@@ -98,41 +102,50 @@ use App\Models\AdminNotification;
             <section class="admin-section">
                 <div class="admin-section-header">
                     <h2 class="section-title">Instructors</h2>
-                    <button class="btn" onclick="  window.location.href = '/admin/instructors/create';">Add Instructor</button>
+                    <button class="btn" onclick="  window.location.href = '/admin/instructors/create';">Add
+                        Instructor</button>
                 </div>
                 <div class="admin-table-responsive">
                     <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Subject</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($instructors as $ins)
+                        <thead>
                             <tr>
-                                <td>{{$ins->user->name}}</td>
-                                <td>{{$ins->user->email}}</td>
-                                <td>{{$ins->subject}}</td>
-                                <td>
-                                    <form action="/admin/instructors/{{$ins->id}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this instructor?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-delete">Delete</button>
-                                    </form>
-                                </td>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            @foreach ($instructors as $ins)
+                                <tr>
+                                    <td>{{ $ins->user->name }}</td>
+                                    <td>{{ $ins->user->email }}</td>
+                                    <td>
+                                        @foreach ($ins->courses as $subjects)
+                                            {{ $subjects->course->subject }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    </td>
+
+                                    <td>
+                                        <form action="/admin/instructors/{{ $ins->id }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this instructor?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-delete">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
 
                 <div>
                     {{ $instructors->links('vendor.pagination.custom') }}
                 </div>
-                
+
             </section>
         </main>
     </div>
@@ -185,14 +198,14 @@ use App\Models\AdminNotification;
                         dot.id = "notif-dot";
                         dot.className = "notif-dot";
                         dot.textContent = "🔴";
-                        notifLink.insertBefore(dot, notifLink.childNodes[0]); 
+                        notifLink.insertBefore(dot, notifLink.childNodes[0]);
                     }
 
                     setTimeout(() => {
                         toast.classList.remove("show");
                     }, 2000);
                 });
-                
+
         });
     </script>
 
@@ -203,4 +216,5 @@ use App\Models\AdminNotification;
     <script src="../script.js"></script>
 
 </body>
+
 </html>
