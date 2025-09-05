@@ -11,7 +11,6 @@ use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
-use App\Models\Instructor;
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
@@ -35,9 +34,14 @@ Route::post('/email/verification-notification', [EmailController::class , 'resen
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
+Route::view('/' , function (){
+    $courses = Course::all();
+    return view('welcome' , ['courses' => $courses]);
+})->middleware(['guest'])->name('welcome');
+
 Route::middleware(['auth' , 'student' , 'prevent.multiple.logins'])->group(function () {
     // home page
-    Route::view('/' , 'home')
+    Route::view('/student/home' , 'home')
         ->name('home');
 
     //profile
@@ -141,7 +145,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::post('/read/{notification}', [AdminController::class , 'readNotification']);
 
-    Route::delete('delete/{notifiaction}' , [AdminController::class , 'deleteNotification']);
+    Route::delete('delete/{notification}' , [AdminController::class , 'deleteNotification']);
 
     //messages
     Route::get('admin/messages' , [AdminController::class , 'messagesView'])->name('admin.messages');

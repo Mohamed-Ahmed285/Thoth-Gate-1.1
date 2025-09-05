@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thoth Gate - Home</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="//imgs/logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="home-page">
 <header class="main-header">
     <div class="header-content">
         <div class="logo-container">
-            <img src="imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
+            <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
             <h1 class="site-logo">Thoth Gate</h1>
         </div>
 
@@ -25,7 +25,7 @@
 
         <nav class="main-nav">
             <ul>
-                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/student/home" class="active">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
                 <li><a href="/community">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
@@ -55,7 +55,7 @@
 <div class="mobile-sidebar" id="mobileSidebar">
     <div class="sidebar-header">
         <div class="logo-container">
-            <img src="imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
+            <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
             <h1 class="site-logo">Thoth Gate</h1>
         </div>
         <button class="close-sidebar" id="closeSidebar">
@@ -66,7 +66,7 @@
 
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/student/home" class="active">Home</a></li>
             <li><a href="/courses">Courses</a></li>
             <li><a href="/community">Chat</a></li>
             <li><a href="/contact">Contact</a></li>
@@ -128,7 +128,7 @@
                     <p class="wisdom-author">- Ancient Egyptian Proverb</p>
                 </div>
                 <div class="wisdom-image">
-                    <img src="imgs/1.jpg" alt="Ancient Egyptian Wisdom" class="egyptian-image">
+                    <img src="/imgs/1.jpg" alt="Ancient Egyptian Wisdom" class="egyptian-image">
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@
             <div class="teachers-grid">
                 <div class="teacher-card">
                     <div class="teacher-image">
-                        <img src="imgs/teacher1 (1).jpg" alt="Dr. Ahmed">
+                        <img src="/imgs/teacher1 (1).jpg" alt="Dr. Ahmed">
                     </div>
                     <div class="teacher-info">
                         <h3>Dr. Salma Hassan</h3>
@@ -151,7 +151,7 @@
 
                 <div class="teacher-card">
                     <div class="teacher-image">
-                        <img src="imgs/teacher2.jpg" alt="Prof. Sarah">
+                        <img src="/imgs/teacher2.jpg" alt="Prof. Sarah">
                     </div>
                     <div class="teacher-info">
                         <h3>Prof. Sarah Mahmoud</h3>
@@ -162,7 +162,7 @@
 
                 <div class="teacher-card">
                     <div class="teacher-image">
-                        <img src="imgs/teacher3.jpg" alt="Mr. Omar">
+                        <img src="/imgs/teacher3.jpg" alt="Mr. Omar">
                     </div>
                     <div class="teacher-info">
                         <h3>Mr. Omar Khalil</h3>
@@ -179,17 +179,17 @@
             <h2 class="section-title">Heritage of Learning</h2>
             <div class="heritage-grid">
                 <div class="heritage-item">
-                    <img src="imgs/2.jpg" alt="Ancient Library" class="heritage-image">
+                    <img src="/imgs/2.jpg" alt="Ancient Library" class="heritage-image">
                     <h3>Ancient Libraries</h3>
                     <p>Home to the world's first great centers of learning</p>
                 </div>
                 <div class="heritage-item">
-                    <img src="imgs/3.jpg" alt="Mathematical Knowledge" class="heritage-image">
+                    <img src="/imgs/3.jpg" alt="Mathematical Knowledge" class="heritage-image">
                     <h3>Mathematical Genius</h3>
                     <p>Pioneers of geometry, algebra, and astronomy</p>
                 </div>
                 <div class="heritage-item">
-                    <img src="imgs/4.jpg" alt="Scientific Discovery" class="heritage-image">
+                    <img src="/imgs/4.jpg" alt="Scientific Discovery" class="heritage-image">
                     <h3>Scientific Discovery</h3>
                     <p>Advancements in medicine, engineering, and architecture</p>
                 </div>
@@ -208,7 +208,7 @@
                 <p class="wisdom-author">Our mission: preserve wisdom — inspire learning.</p>
             </div>
             <div class="wisdom-image">
-                <img src="imgs/1.jpg" alt="About Thoth Gate" class="egyptian-image">
+                <img src="/imgs/1.jpg" alt="About Thoth Gate" class="egyptian-image">
             </div>
         </div>
     </div>
@@ -223,7 +223,7 @@
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/student/home">Home</a></li>
                     <li><a href="/courses">Courses</a></li>
                     <li><a href="/community">Chat</a></li>
                     <li><a href="/contact">Contact</a></li>
@@ -250,6 +250,6 @@
         </div>
     </div>
 </footer>
-<script src="script.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>

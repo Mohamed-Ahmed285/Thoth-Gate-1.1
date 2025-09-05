@@ -27,7 +27,7 @@
 
         <nav class="main-nav">
             <ul>
-                <li><a href="/">Home</a></li>
+                <li><a href="/student/home">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
                 <li><a href="/community">Chat</a></li>
                 <li><a href="/contact" class="active">Contact</a></li>
@@ -69,7 +69,7 @@
 
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="/student/home">Home</a></li>
             <li><a href="/courses">Courses</a></li>
             <li><a href="/community">Chat</a></li>
             <li><a href="/contact" class="active">Contact</a></li>
@@ -229,7 +229,7 @@
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/student/home">Home</a></li>
                     <li><a href="/courses">Courses</a></li>
                     <li><a href="/community">Chat</a></li>
                     <li><a href="/contact">Contact</a></li>

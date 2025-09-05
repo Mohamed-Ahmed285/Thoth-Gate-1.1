@@ -31,7 +31,7 @@ class LoginController extends Controller
             $user = User::find(Auth::id());
             $user->session_id = Session::getId();
             $user->save();
-            
+
             if ($user->type == 2) {
                 return redirect()->route('admin.home');
             }
@@ -50,6 +50,6 @@ class LoginController extends Controller
     public function destroy()
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect()->route('welcome');
     }
 }

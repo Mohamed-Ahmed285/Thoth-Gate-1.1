@@ -12,14 +12,14 @@ class EmailController extends Controller
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
-            return redirect('/');
+            return redirect()->route('home');
         }
 
         return view('emails.waiting-verify');
     }
     public function verify($id, $hash , EmailVerificationRequest $request){
         $request->fulfill();
-        return redirect('/');
+        return redirect()->route('home');
     }
 
     public function resend(Request $request){
