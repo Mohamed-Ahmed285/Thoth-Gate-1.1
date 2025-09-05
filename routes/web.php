@@ -176,5 +176,4 @@ Route::middleware(['auth' , 'check.instructor'])->group(function(){
         ->name('chat.store');
 
     Route::get('instructor/chats/{community}', [InstructorController::class, 'chatShow']);
-
 });

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Instructor;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\InstructorCourse;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,7 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
         Student::create([
             'user_id' => 1,
-            'grade' => '3prep',
+            'grade' => 'Third Preparatory',
             'points'=> 0,
         ]);
 
@@ -43,7 +44,7 @@ class DatabaseSeeder extends Seeder
         ]);
         Student::create([
             'user_id' => 2,
-            'grade' => '1sec',
+            'grade' => 'Third Preparatory',
             'points'=> 0,
         ]);
 
@@ -68,6 +69,14 @@ class DatabaseSeeder extends Seeder
         ]);
         Instructor::create([
             'user_id' => 4,
+        ]);
+        InstructorCourse::create([
+            'instructor_id' => 1,
+            'course_id' => 1,
+        ]);
+        InstructorCourse::create([
+            'instructor_id' => 1,
+            'course_id' => 6,
         ]);
     }
 }

@@ -82,8 +82,8 @@
                     <label for="grade">Grade Level:</label>
                     <select id="grade" name="grade" required>
                         <option value="" disabled selected>Select your grade</option>
-                        <option value="3prep">3rd Prep</option>
-                        <option value="1sec">1st Secondary</option>
+                        <option value="Third Preparatory">Third Preparatory</option>
+                        <option value="First Secondary">First Secondary</option>
                     </select>
                     @error('grade')
                         <span class="error message">{{ $message }}</span>

@@ -73,18 +73,6 @@
             </form>
         </div>
     </main>
-    <script>
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                const examForm = document.getElementById('exam-Form');
-                if (examForm) {
-                    alert("You have left the exam page. Your attempt is being submitted automatically.");
-                    examForm.submit();
-                }
-            }
-        });
-    </script>
-
     <script src="/script.js"></script>
 </body>
 

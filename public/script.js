@@ -572,8 +572,8 @@ function translateToArabic() {
         'Completed': 'مكتمل',
 
         // Grades
-        '3rd Prep': 'الثالثة إعدادي',
-        '1st Secondary': 'الأولى ثانوي',
+        'Third Preparatory': 'الثالث الإعدادي',
+        'First Secondary': 'الأول الثانوي',
         '11th Grade': 'الحادية عشر',
         'Select your grade': 'اختر مستواك الدراسي',
 
@@ -754,8 +754,8 @@ function translateToEnglish() {
         'مكتمل': 'Completed',
 
         // Grades
-        'الثالثة إعدادي': '3rd Prep',
-        'الأولى ثانوي': '1st Secondary',
+        'الثالث الإعدادي': 'Third Preparatory',
+        'الأول الثانوي': 'First Secondary',
         'الحادية عشر': '11th Grade',
         'اختر مستواك الدراسي': 'Select your grade',
 
