@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Exam;
 use App\Models\ExamSession;
 use App\Models\Lecture;
+use App\Models\PurchasedLectures;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,43 +94,56 @@ class ExamController extends Controller
 
     // In app/Http/Controllers/ExamController.php
 
-public function show($courseId, $lectureId, $examId)
-{
-    $exam = Exam::findOrFail($examId);
-    $student = Auth::user()->student;
-
-    if ($student->grade != $exam->lecture->course->grade) {
-        return redirect()->route('home')->with('error', 'You are not allowed to access this page');
-    }
-
-    $session = ExamSession::where('student_id', $student->id)
-        ->where('exam_id', $exam->id)
-        ->first();
-
-    if ($session) {
-        if ($session->submitted_at) {
-            return redirect()->route('exam.info', $session->id)
-                ->with('warning', 'You have already completed this exam.');
+    public function show($courseId, $lectureId, $examId)
+    {
+        $exam = Exam::findOrFail($examId);
+        $student = Auth::user()->student;
+        $purchasedLecture = PurchasedLectures::where('student_id' , $student->id)
+            ->where('lecture_id' , $lectureId)
+            ->first();
+        
+        if ($student->grade != $exam->lecture->course->grade) {
+            return redirect()->route('home')->with('error', 'You are not allowed to access this page');
         }
-    } else {
-        $session = ExamSession::create([
-            'student_id'   => $student->id,
-            'exam_id'      => $exam->id,
-            'started_at'   => now(),
-            'duration'     => $exam->duration,
-            'submitted_at' => null,
-            'score'        => null
+
+        $session = ExamSession::where('student_id', $student->id)
+            ->where('exam_id', $exam->id)
+            ->first();
+
+        if ($session) {
+            if ($session->submitted_at) {
+                return redirect()->route('exam.info', $session->id)
+                    ->with('warning', 'You have already completed this exam.');
+            }
+        } else {
+            $session = ExamSession::create([
+                'student_id'   => $student->id,
+                'exam_id'      => $exam->id,
+                'started_at'   => now(),
+                'duration'     => $exam->duration,
+                'submitted_at' => null,
+                'score'        => null
+            ]);
+            
+            if($purchasedLecture){
+                $purchasedLecture->finished = true;
+                $purchasedLecture->save();
+            }
+            else {
+                return redirect()->route('home')->with('error' , 'you don\'t have access to this exam');
+            }
+        }
+
+        $questions = Question::with('choices')
+            ->where('exam_id', $examId)
+            ->get();
+
+        return view('exam.show', [
+            'exam'      => $exam,
+            'questions' => $questions,
+            'session'   => $session,
         ]);
     }
-
-    $questions = Question::where('exam_id', $examId)->get();
-
-    return view('exam.show', [
-        'exam'      => $exam,
-        'questions' => $questions,
-        'session'   => $session,
-    ]);
-}
 
     public function submit(Course $course, Lecture $lecture, Exam $exam)
     {

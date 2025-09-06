@@ -25,7 +25,7 @@ class CourseSeeder extends Seeder
                 'subject' => 'English',
                 'grade' => 'Third Preparatory',
                 'teacher' => 'Mohamed Hamed',
-                'image' => 'imgs/language.jpg'
+                'image' => 'imgs/english.jpg'
             ],
             [
                 'subject' => 'Math',
@@ -40,23 +40,23 @@ class CourseSeeder extends Seeder
                 'image' => 'imgs/science.jpg',
             ],
             [
-                'subject' => 'History',
+                'subject' => 'Social Studies',
                 'grade' => 'Third Preparatory',
                 'teacher' => 'Mohamed Hamed',
-                'image' => 'imgs/history.jpg',
+                'image' => 'imgs/socialStudies.jpg',
             ],
             // courses for 1 sec
             [
                 'subject' => 'Arabic',
                 'grade' => 'First Secondary',
                 'teacher' => 'Mohamed Hamed',
-                'image' => 'imgs/language.jpg',
+                'image' => 'imgs/arabic.jpg',
             ],
             [
                 'subject' => 'English',
                 'grade' => 'First Secondary',
                 'teacher' => 'Mohamed Hamed',
-                'image' => 'imgs/language.jpg',
+                'image' => 'imgs/english.jpg',
             ],
             [
                 'subject' => 'Philosophy & Logic',
@@ -74,13 +74,13 @@ class CourseSeeder extends Seeder
                 'subject' => 'Math',
                 'grade' => 'First Secondary',
                 'teacher' => 'Mohamed Hamed',
-                'image' => 'imgs/maths.jpg',
+                'image' => 'imgs/math.jpg',
             ],
             [
                 'subject' => 'Integrated Science',
                 'grade' => 'First Secondary',
                 'teacher' => 'Mohamed Hamed',
-                'image' => 'imgs/science.jpg',
+                'image' => 'imgs/integratedScience.jpg',
             ],
         ];
 

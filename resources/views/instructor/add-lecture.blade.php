@@ -17,6 +17,11 @@
 </head>
 
 <body>
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">
@@ -122,7 +127,8 @@
                         <div class="form-group-group">
                             <div class="form-group">
                                 <label for="lecture-video">Upload Lecture Video</label>
-                                <input type="file" id="lecture-video" name="lecture-video" accept="video/*" required>
+                                <input type="file" id="lecture-video" name="lecture-video" accept="video/*"
+                                    required>
                             </div>
                             <div class="form-group">
                                 <label for="lecture-title">Lecture Title</label>

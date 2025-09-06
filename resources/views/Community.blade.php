@@ -16,8 +16,13 @@
     @vite(['resources/js/app.js'])
 </head>
 
-<body class="chat-page">
-    <header class="main-header">
+<body class="chat-page" style="display: flex; flex-direction: column;  height: 100vh;">
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    <header class="main-header" style="flex-shrink: 0;">
         <div class="header-content">
             <div class="logo-container">
                 <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
@@ -92,7 +97,7 @@
             </button>
         </div>
     </div>
-    <section class="chat-column">
+    <section class="chat-column" style="flex: 1;  display: flex;  flex-direction: column;">
         <button class="scroll-button" id="scrollBtn" style="display: none;">
             ↓
         </button>
@@ -123,7 +128,7 @@
         <div class="chat-input-container sticky-composer" style="margin-top: 16px;">
             <div id="imagePreview" class="preview-container"
                 style="margin: 10px; display:flex; gap:10px; flex-wrap:wrap;"></div>
-            <form id="chatForm" class="chat-form" enctype="multipart/form-data">
+            <form id="chatForm" enctype="multipart/form-data">
                 <div class="input-group">
                     <input type="hidden" name="community_id" value="{{ $fullCommunity->id }}">
                     <input type="text" name="message" id="messageInput" placeholder="Type your message."

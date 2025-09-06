@@ -417,3 +417,46 @@ body.dark-mode .remove-choice-btn:hover {
     background: #d7263d;
     color: #fff;
 }
+
+.createxam .form-group .upload-label {
+    display: flex;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    border-radius: 12px;
+    margin-bottom: initial;
+    margin: 7px 2px;
+}
+
+body.dark-mode.createxam .form-group .upload-label {
+    background: #2d2d2d;
+}
+
+.createxam .form-group-choice .upload-label {
+    background: #243a6b;
+    border: none;
+    border-radius: 8px;
+    padding: 0.3rem 0.9rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(36, 58, 107, 0.08);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    font-family: 'Cinzel', serif;
+    margin-bottom: 6px;
+    margin-right: 10px;
+}
+
+body.dark-mode.createxam .form-group-choice .upload-label {
+    background: #2d2d2d;
+}
+
+body.dark-mode.createxam .form-group-choice .upload-label:hover,
+body.dark-mode.createxam .form-group .upload-label:hover {
+    background: #243a6b;
+
+}
