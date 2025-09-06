@@ -1,29 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thoth Gate - Home</title>
     <link rel="stylesheet" href="/styles.css">
-    <link rel="icon" href="//imgs/logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body class="home-page">
-<header class="main-header">
-    <div class="header-content">
-        <div class="logo-container">
-            <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
-            <h1 class="site-logo">Thoth Gate</h1>
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
+                <h1 class="site-logo">Thoth Gate</h1>
+            </div>
+
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/student/home" class="active">Home</a></li>
+                    <li><a href="/courses">Courses</a></li>
+                    <li><a href="/community">Chat</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li>
+                        <form method="POST" action="/logout" id = "logoutForm">
+                            @csrf
+                            @method('DELETE')
+                            <a href="#" class="logout-btn"
+                                onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="switchers-container">
+                <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="language-switcher" id="languageSwitcher" title="Switch Language">
+                    <span class="language-text">EN</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
+                <h1 class="site-logo">Thoth Gate</h1>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">
+                <span></span>
+                <span></span>
+            </button>
         </div>
 
-        <!-- Hamburger Menu Button -->
-        <button class="hamburger-menu" id="hamburgerMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <nav class="main-nav">
+        <nav class="sidebar-nav">
             <ul>
                 <li><a href="/student/home" class="active">Home</a></li>
                 <li><a href="/courses">Courses</a></li>
@@ -34,222 +85,186 @@
                     <form method="POST" action="/logout" id = "logoutForm">
                         @csrf
                         @method('DELETE')
-                        <a href="#" class="logout-btn" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                        <a href="#" class="logout-btn"
+                            onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
                     </form>
                 </li>
             </ul>
         </nav>
 
-        <div class="switchers-container">
-            <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
+        <div class="sidebar-switchers">
+            <button class="theme-switcher" id="sidebarThemeSwitcher" title="Toggle Dark Mode">
                 <span class="theme-icon">🌙</span>
             </button>
-            <button class="language-switcher" id="languageSwitcher" title="Switch Language">
+            <button class="language-switcher" id="sidebarLanguageSwitcher" title="Switch Language">
                 <span class="language-text">EN</span>
             </button>
         </div>
     </div>
-</header>
 
-<!-- Mobile Sidebar -->
-<div class="mobile-sidebar" id="mobileSidebar">
-    <div class="sidebar-header">
-        <div class="logo-container">
-            <img src="/imgs/logo.png" alt="Thoth Gate Logo" class="logo-image">
-            <h1 class="site-logo">Thoth Gate</h1>
-        </div>
-        <button class="close-sidebar" id="closeSidebar">
-            <span></span>
-            <span></span>
-        </button>
-    </div>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <nav class="sidebar-nav">
-        <ul>
-            <li><a href="/student/home" class="active">Home</a></li>
-            <li><a href="/courses">Courses</a></li>
-            <li><a href="/community">Chat</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li>
-                <form method="POST" action="/logout" id = "logoutForm">
-                    @csrf
-                    @method('DELETE')
-                    <a href="#" class="logout-btn" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
-                </form>
-            </li>
-        </ul>
-    </nav>
-
-    <div class="sidebar-switchers">
-        <button class="theme-switcher" id="sidebarThemeSwitcher" title="Toggle Dark Mode">
-            <span class="theme-icon">🌙</span>
-        </button>
-        <button class="language-switcher" id="sidebarLanguageSwitcher" title="Switch Language">
-            <span class="language-text">EN</span>
-        </button>
-    </div>
-</div>
-
-<!-- Sidebar Overlay -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<main>
-    @if (session('error'))
-        <div class="message error" style="margin: 0px 10px;">
-            {{ session('error') }}
-        </div>
-    @endif
-    <section class="hero-section">
-        <div class="hero-content">
-            <h2 class="hero-title">Unlock Your Potential</h2>
-            <p class="hero-subtitle">Discover the ancient wisdom of learning through modern educational excellence</p>
-            <div class="hero-buttons">
-                <a href="/courses" class="btn primary">Explore Courses</a>
-                <a href="/community" class="btn secondary">Join Grade Chat</a>
+    <main>
+        @if (session('error'))
+            <div class="message error" style="margin: 0px 10px;">
+                {{ session('error') }}
             </div>
-        </div>
-        <div class="hero-decoration">
-            <div class="ancient-symbol"></div>
-            <div class="egyptian-patterns">
-                <div class="pattern-1"></div>
-                <div class="pattern-2"></div>
-                <div class="pattern-3"></div>
+        @endif
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2 class="hero-title">Unlock Your Potential</h2>
+                <p class="hero-subtitle">Discover the ancient wisdom of learning through modern educational excellence
+                </p>
+                <div class="hero-buttons">
+                    <a href="/courses" class="btn primary">Explore Courses</a>
+                    <a href="/community" class="btn secondary">Join Grade Chat</a>
+                </div>
             </div>
-        </div>
-    </section>
+            <div class="hero-decoration">
+                <div class="ancient-symbol"></div>
+                <div class="egyptian-patterns">
+                    <div class="pattern-1"></div>
+                    <div class="pattern-2"></div>
+                    <div class="pattern-3"></div>
+                </div>
+            </div>
+        </section>
 
-    <section class="egyptian-wisdom-section">
+        <section class="egyptian-wisdom-section">
+            <div class="container">
+                <h2 class="section-title">Ancient Wisdom</h2>
+                <div class="wisdom-content">
+                    <div class="wisdom-text">
+                        <p>"The beginning of wisdom is to call things by their proper names."</p>
+                        <p class="wisdom-author">- Ancient Egyptian Proverb</p>
+                    </div>
+                    <div class="wisdom-image">
+                        <img src="/imgs/1.jpg" alt="Ancient Egyptian Wisdom" class="egyptian-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="teachers" class="teachers-section">
+            <div class="container">
+                <h2 class="section-title">Wise Mentors</h2>
+                <div class="teachers-grid">
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <img src="/imgs/teacher1 (1).jpg" alt="Dr. Ahmed">
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Dr. Salma Hassan</h3>
+                            <p class="subject">Mathematics & Physics</p>
+                            <p class="experience">15+ years of teaching experience</p>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <img src="/imgs/teacher2.jpg" alt="Prof. Sarah">
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Prof. Sarah Mahmoud</h3>
+                            <p class="subject">Chemistry & Biology</p>
+                            <p class="experience">12+ years of teaching experience</p>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <img src="/imgs/teacher3.jpg" alt="Mr. Omar">
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Mr. Omar Khalil</h3>
+                            <p class="subject">English & Literature</p>
+                            <p class="experience">10+ years of teaching experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="egyptian-heritage-section">
+            <div class="container">
+                <h2 class="section-title">Heritage of Learning</h2>
+                <div class="heritage-grid">
+                    <div class="heritage-item">
+                        <img src="/imgs/2.jpg" alt="Ancient Library" class="heritage-image">
+                        <h3>Ancient Libraries</h3>
+                        <p>Home to the world's first great centers of learning</p>
+                    </div>
+                    <div class="heritage-item">
+                        <img src="/imgs/3.jpg" alt="Mathematical Knowledge" class="heritage-image">
+                        <h3>Mathematical Genius</h3>
+                        <p>Pioneers of geometry, algebra, and astronomy</p>
+                    </div>
+                    <div class="heritage-item">
+                        <img src="/imgs/4.jpg" alt="Scientific Discovery" class="heritage-image">
+                        <h3>Scientific Discovery</h3>
+                        <p>Advancements in medicine, engineering, and architecture</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <section class="egyptian-wisdom-section about-section">
         <div class="container">
-            <h2 class="section-title">Ancient Wisdom</h2>
+            <h2 class="section-title">About Us</h2>
             <div class="wisdom-content">
                 <div class="wisdom-text">
-                    <p>"The beginning of wisdom is to call things by their proper names."</p>
-                    <p class="wisdom-author">- Ancient Egyptian Proverb</p>
+                    <p class="hero-subtitle">
+                        Thoth Gate blends the legacy of ancient Egyptian scholarship with modern pedagogical practice —
+                        delivering rigorous courses, expert mentorship, and a nurturing learning environment for the
+                        students of today.
+                    </p>
+                    <p class="wisdom-author">Our mission: preserve wisdom — inspire learning.</p>
                 </div>
                 <div class="wisdom-image">
-                    <img src="/imgs/1.jpg" alt="Ancient Egyptian Wisdom" class="egyptian-image">
+                    <img src="/imgs/1.jpg" alt="About Thoth Gate" class="egyptian-image">
                 </div>
             </div>
         </div>
     </section>
-
-    <section id="teachers" class="teachers-section">
+    <footer class="main-footer">
         <div class="container">
-            <h2 class="section-title">Wise Mentors</h2>
-            <div class="teachers-grid">
-                <div class="teacher-card">
-                    <div class="teacher-image">
-                        <img src="/imgs/teacher1 (1).jpg" alt="Dr. Ahmed">
-                    </div>
-                    <div class="teacher-info">
-                        <h3>Dr. Salma Hassan</h3>
-                        <p class="subject">Mathematics & Physics</p>
-                        <p class="experience">15+ years of teaching experience</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Thoth Gate</h3>
+                    <p>Gateway to Ancient Wisdom, Modern Learning</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/student/home">Home</a></li>
+                        <li><a href="/courses">Courses</a></li>
+                        <li><a href="/community">Chat</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        <li><a href="/profile">Profile</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: info@thothgate.edu.eg</p>
+                    <p>Phone: +20 123 456 789</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon">📘</a>
+                        <a href="#" class="social-icon">📷</a>
+                        <a href="#" class="social-icon">🐦</a>
+                        <a href="#" class="social-icon">💼</a>
                     </div>
                 </div>
-
-                <div class="teacher-card">
-                    <div class="teacher-image">
-                        <img src="/imgs/teacher2.jpg" alt="Prof. Sarah">
-                    </div>
-                    <div class="teacher-info">
-                        <h3>Prof. Sarah Mahmoud</h3>
-                        <p class="subject">Chemistry & Biology</p>
-                        <p class="experience">12+ years of teaching experience</p>
-                    </div>
-                </div>
-
-                <div class="teacher-card">
-                    <div class="teacher-image">
-                        <img src="/imgs/teacher3.jpg" alt="Mr. Omar">
-                    </div>
-                    <div class="teacher-info">
-                        <h3>Mr. Omar Khalil</h3>
-                        <p class="subject">English & Literature</p>
-                        <p class="experience">10+ years of teaching experience</p>
-                    </div>
-                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Thoth Gate Learning Center. All rights reserved.</p>
             </div>
         </div>
-    </section>
-
-    <section class="egyptian-heritage-section">
-        <div class="container">
-            <h2 class="section-title">Heritage of Learning</h2>
-            <div class="heritage-grid">
-                <div class="heritage-item">
-                    <img src="/imgs/2.jpg" alt="Ancient Library" class="heritage-image">
-                    <h3>Ancient Libraries</h3>
-                    <p>Home to the world's first great centers of learning</p>
-                </div>
-                <div class="heritage-item">
-                    <img src="/imgs/3.jpg" alt="Mathematical Knowledge" class="heritage-image">
-                    <h3>Mathematical Genius</h3>
-                    <p>Pioneers of geometry, algebra, and astronomy</p>
-                </div>
-                <div class="heritage-item">
-                    <img src="/imgs/4.jpg" alt="Scientific Discovery" class="heritage-image">
-                    <h3>Scientific Discovery</h3>
-                    <p>Advancements in medicine, engineering, and architecture</p>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-<section class="egyptian-wisdom-section about-section">
-    <div class="container">
-        <h2 class="section-title">About Us</h2>
-        <div class="wisdom-content">
-            <div class="wisdom-text">
-                <p class="hero-subtitle">
-                    Thoth Gate blends the legacy of ancient Egyptian scholarship with modern pedagogical practice — delivering rigorous courses, expert mentorship, and a nurturing learning environment for the students of today.
-                </p>
-                <p class="wisdom-author">Our mission: preserve wisdom — inspire learning.</p>
-            </div>
-            <div class="wisdom-image">
-                <img src="/imgs/1.jpg" alt="About Thoth Gate" class="egyptian-image">
-            </div>
-        </div>
-    </div>
-</section>
-<footer class="main-footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Thoth Gate</h3>
-                <p>Gateway to Ancient Wisdom, Modern Learning</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="/student/home">Home</a></li>
-                    <li><a href="/courses">Courses</a></li>
-                    <li><a href="/community">Chat</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/profile">Profile</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Contact</h4>
-                <p>Email: info@thothgate.edu.eg</p>
-                <p>Phone: +20 123 456 789</p>
-            </div>
-            <div class="footer-section">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#" class="social-icon">📘</a>
-                    <a href="#" class="social-icon">📷</a>
-                    <a href="#" class="social-icon">🐦</a>
-                    <a href="#" class="social-icon">💼</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Thoth Gate Learning Center. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
-<script src="/script.js"></script>
+    </footer>
+    <script src="/script.js"></script>
 </body>
+
 </html>

@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thoth Gate - Register</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body class="login-page register-page">
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
     <div class="login-container">
         <div class="login-header">
             <div class="logo-container">
@@ -48,7 +57,8 @@
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="text" id="phone_number" name="phone_number" required value="{{ old('phone_number') }}">
+                    <input type="text" id="phone_number" name="phone_number" required
+                        value="{{ old('phone_number') }}">
                     @error('phone')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
@@ -94,7 +104,7 @@
                     <label class="checkbox-label">
                         <input type="checkbox" id="terms" name="terms" required>
                         <span class="checkmark"></span>
-                        I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+                        I agree to the <a href="/privacy" class="terms-link">Terms of Service and Privacy Policy</a>
                     </label>
                 </div>
 
@@ -111,4 +121,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Students</title>
-        <link rel="icon" href="../imgs/logo.png" type="image/x-icon">
+    <link rel="icon" href="../imgs/logo.png" type="image/x-icon">
 
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/admin-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body>
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">
                 <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
                 <h1 class="site-logo">Th𝕆th Gate</h1>
             </div>
-             <button class="hamburger-menu" id="hamburgerMenu">
+            <button class="hamburger-menu" id="hamburgerMenu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -31,14 +40,14 @@
                     <li><a href="/admin/students" class="active">Students</a></li>
                     <li><a href="/admin/messages">Messages</a></li>
                     <li><a href="/admin/notifications" id="notifLink">
-                        @if (App\Models\AdminNotification::where('is_read' , false)->count() > 0)
-                            <span class="notif-dot" id = "notif-dot">🔴</span>
-                        @endif
-                        Notifications
-                    </a></li>
+                            @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
+                                <span class="notif-dot" id = "notif-dot">🔴</span>
+                            @endif
+                            Notifications
+                        </a></li>
                 </ul>
             </nav>
-                 <div class="switchers-container">
+            <div class="switchers-container">
                 <button class="theme-switcher" id="themeSwitcher" title="Toggle Dark Mode">
                     <span class="theme-icon">🌙</span>
                 </button>
@@ -48,7 +57,7 @@
             </div>
         </div>
     </header>
-       <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="logo-container">
                 <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
@@ -66,11 +75,11 @@
                 <li><a href="/admin/students" class="active">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
                 <li><a href="/admin/notifications" id="notifLink">
-                    @if (App\Models\AdminNotification::where('is_read' , false)->count() > 0)
-                        <span class="notif-dot" id = "notif-dot">🔴</span>
-                    @endif
-                    Notifications
-                </a></li>
+                        @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
+                            <span class="notif-dot" id = "notif-dot">🔴</span>
+                        @endif
+                        Notifications
+                    </a></li>
 
             </ul>
         </nav>
@@ -97,39 +106,42 @@
                     <input type="text" id="studentSearch" class="search-bar" placeholder="Search students...">
                 </div>
                 <div class="admin-table-responsive">
-                       <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Course</th>
-                            <th style="text-align: center;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentsTableBody">
-
-                        @foreach ($students as $std)
+                    <table class="admin-table">
+                        <thead>
                             <tr>
-                                <td>{{$std->id}}</td>
-                                <td>{{$std->user->name}}</td>
-                                <td>{{$std->user->email}}</td>
-                                <td>{{$std->grade}}</td>
-                                <td class="btns-td">
-                                    <div style="display: flex; gap: 1rem; justify-content: center; align-items: center;">
-                                        <button class="btn btn-view" onclick="  window.location.href = '/admin/students/{{$std->id}}';">View</button>
-                                        <form action="/admin/students/{{$std->id}}" method="POST" onsubmit="return confirm('Are you sure you want to remove this student?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-remove">Remove</button>
-                                        </form>
-                                    </div>
-                                </td>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th style="text-align: center;">Actions</th>
                             </tr>
-                        @endforeach
-                        <!-- More rows as needed -->
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="studentsTableBody">
+
+                            @foreach ($students as $std)
+                                <tr>
+                                    <td>{{ $std->id }}</td>
+                                    <td>{{ $std->user->name }}</td>
+                                    <td>{{ $std->user->email }}</td>
+                                    <td>{{ $std->grade }}</td>
+                                    <td class="btns-td">
+                                        <div
+                                            style="display: flex; gap: 1rem; justify-content: center; align-items: center;">
+                                            <button class="btn btn-view"
+                                                onclick="  window.location.href = '/admin/students/{{ $std->id }}';">View</button>
+                                            <form action="/admin/students/{{ $std->id }}" method="POST"
+                                                onsubmit="return confirm('Are you sure you want to remove this student?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-remove">Remove</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <!-- More rows as needed -->
+                        </tbody>
+                    </table>
                 </div>
                 <div>
                     {{ $students->links('vendor.pagination.custom') }}
@@ -172,26 +184,26 @@
             </div>
         </div>
     </footer>
-<script>
-    window.allStudents = @json($allStudents);
+    <script>
+        window.allStudents = @json($allStudents);
 
-    document.getElementById("studentSearch").addEventListener("keyup", function () {
-        let filter = this.value.toLowerCase().trim();
-        let tbody = document.getElementById("studentsTableBody");
+        document.getElementById("studentSearch").addEventListener("keyup", function() {
+            let filter = this.value.toLowerCase().trim();
+            let tbody = document.getElementById("studentsTableBody");
 
-        tbody.innerHTML = ""; 
+            tbody.innerHTML = "";
 
-        let filtered = window.allStudents.filter(std => {
-            return (
-                std.id.toString().includes(filter) ||
-                std.user.name.toLowerCase().includes(filter) ||
-                std.user.email.toLowerCase().includes(filter) ||
-                std.grade.toLowerCase().includes(filter)
-            );
-        });
+            let filtered = window.allStudents.filter(std => {
+                return (
+                    std.id.toString().includes(filter) ||
+                    std.user.name.toLowerCase().includes(filter) ||
+                    std.user.email.toLowerCase().includes(filter) ||
+                    std.grade.toLowerCase().includes(filter)
+                );
+            });
 
-        filtered.forEach(std => {
-            let row = `
+            filtered.forEach(std => {
+                let row = `
                 <tr>
                     <td>${std.id}</td>
                     <td>${std.user.name}</td>
@@ -209,10 +221,10 @@
                     </td>
                 </tr>
             `;
-            tbody.insertAdjacentHTML("beforeend", row);
+                tbody.insertAdjacentHTML("beforeend", row);
+            });
         });
-    });
-</script>
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             window.Echo.channel('admin.notifications')
@@ -227,14 +239,14 @@
                         dot.id = "notif-dot";
                         dot.className = "notif-dot";
                         dot.textContent = "🔴";
-                        notifLink.insertBefore(dot, notifLink.childNodes[0]); 
+                        notifLink.insertBefore(dot, notifLink.childNodes[0]);
                     }
 
                     setTimeout(() => {
                         toast.classList.remove("show");
                     }, 2000);
                 });
-                
+
         });
     </script>
 
@@ -246,4 +258,5 @@
 
 
 </body>
+
 </html>

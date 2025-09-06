@@ -13,6 +13,11 @@
 </head>
 
 <body class="modal-overlay">
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
     <div class="quiz-modal-fullpage">
         <div class="quiz-modal">
             <div class="quiz-modal-header">
@@ -29,8 +34,6 @@
                         <h4 style="margin-bottom:0.5rem; color:#d4af37; font-family:'Cinzel Decorative',serif;">Exam
                             Instructions</h4>
                         <ul style="margin-left:1.2em;">
-                            <li>Do not open another tab or window during the exam. <strong>If you do, the exam will be
-                                    automatically submitted.</strong></li>
                             <li>Do not close the browser.</li>
                             <li>Read each question carefully before answering.</li>
                             <li>Once submitted, you cannot retake the exam.</li>

@@ -16,6 +16,11 @@
 </head>
 
 <body class="admin-messages-page">
+    <div id="loader">
+        <!-- You can add an image, a CSS spinner, or text here -->
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">

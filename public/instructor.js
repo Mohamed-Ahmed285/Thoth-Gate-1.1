@@ -11,8 +11,12 @@ if (document.getElementById('add-question-btn')) {
             <div class="question-header">
                 <button type="button" class="remove-question-btn" title="Remove this question">&times;</button>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="flex-direction:row;">
                 <input type="text" name="questions[${questionCount}][text]" required placeholder="Enter question text">
+                <label class="upload-label">
+                    <span class="upload-icon" aria-hidden="true">📷</span>
+                    <input type="file" name="questions[${questionCount}][image]" accept="image/*" class="question-image-input" style="display:none;">
+                </label>
             </div>
             <div class="choices-list"></div>
             <button type="button" class="add-choice-btn"><i class='fas fa-plus'></i> Add Choice</button>
@@ -40,11 +44,14 @@ if (document.getElementById('add-question-btn')) {
         cDiv.innerHTML = `
             <input type="radio" name="questions[${qNum}][correct_choice]" value="${choiceCount}" class="correct-choice-radio" title="Mark as correct" required>
             <input type="text" name="questions[${qNum}][choices][]" required placeholder="Enter choice text" class="choice-input">
+            <label class="upload-label">
+                <span class="upload-icon" aria-hidden="true">🖼️</span>
+                <input type="file" name="questions[${qNum}][choices_image][]" accept="image/*" class="choice-image-input" style="display:none;">
+            </label>
             <button type="button" class="remove-choice-btn" title="Remove choice">&times;</button>
         `;
         choicesList.appendChild(cDiv);
 
-        // Add remove choice functionality
         cDiv.querySelector('.remove-choice-btn').addEventListener('click', function() {
             cDiv.remove();
         });

@@ -11,6 +11,7 @@ use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
+use App\Models\Course;
 
 //login
 Route::get('/login' , [LoginController::class , 'index'])->name('login')->middleware('guest');
@@ -34,10 +35,13 @@ Route::post('/email/verification-notification', [EmailController::class , 'resen
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
-Route::view('/' , function (){
-    $courses = Course::all();
-    return view('welcome' , ['courses' => $courses]);
-})->middleware(['guest'])->name('welcome');
+Route::get('/' , function (){
+    $courses1 = Course::where('grade' , 'Third Preparatory')->get();
+    $courses2 = Course::where('grade', 'First Secondary')->get();
+    return view('welcome' , ['courses1' => $courses1 , 'courses2' => $courses2]);
+})->middleware('guest')->name('welcome');
+
+Route::view('/privacy' , 'privacy');
 
 Route::middleware(['auth' , 'student' , 'prevent.multiple.logins'])->group(function () {
     // home page
