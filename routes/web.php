@@ -189,4 +189,6 @@ Route::middleware(['auth' , 'check.instructor'])->group(function(){
         ->name('chat.store');
 
     Route::get('instructor/chats/{community}', [InstructorController::class, 'chatShow']);
+
+    Route::delete('/instructor/chats/delete/{Id}' , [InstructorController::class , 'destroy']);
 });

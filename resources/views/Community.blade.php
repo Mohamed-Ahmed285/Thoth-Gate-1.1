@@ -104,8 +104,7 @@
         </div>
         <div class="chat-messages" id="chatMessages">
             @foreach ($messages as $message)
-                <div class="message 
-    {{ $message->deleted ? 'deleted-message' : ($message->user_id === Auth::id() ? 'user-message' : 'other-message') }}"
+                <div class="message {{ $message->user_id === Auth::id() ? 'user-message' : 'other-message' }} {{ $message->deleted ? 'deleted-message' : '' }}"
                     data-id="{{ $message->id }}" data-user-id="{{ $message->user_id }}">
 
                     <div class="message-avatar">
@@ -122,7 +121,7 @@
                         </div>
 
                         @if ($message->deleted)
-                            <span>This message was deleted.</span>
+                            <span>{{ $message->message }}</span>
                         @else
                             @if ($message->message)
                                 <p>{{ $message->message }}</p>
@@ -356,7 +355,7 @@
                         });
 
                         if (res.ok) {
-                            msgToDelete.className = "message deleted-message";
+                            msgToDelete.classList.add("deleted-message");
                             const content = msgToDelete.querySelector(".message-content");
 
                             if (content) {
@@ -404,7 +403,7 @@
                     const msgEl = document.querySelector(`.message[data-id="${msgId}"]`);
 
                     if (msgEl) {
-                        msgEl.className = "message deleted-message";
+                        msgEl.classList.add("deleted-message");
 
                         const content = msgEl.querySelector(".message-content");
                         if (content) {
@@ -417,7 +416,7 @@
                         ${author}
                         ${time}
                     </div>
-                    <span>This message was deleted.</span>
+                    <span>${e.message}</span>
                 `;
                         }
 

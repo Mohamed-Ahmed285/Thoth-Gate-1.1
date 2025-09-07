@@ -5375,7 +5375,7 @@ body.dark-mode .chat-sidebar {
     border-top: 2px solid #d4af37;
 }
 
-.chat-form {
+/* .chat-form {
     display: flex;
     flex-direction: row;
     gap: 8px;
@@ -5383,7 +5383,7 @@ body.dark-mode .chat-sidebar {
     flex-flow: wrap;
     flex-flow: nowrap;
     align-items: center;
-}
+} */
 
 #messageInput {
     flex: 1;
@@ -5677,6 +5677,7 @@ body.dark-mode .delete-modal-content {
 
 /* Deleted message style */
 .deleted-message {
+    width: fit-content;
     color: #b0b0b0 !important;
     font-style: italic;
     background: #f5f5f5 !important;
@@ -5702,4 +5703,14 @@ body.dark-mode .deleted-message {
         /* flex-direction: column; */
         gap: 0.7rem;
     }
+}
+
+body.dark-mode .deleted-message .message-content {
+    background: #000;
+    color: white;
+}
+
+.deleted-message .message-content {
+    background: #fff;
+    color: black;
 }

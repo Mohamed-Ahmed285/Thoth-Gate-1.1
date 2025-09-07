@@ -10,6 +10,7 @@ use App\Events\MessageEvent;
 use App\Models\Exam;
 use App\Models\InstructorCourse;
 use App\Models\Lecture;
+use App\Events\MessageDeletedEvent;
 
 class InstructorController extends Controller
 {
@@ -200,5 +201,20 @@ class InstructorController extends Controller
             'status' => 'success',
             'message' => $message
         ]);
+    }
+
+    public function destroy($id)
+    {
+        $message = CommunityMessage::findOrFail($id);
+
+        $message->update([
+            'deleted' => true,
+            'message' => 'This message was deleted by instructor.',
+            'image'   => null,
+        ]);
+
+        broadcast(new MessageDeletedEvent($message))->toOthers();
+
+        return response()->json(['success' => true]);
     }
 }

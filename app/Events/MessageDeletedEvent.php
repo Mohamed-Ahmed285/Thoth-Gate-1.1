@@ -12,11 +12,11 @@ class MessageDeletedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $messageId;
+    public $message;
 
-    public function __construct($messageId)
+    public function __construct($message)
     {
-        $this->messageId = $messageId;
+        $this->message = $message;
     }
 
     public function broadcastOn(): array
@@ -32,7 +32,8 @@ class MessageDeletedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'message_id' => $this->messageId,
+            'message_id' => $this->message->id,
+            'message' => $this->message->message,
         ];
     }
 }

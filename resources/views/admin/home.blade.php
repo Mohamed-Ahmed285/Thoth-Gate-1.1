@@ -82,12 +82,22 @@
                 <li><a href="/admin/instructors">Instructors</a></li>
                 <li><a href="/admin/students">Students</a></li>
                 <li><a href="/admin/messages">Messages</a></li>
-                <li><a href="/admin/notifications" id="notifLink">
+                <li>
+                    <a href="/admin/notifications" id="notifLink">
                         @if (App\Models\AdminNotification::where('is_read', false)->count() > 0)
                             <span class="notif-dot" id = "notif-dot">🔴</span>
                         @endif
                         Notifications
-                    </a></li>
+                    </a>
+                </li>
+                <li>
+                    <form method="POST" action="/logout" id = "logoutForm">
+                        @csrf
+                        @method('DELETE')
+                        <a href="#" class="logout-btn"
+                            onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                    </form>
+                </li>
             </ul>
         </nav>
         <div class="sidebar-switchers">

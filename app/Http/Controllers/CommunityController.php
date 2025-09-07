@@ -97,11 +97,11 @@ class CommunityController extends Controller
 
         $message->update([
             'deleted' => true,
-            'message' => null,
+            'message' => 'This message was deleted.',
             'image'   => null,
         ]);
 
-        broadcast(new MessageDeletedEvent($message->id))->toOthers();
+        broadcast(new MessageDeletedEvent($message))->toOthers();
 
         return response()->json(['success' => true]);
     }
