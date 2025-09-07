@@ -4768,7 +4768,7 @@ body.dark-mode .quiz-submit-btn {
     box-shadow: 0 2px 8px rgba(36, 58, 107, 0.08);
 }
 
-/* 
+/*
 .quiz-timer {
     text-align: center;
     font-size: 1.2rem;
@@ -5713,4 +5713,32 @@ body.dark-mode .deleted-message .message-content {
 .deleted-message .message-content {
     background: #fff;
     color: black;
+}
+
+.toast-success {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #28a745; /* green for success */
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 15px 20px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-weight: 500;
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+}
+
+.toast-success.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-success {
+    transform: translateY(-20px);
 }

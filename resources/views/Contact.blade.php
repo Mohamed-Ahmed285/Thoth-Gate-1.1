@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Thoth Gate Academy</title>
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Add Google Fonts for Cinzel Decorative and Cinzel -->
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    @vite(['resources/css/app.css' , 'resources/js/app.js'])
 </head>
 
 <body class="contact-page">
@@ -128,7 +130,6 @@
                         <h2>Send us a Message</h2>
                         <p>Fill out the form below and we'll get back to you within 24 hours.</p>
                     </div>
-
                     <form class="contact-form" id="contactForm" method="post" action="/contact">
                         @csrf
                         <div class="form-group">
@@ -160,7 +161,7 @@
                             </div>
                         @endif
 
-                        <button type="submit" class="submit-btn">
+                        <button type="submit" class="submit-btn" id = "contactSubmitBtn">
                             <span class="btn-icon">📧</span>
                             Send Message
                         </button>
@@ -267,7 +268,55 @@
         </div>
     </footer>
 
+    <script>
+        const ContactForm = document.getElementById("contactForm");
+        const messageIn = document.getElementById("message");
+        const subjectIn = document.getElementById("subject");
+        const submitBtn = document.getElementById("contactSubmitBtn");
+        ContactForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            if (!messageIn.value.trim() || !subjectIn.value.trim()) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="btn-icon">⏳</span>Sending...';
+
+            const formData = new FormData(ContactForm);
+            try {
+                const response = await fetch("/contact", {
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: formData,
+                });
+                const data = await response.json();
+
+                if (data.status === "success") {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = "Message sent successfully!";
+                    toast.classList.add("show");
+
+                    ContactForm.reset();
+                }
+
+            }
+            catch (error) {
+                console.error("Error:", error);
+            }
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="btn-icon">📧</span> Send Message';
+
+            setTimeout(() => {
+                let toast = document.getElementById("toast");
+                toast.classList.remove("show");
+            }, 3000);
+        });
+    </script>
     <script src="/script.js"></script>
+
+    <div id="toast" class="toast-success"></div>
+
 </body>
 
 </html>

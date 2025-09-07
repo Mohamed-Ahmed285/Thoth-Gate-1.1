@@ -291,7 +291,6 @@
                     } else {
                         scrollToBottom();
                     }
-
                 });
         });
     </script>
@@ -319,7 +318,7 @@
                 }
             });
 
-            // Mobile: 
+            // Mobile:
             chatMessages.addEventListener('touchstart', function(e) {
                 let msg = e.target.closest('.message');
                 const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
