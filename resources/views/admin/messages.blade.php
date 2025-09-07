@@ -221,6 +221,41 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.Echo.channel('contact-messages')
+                .listen('.new.contact.message', (e) => {
+                    let messagesContainer = document.querySelector('.messages-card-list');
+
+                    let card = document.createElement('div');
+                    card.classList.add('message-card');
+                    let date = new Date(e.message.created_at);
+                    let formattedDate = `${date.getDate()} - ${date.getMonth()+1} - ${date.getFullYear()}`;
+
+                    card.innerHTML = `
+                    <div class="message-card-header">
+                        <span class="message-id">${e.message.id}</span>
+                        <form action="/message/delete/${e.message.id}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-delete" title="Delete">Delete</button>
+                        </form>
+                    </div>
+
+                    <div class="message-card-body">
+                        <h3 class="message-name">${e.user.name}</h3>
+                        <p class="message-email"><strong>Email:</strong> ${e.user.email}</p>
+                        <p class="message-email"><strong>Phone:</strong> ${e.user.phone_number || ''}</p>
+                        <p class="message-text"><strong>Subject: </strong>${e.message.subject}</p>
+                        <p class="message-text"><strong>Message: </strong>${e.message.message}</p>
+                        <p class="message-date"><strong>Date:</strong> ${formattedDate}</p>
+                    </div>
+                `;
+                    messagesContainer.prepend(card);
+                });
+        })
+    </script>
+
     <div id="toast" class="toast"></div>
 
     <script src="/admin.js"></script>
