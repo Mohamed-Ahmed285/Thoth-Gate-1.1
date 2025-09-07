@@ -3930,10 +3930,10 @@ body.dark-mode .video-info p {
         width: 250px;
         height: 150px;
     }
-
+/* 
     .course-meta {
         justify-content: center;
-    }
+    } */
 }
 
 @media (max-width: 768px) {
@@ -4019,7 +4019,8 @@ body.dark-mode .video-info p {
 
     .course-meta {
         flex-direction: column;
-        align-items: center;
+        /* align-items: center; */
+        width: fit-content;
         gap: 0.8rem;
     }
 
@@ -5741,4 +5742,25 @@ body.dark-mode .deleted-message .message-content {
 
 .toast-success {
     transform: translateY(-20px);
+}
+
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 18px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.4s, visibility 0.4s;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
 }

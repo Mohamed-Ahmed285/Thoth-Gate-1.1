@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Thoth Gate - Grade Chat</title>
     <meta name="user-id" content="{{ Auth::id() }}">
+    <meta name="student-id" content="{{ auth()->user()->student->id }}">
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
     <link
@@ -444,6 +445,24 @@
             setTimeout(checkScrollBtn, 500);
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentId = {{ auth()->user()->student->id }};
+
+            window.Echo.private(`student.notification.${studentId}`)
+                .listen('.student.notification', (e) => {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = `📢 ${e.message}`;
+                    toast.classList.add("show");
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 3000);
+                });
+        });
+    </script>
+    <div id="toast" class="toast"></div>
 
     <script src="/script.js"></script>
 </body>
