@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\PurchasedLectures;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,5 +28,27 @@ class ProfileController extends Controller
             ];
         }
         return view('profile', ['finished' => $finished]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $student_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Request $request, $student_id)
+    {
+        $student = Student::findOrFail($student_id);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if (!$user->student || $user->student->id != $student_id) {
+            return redirect()->route('home')->with('error', 'You don\'t have access to this page');
+        }
+
+        Auth::logout();
+        $user->delete();
+
+        return redirect()->route('welcome');
     }
 }

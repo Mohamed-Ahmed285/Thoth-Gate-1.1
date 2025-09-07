@@ -50,11 +50,14 @@
                 @foreach ($questions as $question)
                     <div class="quiz-question-box">
                         <h3 class="quiz-question">
+                            <span style="margin-right: 20px">{{ $loop->iteration }}. </span>
                             @if ($question->text)
-                                {{ $loop->iteration }}. {{ $question->text }}
-                            @else
-                                {{ $loop->iteration }}.
-                                <img src="{{ $question->image }}" alt="Question Image">
+                                <span style="display: block">{{ $question->text }}</span>
+                            @endif
+
+                            @if ($question->image)
+                                <img src="{{ asset('storage/' . $question->image) }}" alt="Question Image"
+                                    style="max-width: calc(100% - 50px); max-height: 500px; display: block; margin-top: 10px;">
                             @endif
                         </h3>
 
@@ -65,11 +68,16 @@
                                 @elseif($last_choice->firstWhere('question_id', $question->id)->choice_id === $choice->id)
                                     style="background-color: #E62727; border-radius: 10px; padding: 10px" @endif>
                                     <label style="color: white">
-                                        <input type="radio" @if ($choice->is_correct) checked @endif disabled>
-                                        @if ($choice->text)
-                                            {{ $choice->text }}
-                                        @else
-                                            <img src="{{ $choice->image }}" alt="Choice Image">
+                                        <div style="margin-bottom: 15px">
+                                            <input type="radio" @if ($choice->is_correct) checked @endif
+                                                disabled>
+                                            @if ($choice->text)
+                                                {{ $choice->text }}
+                                            @endif
+                                        </div>
+                                        @if ($choice->image)
+                                            <img src="{{ asset('storage/' . $choice->image) }}" alt="Choice Image"
+                                                style="max-width: calc(100% - 50px); max-height: 500px;">
                                         @endif
                                     </label>
                                 </div>

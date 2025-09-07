@@ -117,7 +117,7 @@
                 <p class="section-des">Build your exam by adding questions and choices for your students.</p>
             </div>
             <form id="createExamForm" class="createExamForm" style="max-width:700px;margin:0 auto;" method="POST"
-                action="/instructor/create/exam">
+                enctype="multipart/form-data" action="/instructor/create/exam">
                 @csrf
                 <div class="exam-form-row" style="display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;">
                     <div class="form-group" style="flex:1;min-width:220px;">

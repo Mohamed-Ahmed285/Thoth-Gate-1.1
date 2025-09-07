@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-id" content="{{ Auth::id() }}">
+    <meta name="user-type" content="{{ Auth::user()->type }}">
+
     <title>Instructor Chat</title>
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
 
@@ -19,13 +21,13 @@
     @vite(['resources/js/app.js'])
 </head>
 
-<body class="instructor-home">
+<body class="instructor-home" style="display: flex; flex-direction: column;  height: 100vh;">
     <div id="loader">
         <!-- You can add an image, a CSS spinner, or text here -->
         <div class="spinner"></div>
         <p>Loading...</p>
     </div>
-    <header class="main-header">
+    <header class="main-header" style="flex-shrink: 0;">
         <div class="header-content">
             <div class="logo-container">
                 <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
@@ -98,28 +100,40 @@
             </button>
         </div>
     </div>
-    <section class="chat-column">
-        <button class="scroll-button" id="scrollBtn" style="display: none;">
-            ↓
-        </button>
+    <section class="chat-column" style="flex: 1;  display: flex;  flex-direction: column;">
+        <div id="scrollToBottomBtn" class="scroll-to-bottom-btn" title="Scroll to latest message" style="display:none;"
+            onclick="scrollToLatestMessage()">
+            <span class="scroll-arrow">⬇</span>
+        </div>
         <div class="chat-messages" id="chatMessages">
             @foreach ($messages as $message)
-                <div class="message {{ $message->user_id === Auth::id() ? 'user-message' : 'other-message' }}">
+                <div class="message {{ $message->user_id === Auth::id() ? 'user-message' : 'other-message' }} {{ $message->deleted ? 'deleted-message' : '' }}"
+                    data-id="{{ $message->id }}" data-user-id="{{ $message->user_id }}">
+
+
                     <div class="message-avatar">
-                        <img src="/imgs/profile.png" alt="Student">
+                        @unless ($message->deleted)
+                            <img src="/imgs/profile.png" alt="Student">
+                        @endunless
                     </div>
+
                     <div class="message-content">
                         <div class="message-header">
                             <span
                                 class="message-author">{{ ($message->user->type == 1 ? 'Mr.' : '') . $message->user->name }}</span>
                             <span class="message-time">{{ $message->time }}</span>
                         </div>
-                        @if ($message->message)
-                            <p>{{ $message->message }}</p>
-                        @endif
-                        @if ($message->image)
-                            <img src="{{ asset($message->image) }}" alt="Community Image"
-                                style="max-width: 100%; height: auto; margin-top: 8px;">
+
+                        @if ($message->deleted)
+                            <span>{{ $message->message }}</span>
+                        @else
+                            @if ($message->message)
+                                <p>{{ $message->message }}</p>
+                            @endif
+                            @if ($message->image)
+                                <img src="{{ asset($message->image) }}" alt="Community Image"
+                                    style="max-width: 100%; height: auto; margin-top: 8px;">
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -143,8 +157,19 @@
             </form>
         </div>
     </section>
+    <div id="deleteMsgModal" class="delete-modal" style="display:none;">
+        <div class="delete-modal-content">
+            <p>Are you sure you want to delete this message?</p>
+            <div class="delete-modal-actions">
+                <button id="deleteMsgYes" class="btn btn-delete">Delete</button>
+                <button id="deleteMsgNo" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script>
+        const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
+        const currentUserType = document.querySelector('meta[name="user-type"]')?.content;
         const imageInput = document.getElementById('imageIn');
         const imagePreview = document.getElementById('imagePreview');
 
@@ -181,7 +206,6 @@
         const chatForm = document.getElementById('chatForm');
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
-        const scrollBtn = document.getElementById('scrollBtn');
         let icon = document.getElementById('send-span');
         let sendbtn = document.querySelector('.send-btn');
 
@@ -222,7 +246,6 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const chatMessages = document.getElementById('chatMessages');
-            const scrollBtn = document.getElementById('scrollBtn');
 
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -231,6 +254,9 @@
                 .listen('.App\\Events\\MessageEvent', (e) => {
                     const msg = e.message;
                     const div = document.createElement('div');
+
+                    div.setAttribute("data-id", msg.id);
+                    div.setAttribute("data-user-id", msg.user.id);
 
                     const isNearBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages
                         .scrollHeight - 50;
@@ -272,20 +298,156 @@
                     }
 
                 });
+        });
+    </script>
 
+    <script>
+        let msgToDelete = null;
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const modal = document.getElementById('deleteMsgModal');
+            const yesBtn = document.getElementById('deleteMsgYes');
+            const noBtn = document.getElementById('deleteMsgNo');
+            let longPressTimer = null;
 
-            chatMessages.addEventListener('scroll', () => {
-                if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 50) {
-                    scrollBtn.style.display = 'block';
-                } else {
-                    scrollBtn.style.display = 'none';
+            chatMessages.addEventListener('contextmenu', function(e) {
+                let msg = e.target.closest('.message');
+
+                if (msg && !msg.classList.contains('deleted-message')) {
+                    // allow if it's the user's own message OR if the user is an instructor
+                    if (msg.getAttribute("data-user-id") === currentUserId || currentUserType === "1") {
+                        e.preventDefault();
+                        msgToDelete = msg;
+                        modal.style.display = 'flex';
+                    }
                 }
             });
 
-            scrollBtn.addEventListener('click', () => {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Mobile: 
+            chatMessages.addEventListener('touchstart', function(e) {
+                let msg = e.target.closest('.message');
+                const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
+                const currentUserType = document.querySelector('meta[name="user-type"]')?.content;
+
+                if (msg && !msg.classList.contains('deleted-message')) {
+                    if (msg.getAttribute("data-user-id") === currentUserId || currentUserType === "1") {
+                        longPressTimer = setTimeout(function() {
+                            msgToDelete = msg;
+                            modal.style.display = 'flex';
+                        }, 600); // long press duration
+                    }
+                }
             });
+            chatMessages.addEventListener('touchend', function(e) {
+                clearTimeout(longPressTimer);
+            });
+            chatMessages.addEventListener('touchmove', function(e) {
+                clearTimeout(longPressTimer);
+            });
+
+            yesBtn.onclick = async function() {
+                if (msgToDelete) {
+                    const msgId = msgToDelete.getAttribute("data-id");
+
+                    try {
+                        const res = await fetch(`/instructor/chats/delete/${msgId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                    .content,
+                            },
+                        });
+
+                        if (res.ok) {
+                            msgToDelete.classList.add("deleted-message");
+                            const content = msgToDelete.querySelector(".message-content");
+
+                            if (content) {
+                                const header = content.querySelector(".message-header");
+                                const author = header?.querySelector(".message-author")?.outerHTML || "";
+                                const time = header?.querySelector(".message-time")?.outerHTML || "";
+
+                                content.innerHTML = `
+                                    <div class="message-header">
+                                        ${author}
+                                        ${time}
+                                    </div>
+                                    <span>This message was deleted by instructor. </span>
+                                `;
+                            }
+
+                            const avatar = msgToDelete.querySelector(".message-avatar");
+                            if (avatar) avatar.innerHTML = "";
+                        } else {
+                            alert("Could not delete message.");
+                        }
+                    } catch (err) {
+                        console.error("Error deleting message:", err);
+                    }
+                }
+                modal.style.display = "none";
+                msgToDelete = null;
+            };
+
+            noBtn.onclick = function() {
+                modal.style.display = 'none';
+                msgToDelete = null;
+            };
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    msgToDelete = null;
+                }
+            });
+
+            window.Echo.channel('MessageChannel')
+                .listen('.MessageDeletedEvent', (e) => {
+                    const msgId = e.message_id;
+                    const msgEl = document.querySelector(`.message[data-id="${msgId}"]`);
+
+                    if (msgEl) {
+                        msgEl.classList.add("deleted-message");
+
+                        const content = msgEl.querySelector(".message-content");
+                        if (content) {
+                            const header = content.querySelector(".message-header");
+                            const author = header?.querySelector(".message-author")?.outerHTML || "";
+                            const time = header?.querySelector(".message-time")?.outerHTML || "";
+
+                            content.innerHTML = `   
+                                <div class="message-header">
+                                    ${author}
+                                    ${time}
+                                </div>
+                                <span>${e.message}</span>
+                            `;
+                        }
+
+                        const avatar = msgEl.querySelector(".message-avatar");
+                        if (avatar) avatar.innerHTML = "";
+                    }
+                });
+
         });
+
+        const scrollBtn = document.getElementById('scrollToBottomBtn');
+
+        function checkScrollBtn() {
+            if (!chatMessages || !scrollBtn) return;
+            const atBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 10;
+            scrollBtn.style.display = atBottom ? 'none' : 'flex';
+        }
+
+        function scrollToLatestMessage() {
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+        if (chatMessages && scrollBtn) {
+            chatMessages.addEventListener('scroll', checkScrollBtn);
+            setTimeout(checkScrollBtn, 500);
+        }
     </script>
 
     <script src="/script.js"></script>
