@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Lectures - Thoth Gate</title>
+    <meta name="student-id" content="{{ auth()->user()->student->id }}">
+    @vite(['resources/js/app.js'])
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <link
@@ -129,10 +131,11 @@
                                 <p class="lecture-description">{{ $lecture->description }}.</p>
                                 <div>
                                     @if ($lecture->purchased_lectures->isNotEmpty())
-                                        <a href="/lectures/{{ $course->id }}/{{ $lecture->id }}"
-                                            class="course-btn">View Lecture</a>
+                                        <a href="/lectures/{{ $course->id }}/{{ $lecture->id }}" class="course-btn"
+                                            data-lecture-id="{{ $lecture->id }}">View Lecture</a>
                                     @else
-                                        <a href="/lectures/{{ $lecture->id }}/buy" class="course-btn">Buy Lecture</a>
+                                        <a href="/lectures/{{ $lecture->id }}/buy" class="course-btn buy-btn"
+                                            data-lecture-id="{{ $lecture->id }}">Buy Lecture</a>
                                     @endif
                                 </div>
                             </div>
@@ -180,6 +183,41 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentId = {{ auth()->user()->student->id }};
+
+            window.Echo.private(`student.${studentId}`)
+                .listen('.lecture.granted', (e) => {
+                    const buyBtn = document.querySelector(`.buy-btn[data-lecture-id="${e.lecture_id}"]`);
+                    if (buyBtn) {
+                        buyBtn.textContent = "View Lecture";
+                        buyBtn.href = `/lectures/${e.course_id}/${e.lecture_id}`;
+                        buyBtn.classList.remove('buy-btn');
+                    }
+                });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentId = {{ auth()->user()->student->id }};
+
+            window.Echo.private(`student.notification.${studentId}`)
+                .listen('.student.notification', (e) => {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = `📢 ${e.message}`;
+                    toast.classList.add("show");
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 3000);
+                });
+        });
+    </script>
+    <div id="toast" class="toast"></div>
+
     <script src="/script.js"></script>
 </body>
 

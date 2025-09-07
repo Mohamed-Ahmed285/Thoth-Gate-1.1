@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="student-id" content="{{ auth()->user()->student->id }}">
+    @vite(['resources/js/app.js'])
     <title>Thoth Gate - Course Detail</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
@@ -149,7 +151,8 @@
 
                     <div class="lectures-list">
                         @foreach ($lectures as $lecture)
-                            <a href="/lectures/{{ $course->id }}/{{ $lecture->id }}" style="text-decoration: none;">
+                            <a href="/lectures/{{ $course->id }}/{{ $lecture->id }}"
+                                style="text-decoration: none;">
                                 <div class="lecture-item {{ $lecture->id == $currentLecture->id ? 'active' : '' }}">
                                     <div class="lecture-thumbnail">
                                         <img src="/{{ $course->image }}" alt="{{ $lecture->title }}">
@@ -235,6 +238,23 @@
             </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentId = {{ auth()->user()->student->id }};
+
+            window.Echo.private(`student.notification.${studentId}`)
+                .listen('.student.notification', (e) => {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = `📢 ${e.message}`;
+                    toast.classList.add("show");
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 3000);
+                });
+        });
+    </script>
+    <div id="toast" class="toast"></div>
 
     <script src="/script.js"></script>
 </body>

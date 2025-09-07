@@ -19,6 +19,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Events\LectureAccessGranted;
+use App\Events\StudentNotification;
 
 class AdminController extends Controller
 {
@@ -192,7 +194,6 @@ class AdminController extends Controller
             return $pl->lecture->only(['id' , 'index' , 'course_id']);
         });
 
-        // dd($purchased);
         return view('admin.show-student', [
             'student' => $student,
             'purchasedLectures' => $purchasedLectures,
@@ -241,8 +242,12 @@ class AdminController extends Controller
             ]);
         }
 
+        event(new LectureAccessGranted($student->id, $lecture->id , $lecture->course->id));
+        event(new StudentNotification($student->id , 'New lecture opened for you.'));
+
         return redirect()->route('students.show', [$student_id])->with('success', 'Lecture granted successfully!');
     }
+
     public function removeAccess(Request $request , $std){
         $validated = $request->validate([
             'lecture_id' => 'required|exists:lectures,id'

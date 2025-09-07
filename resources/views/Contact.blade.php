@@ -7,13 +7,14 @@
     <title>Contact Us - Thoth Gate Academy</title>
     <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="student-id" content="{{ auth()->user()->student->id }}">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Add Google Fonts for Cinzel Decorative and Cinzel -->
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    @vite(['resources/css/app.css' , 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="contact-page">
@@ -300,8 +301,7 @@
                     ContactForm.reset();
                 }
 
-            }
-            catch (error) {
+            } catch (error) {
                 console.error("Error:", error);
             }
             submitBtn.disabled = false;
@@ -314,6 +314,24 @@
         });
     </script>
     <script src="/script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentId = {{ auth()->user()->student->id }};
+
+            window.Echo.private(`student.notification.${studentId}`)
+                .listen('.student.notification', (e) => {
+                    let toast = document.getElementById("toast2");
+                    toast.textContent = `📢 ${e.message}`;
+                    toast.classList.add("show");
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 3000);
+                });
+        });
+    </script>
+    <div id="toast2" class="toast"></div>
 
     <div id="toast" class="toast-success"></div>
 

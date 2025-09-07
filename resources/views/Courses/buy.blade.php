@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecture Access Restricted</title>
+    <meta name="student-id" content="{{ auth()->user()->student->id }}">
+    @vite(['resources/js/app.js'])
     <link rel="stylesheet" href="/styles.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&display=swap"
@@ -172,6 +174,23 @@
             </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentId = {{ auth()->user()->student->id }};
+
+            window.Echo.private(`student.notification.${studentId}`)
+                .listen('.student.notification', (e) => {
+                    let toast = document.getElementById("toast");
+                    toast.textContent = `📢 ${e.message}`;
+                    toast.classList.add("show");
+
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                    }, 3000);
+                });
+        });
+    </script>
+    <div id="toast" class="toast"></div>
 
     <script src="/script.js"></script>
 </body>
