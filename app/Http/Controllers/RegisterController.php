@@ -31,7 +31,7 @@ class RegisterController extends Controller
             'phone_number' => 'required|string|max:255',
             'dateOfBirth' => 'required|date',
             'password' => 'required|string|min:8|confirmed',
-            'grade' => 'required|string|in:3prep,1sec',
+            'grade' => 'required|string|in:Third Preparatory,First Secondary',
         ]);
 
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageEvent;
 use Carbon\Carbon;
+use App\Events\MessageDeletedEvent;
 
 class CommunityController extends Controller
 {
@@ -85,5 +86,23 @@ class CommunityController extends Controller
             'message' => $message
         ]);
     }
+    
+    public function destroy($id)
+    {
+        $message = CommunityMessage::findOrFail($id);
 
+        if ($message->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $message->update([
+            'deleted' => true,
+            'message' => null,
+            'image'   => null,
+        ]);
+
+        broadcast(new MessageDeletedEvent($message->id))->toOthers();
+
+        return response()->json(['success' => true]);
+    }
 }

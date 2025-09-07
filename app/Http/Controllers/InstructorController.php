@@ -78,13 +78,46 @@ class InstructorController extends Controller
     public function saveExam(Request $request){
         $validated = $request->validate([
             'exam-title' => 'required|string|max:255',
-            'exam-duration' => 'required|integer|max:60',
+            'exam-duration' => 'required|integer|min:1',
             'questions' => 'required|array|min:1',
-            'questions.*.text' => 'required|string',
-            'questions.*.choices' => 'required|array|min:2',
-            'questions.*.choices.*' => 'required|string',
+            'questions.*.text' => 'nullable|string',
+            'questions.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'questions.*.correct_choice' => 'required|numeric',
+            'questions.*.choices' => 'required|array|min:2',
+            'questions.*.choices.*.text' => 'nullable|string',
+            'questions.*.choices.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+
+        foreach ($request->questions ?? [] as $qIndex => $question) {
+            // Validate choices
+            foreach ($question['choices'] ?? [] as $cIndex => $choice) {
+                $choiceText  = $choice['text'] ?? null;
+                $choiceImage = $choice['image'] ?? null;
+
+                if (empty($choiceText) && empty($choiceImage)) {
+                    return back()
+                        ->withErrors([
+                            "questions.$qIndex.choices.$cIndex.text" => "Each choice must have either text or an image."
+                        ])
+                        ->withInput();
+                }
+            }
+
+            // Validate question itself
+            $questionText  = $question['text'] ?? null;
+            $questionImage = $question['image'] ?? null;
+
+            if (empty($questionText) && empty($questionImage)) {
+                return back()
+                    ->withErrors([
+                        "questions.$qIndex.text" => "Each question must have either text or an image."
+                    ])
+                    ->withInput();
+            }
+        }
+
+
 
         $exam = Exam::create([
             'instructor_id' => Auth::user()->instructor->id,
@@ -92,19 +125,33 @@ class InstructorController extends Controller
             'duration'   => $validated['exam-duration'],
         ]);
 
-        foreach ($validated['questions'] as $q) {
+        foreach ($request->questions as $qId => $qData) {
+            $questionImagePath = null;
+            if (!empty($qData['image']) && $qData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                $questionImagePath = $qData['image']->store('question_images', 'public');
+            }
+
             $question = $exam->questions()->create([
-                'text' => $q['text'],
+                'text'  => $qData['text'] ?? null,
+                'image' => $questionImagePath,
             ]);
 
-            foreach ($q['choices'] as $index => $choice) {
+            foreach ($qData['choices'] ?? [] as $cId => $cData) {
+                $choiceImagePath = null;
+                if (!empty($cData['image']) && $cData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                    $choiceImagePath = $cData['image']->store('choice_images', 'public');
+                }
+
                 $question->choices()->create([
-                    'text' => $choice,
-                    'is_correct' => ($index == $q['correct_choice']),
+                    'text'       => $cData['text'] ?? null,
+                    'image'      => $choiceImagePath,
+                    'is_correct' => ((string)$cId === (string)$qData['correct_choice']),
                 ]);
             }
         }
-        return redirect()->route('instructor.addExam')->with('success' , 'Exam created successfully, Now you can add lecture!');
+
+
+        return redirect()->route('instructor.addExam')->with('success', 'Exam created successfully!');
     }
 
 

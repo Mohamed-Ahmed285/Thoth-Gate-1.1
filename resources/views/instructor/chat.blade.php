@@ -19,13 +19,13 @@
     @vite(['resources/js/app.js'])
 </head>
 
-<body class="instructor-home">
+<body class="instructor-home" style="display: flex; flex-direction: column;  height: 100vh;">
     <div id="loader">
         <!-- You can add an image, a CSS spinner, or text here -->
         <div class="spinner"></div>
         <p>Loading...</p>
     </div>
-    <header class="main-header">
+    <header class="main-header" style="flex-shrink: 0;">
         <div class="header-content">
             <div class="logo-container">
                 <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
@@ -98,10 +98,11 @@
             </button>
         </div>
     </div>
-    <section class="chat-column">
-        <button class="scroll-button" id="scrollBtn" style="display: none;">
-            ↓
-        </button>
+    <section class="chat-column" style="flex: 1;  display: flex;  flex-direction: column;">
+        <div id="scrollToBottomBtn" class="scroll-to-bottom-btn" title="Scroll to latest message" style="display:none;"
+            onclick="scrollToLatestMessage()">
+            <span class="scroll-arrow">⬇</span>
+        </div>
         <div class="chat-messages" id="chatMessages">
             @foreach ($messages as $message)
                 <div class="message {{ $message->user_id === Auth::id() ? 'user-message' : 'other-message' }}">
@@ -181,7 +182,6 @@
         const chatForm = document.getElementById('chatForm');
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
-        const scrollBtn = document.getElementById('scrollBtn');
         let icon = document.getElementById('send-span');
         let sendbtn = document.querySelector('.send-btn');
 
@@ -222,7 +222,6 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const chatMessages = document.getElementById('chatMessages');
-            const scrollBtn = document.getElementById('scrollBtn');
 
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -272,20 +271,27 @@
                     }
 
                 });
-
-
-            chatMessages.addEventListener('scroll', () => {
-                if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 50) {
-                    scrollBtn.style.display = 'block';
-                } else {
-                    scrollBtn.style.display = 'none';
-                }
-            });
-
-            scrollBtn.addEventListener('click', () => {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            });
         });
+    </script>
+
+    <script>
+        const scrollBtn = document.getElementById('scrollToBottomBtn');
+
+        function checkScrollBtn() {
+            if (!chatMessages || !scrollBtn) return;
+            const atBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 10;
+            scrollBtn.style.display = atBottom ? 'none' : 'flex';
+        }
+
+        function scrollToLatestMessage() {
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+        if (chatMessages && scrollBtn) {
+            chatMessages.addEventListener('scroll', checkScrollBtn);
+            setTimeout(checkScrollBtn, 500);
+        }
     </script>
 
     <script src="/script.js"></script>

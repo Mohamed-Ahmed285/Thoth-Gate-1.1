@@ -460,3 +460,18 @@ body.dark-mode.createxam .form-group .upload-label:hover {
     background: #243a6b;
 
 }
+
+.choice-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.choice-input {
+    flex: 1;
+    /* makes the text input take available space */
+}
+
+.upload-label {
+    cursor: pointer;
+}

@@ -51,6 +51,8 @@ Route::middleware(['auth' , 'student' , 'prevent.multiple.logins'])->group(funct
     //profile
     Route::get('/profile' , [ProfileController::class , 'index'])
         ->name('profile');
+    
+    Route::delete('profile/delete/{student}' , [ProfileController::class , 'destroy']);
 
     // courses
     Route::middleware(['verified' , 'check.exam'])->group(function () {
@@ -75,6 +77,9 @@ Route::middleware(['auth' , 'student' , 'prevent.multiple.logins'])->group(funct
     Route::post('/community' , [CommunityController::class , 'store'])
         ->middleware(['verified' , 'check.exam'])
         ->name('community.store');
+
+    Route::delete('/community/message/{id}', [CommunityController::class, 'destroy'])
+        ->name('community.message.destroy');
 
     // exams
     Route::prefix('courses/{course}/{lecture}/exams')->middleware('verified')->group(function () {

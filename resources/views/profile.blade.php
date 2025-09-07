@@ -109,6 +109,11 @@
         <div class="container">
             <div class="profile-header">
                 <h2 class="section-title">Student Profile</h2>
+                <form action="/profile/delete/{{ Auth::user()->student->id }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type = "submit" class="delete-profile-btn">Delete Profile</button>
+                </form>
             </div>
 
             <div class="profile-content">
