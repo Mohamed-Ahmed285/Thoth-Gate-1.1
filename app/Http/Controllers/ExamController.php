@@ -11,6 +11,7 @@ use App\Models\PurchasedLectures;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\StudentNotification;
 
 class ExamController extends Controller
 {
@@ -50,7 +51,7 @@ class ExamController extends Controller
         if ($session->student_id != Auth::user()->student->id) {
             return redirect()->route('home')->with('error' , 'You are not allowed to access this page');
         }
-        return view( 'exam.info' , ['session' => $session]);
+        return view('exam.info' , ['session' => $session]);
     }
 
     /**
@@ -61,6 +62,8 @@ class ExamController extends Controller
         $exam = Exam::with('questions.choices')->findOrFail($exam_id);
 
         $session = ExamSession::findOrFail($session_id);
+
+        $student = Auth::user()->student;
 
         if ($session->student_id != Auth::user()->student->id || $session->submitted_at) {
             return redirect()->route('home')->with('error', 'You are not allowed to access this page');
@@ -85,6 +88,10 @@ class ExamController extends Controller
                 }
             }
         }
+
+        $student->points += $score;
+        $student->save();
+
         $session->score = $score;
         $session->submitted_at = now();
         $session->save();

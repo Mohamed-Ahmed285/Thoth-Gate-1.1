@@ -154,9 +154,9 @@
                             </li>
                         @endif
                         @foreach ($notifications as $notification)
-                            <li class="{{ $notification->is_read ? '' : 'unread-notification' }}">
-                                <strong>📢 {{ $notification->title }}</strong><br>
-                                <span>{{ $notification->message }}</span><br>
+                            <li class="{{ $notification->is_read ? '' : 'unread-notification' }}"
+                                style="padding: 10px;">
+                                <strong>📢&ensp;{{ $notification->title }}</strong><br>
                             </li>
                         @endforeach
                     </ul>
