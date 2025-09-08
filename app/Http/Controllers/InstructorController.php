@@ -11,6 +11,8 @@ use App\Models\Exam;
 use App\Models\InstructorCourse;
 use App\Models\Lecture;
 use App\Events\MessageDeletedEvent;
+use App\Models\AdminNotification;
+use App\Events\AdminNotificationEvent;
 
 class InstructorController extends Controller
 {
@@ -61,6 +63,14 @@ class InstructorController extends Controller
         $exam->lecture_id = $lec->id;
         $exam->save();
 
+
+        $notification = AdminNotification::create([
+            'title' => Auth::user()->name . " added a new lecture.",
+            'is_read' => false,
+        ]);
+
+        event(new AdminNotificationEvent($notification));
+        
         return redirect()->route('instructor.addLecture')->with('success', 'Lecture added successfully!');
     }
 
