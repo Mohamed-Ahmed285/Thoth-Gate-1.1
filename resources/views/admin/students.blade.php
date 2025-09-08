@@ -129,7 +129,7 @@
                                             style="display: flex; gap: 1rem; justify-content: center; align-items: center;">
                                             <button class="btn btn-view"
                                                 onclick="  window.location.href = '/admin/students/{{ $std->id }}';">View</button>
-                                            <form action="/admin/students/{{ $std->id }}" method="POST"
+                                            <form action="{{ route('students.destroy', [$std->id]) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to remove this student?');">
                                                 @csrf
                                                 @method('DELETE')

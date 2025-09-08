@@ -231,7 +231,7 @@ class AdminController extends Controller
         $community = PurchasedCommunity::where('student_id' , $student_id)->first();
 
         if($community){
-            $community->end_date = Carbon::now()->addMonth();
+            $community->end_date = max(Carbon::now()->addMonth() , $community->end_date);
             $community->save();
         }
         else{
@@ -255,6 +255,7 @@ class AdminController extends Controller
         $lecture = PurchasedLectures::where('student_id' , $std)
             ->where('lecture_id' , $validated['lecture_id'])
             ->first();
+        
         if ($lecture){
             $lecture->delete();
             return redirect()->route('students.show' , ['student' => $std])->with('success' , "Lecture removed successfully!");
@@ -360,11 +361,7 @@ class AdminController extends Controller
     }
 
     public function readAll(){
-        $notifi = AdminNotification::where('is_read' , false)->get();
-        foreach($notifi as $n){
-            $n->is_read = true;
-            $n->save();
-        } 
+        AdminNotification::where('is_read' , false)->update(['is_read' => true]);
         return redirect()->route('admin.notifications');
     }
 

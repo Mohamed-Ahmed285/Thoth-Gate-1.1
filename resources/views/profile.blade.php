@@ -111,7 +111,8 @@
         <div class="container">
             <div class="profile-header">
                 <h2 class="section-title">Student Profile</h2>
-                <form action="/profile/delete/{{ Auth::user()->student->id }}" method="POST">
+                <form action="/profile/delete/{{ Auth::user()->student->id }}" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete your profile?');">
                     @csrf
                     @method('DELETE')
                     <button type = "submit" class="delete-profile-btn">Delete Profile</button>
