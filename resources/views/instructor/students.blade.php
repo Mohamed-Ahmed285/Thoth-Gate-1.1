@@ -4,28 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Manage Students</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/instructor.css">
+    <link rel="stylesheet" href="/instructor-students-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
-
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-
 </head>
 
 <body class="instructor-home">
-    <div id="loader">
-        <!-- You can add an image, a CSS spinner, or text here -->
-        <div class="spinner"></div>
-        <p>Loading...</p>
-    </div>
     <header class="main-header">
         <div class="header-content">
             <div class="logo-container">
-                <img src="../imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
+                <img src="/imgs/logo.png" alt="Th𝕆th Gate Logo" class="logo-image">
                 <h1 class="site-logo">Th𝕆th Gate</h1>
             </div>
             <button class="hamburger-menu" id="hamburgerMenu">
@@ -35,13 +28,13 @@
             </button>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="/instructor/home" class="active">Home</a></li>
+                    <li><a href="/instructor/home">Home</a></li>
                     <li><a href="/instructor/create/exam">Create Exam</a></li>
                     <li><a href="/instructor/add/lecture">Add Lecture</a></li>
                     <li><a href="/instructor/chats">Chats</a></li>
-                    <li><a href="/instructor/students">Students</a></li>
+                    <li><a href="/instructor/students" class="active">Students</a></li>
                     <li>
-                        <form method="POST" action="/logout" id="logoutForm">
+                        <form method="POST" action="/logout" id = "logoutForm">
                             @csrf
                             @method('DELETE')
                             <a href="#" class="logout-btn"
@@ -60,7 +53,6 @@
             </div>
         </div>
     </header>
-    <!-- Mobile Sidebar for instructor -->
     <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="logo-container">
@@ -74,13 +66,13 @@
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="/instructor/home" class="active">Home</a></li>
+                <li><a href="/instructor/home">Home</a></li>
                 <li><a href="/instructor/create/exam">Create Exam</a></li>
                 <li><a href="/instructor/add/lecture">Add Lecture</a></li>
                 <li><a href="/instructor/chats">Chats</a></li>
-                <li><a href="/instructor/students">Students</a></li>
+                <li><a href="/instructor/students" class="active">Students</a></li>
                 <li>
-                    <form method="POST" action="/logout" id="logoutForm">
+                    <form method="POST" action="/logout" id = "logoutForm">
                         @csrf
                         @method('DELETE')
                         <a href="#" class="logout-btn"
@@ -98,32 +90,51 @@
             </button>
         </div>
     </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <main class="container" style="margin-bottom: 3rem;">
+        <h1 class="section-title" style="margin: revert;">Manage Student Points</h1>
+        <p style="text-align:center; margin-bottom: 2rem;">Search and manage points for your students</p>
 
-    <main class="container">
-        <h1 class="section-title" style="    margin: revert;">Welcome, Instructor!</h1>
-        <p style="text-align:center;">Manage your lectures, exams, and student chats from your dashboard.</p>
-        <div class="inst-grid">
-            <div class="inst-card" onclick="window.location.href='/instructor/add/lecture'">
-                <img src="../imgs/language.jpg" alt="Add Lecture"
-                    style="width:60px;height:60px;border-radius:50%;margin-bottom:1rem;object-fit:cover;">
-                <h3>Add Lecture</h3>
-                <p>Create and share new lectures with your students.</p>
-            </div>
-            <div class="inst-card" onclick="window.location.href='/instructor/create/exam'">
-                <img src="../imgs/history.jpg" alt="Create Exam"
-                    style="width:60px;height:60px;border-radius:50%;margin-bottom:1rem;object-fit:cover;">
-                <h3>Create Exam</h3>
-                <p>Design exams and assign them to grades.</p>
-            </div>
-            <div class="inst-card" onclick="window.location.href='/instructor/chats'">
-                <img src="../imgs/profile.png" alt="Chats"
-                    style="width:60px;height:60px;border-radius:50%;margin-bottom:1rem;object-fit:cover;">
-                <h3>Chats</h3>
-                <p>Access and communicate with students by grade.</p>
+        <!-- Search and Filter Section -->
+        <div class="search-section"
+            style="border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);">
+            <div class="search-container">
+                <div class="search-input-group" style="flex: 1; min-width: 200px;">
+                    <input type="text" id="studentSearch" placeholder="Search students by name or ID...">
+                </div>
+                <div class="filter-group">
+                    <select id="gradeFilter"
+                        style="padding: 12px 15px; border: 2px solid #d4af37; border-radius: 8px; font-size: 1rem; min-width: 120px;">
+
+                        @foreach ($grades as $grade)
+                            <option value="{{ $grade }}">{{ $grade }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button id="searchBtn" class="exam-btn" style="padding: 12px 24px;">Search</button>
             </div>
         </div>
+
+        <div class="students-grid" id="studentsGrid">
+            <!-- Static Student Cards -->
+
+            @foreach ($students as $student)
+                <div class="course-card" data-student-id="{{ $student->id }}"
+                    data-student-name="{{ $student->user->name }}" data-grade="{{ $student->grade }}">
+                    <div class="course-content">
+                        <img src="/imgs/profile.png" alt="{{ $student->user->name }}">
+                        <h3>{{ $student->user->name }}</h3>
+                        <p>ID: {{ $student->id }}</p>
+                        <p>{{ $student->grade }}</p>
+                        <div>Points: {{ $student->points }}</div>
+                        <br>
+                        <a href="/instructor/add/points/{{ $student->id }}" class="exam-btn">Add Points</a>
+                    </div>
+                </div>
+            @endforeach
     </main>
+
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
@@ -161,8 +172,40 @@
             </div>
         </div>
     </footer>
+
     <script src="/script.js"></script>
     <script src="/instructor.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            filterStudents();
+        });
+    </script>
+    <script>
+        function filterStudents() {
+            const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+            const gradeFilter = document.getElementById('gradeFilter').value;
+            const studentCards = document.querySelectorAll('.course-card');
+
+            studentCards.forEach(card => {
+                const studentName = card.getAttribute('data-student-name').toLowerCase();
+                const studentId = card.getAttribute('data-student-id');
+                const studentGrade = card.getAttribute('data-grade');
+
+                const matchesSearch = studentName.includes(searchTerm) || studentId.includes(searchTerm);
+                const matchesGrade = !gradeFilter || studentGrade === gradeFilter;
+
+                if (matchesSearch && matchesGrade) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', filterStudents);
+        document.getElementById('studentSearch').addEventListener('input', filterStudents);
+        document.getElementById('gradeFilter').addEventListener('change', filterStudents);
+    </script>
 </body>
 
 </html>

@@ -212,33 +212,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Configuration & State ---
-            const COURSES_PER_LOAD = 3; // MODIFIED: Set how many courses to load at a time
+            const COURSES_PER_LOAD = 3;
             let coursesCurrentlyVisible = COURSES_PER_LOAD;
 
-            // --- Element Selectors ---
             const gradeFilter = document.getElementById('gradeFilter');
             const coursesGrid = document.getElementById('coursesGrid');
             const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-            // --- Main Render Function ---
             function renderCourses(selectedGrade) {
                 const allCoursesForGrade = coursesByGrade[selectedGrade] || [];
 
-                // Clear the existing courses
                 coursesGrid.innerHTML = '';
 
-                // Get the portion of courses to display
                 const coursesToDisplay = allCoursesForGrade.slice(0, coursesCurrentlyVisible);
 
-                // If no courses exist for the grade, show a message and hide the button
                 if (allCoursesForGrade.length === 0) {
                     coursesGrid.innerHTML = '<p style="color: #243a6b;">No courses available for this grade.</p>';
                     loadMoreBtn.style.display = 'none';
                     return;
                 }
 
-                // Create and append HTML for each course card
                 coursesToDisplay.forEach(course => {
                     const courseCard = `
                     <div class="course-card">
@@ -258,33 +251,25 @@
                     coursesGrid.insertAdjacentHTML('beforeend', courseCard);
                 });
 
-                // --- Manage "Load More" Button Visibility ---
                 if (coursesCurrentlyVisible >= allCoursesForGrade.length) {
-                    loadMoreBtn.style.display = 'none'; // Hide button if all courses are shown
+                    loadMoreBtn.style.display = 'none'; 
                 } else {
-                    loadMoreBtn.style.display = 'block'; // Show button if there are more to load
+                    loadMoreBtn.style.display = 'block'; 
                 }
             }
 
-            // --- Event Listeners ---
 
-            // 1. When the grade filter is changed
             gradeFilter.addEventListener('change', function() {
-                // Reset the count for the new category
                 coursesCurrentlyVisible = COURSES_PER_LOAD;
                 renderCourses(this.value);
             });
 
-            // 2. When the "Load More" button is clicked
             loadMoreBtn.addEventListener('click', function() {
-                // Increase the number of visible courses
                 coursesCurrentlyVisible += COURSES_PER_LOAD;
                 const selectedGrade = gradeFilter.value;
                 renderCourses(selectedGrade);
             });
 
-            // --- Initial Page Load ---
-            // Render the initial set of courses for the default selected grade
             renderCourses(gradeFilter.value);
         });
     </script>

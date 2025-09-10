@@ -21,7 +21,8 @@ class EnsureUserIsStudent
             } else if (Auth::user()->type == 1) {
                 return redirect()->route('instructors.home')->with('error', 'You are not allowed to view this page');
             }
-        } else {
+        } 
+        else {
             return redirect()->route('login');
         }
         return $next($request);
