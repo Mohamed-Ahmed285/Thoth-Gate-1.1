@@ -38,6 +38,7 @@
                     <li><a href="/instructor/create/exam" class="active">Create Exam</a></li>
                     <li><a href="/instructor/add/lecture">Add Lecture</a></li>
                     <li><a href="/instructor/chats">Chats</a></li>
+                    <li><a href="/instructor/students">Students</a></li>
                     <li>
                         <form method="POST" action="/logout" id="logoutForm">
                             @csrf
@@ -75,6 +76,7 @@
                 <li><a href="/instructor/create/exam" class="active">Create Exam</a></li>
                 <li><a href="/instructor/add/lecture">Add Lecture</a></li>
                 <li><a href="/instructor/chats">Chats</a></li>
+                <li><a href="/instructor/students">Students</a></li>
                 <li>
                     <form method="POST" action="/logout" id="logoutForm">
                         @csrf
@@ -163,6 +165,7 @@
                         <li><a href="/instructor/add/lecture">Add Lecture</a></li>
                         <li><a href="/instructor/create/exam">Create Exam</a></li>
                         <li><a href="/instructor/chats">Chats</a></li>
+                        <li><a href="/instructor/students">Students</a></li>
 
                     </ul>
                 </div>

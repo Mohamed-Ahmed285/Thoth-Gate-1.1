@@ -230,6 +230,7 @@
                 });
 
             } catch (err) {
+                alert('message faild to send');
                 console.error(err);
             }
 

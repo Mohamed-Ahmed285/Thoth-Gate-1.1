@@ -160,7 +160,6 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('admin/messages' , [AdminController::class , 'messagesView'])->name('admin.messages');
 
     Route::delete('/message/delete/{message}' , [AdminController::class , 'deleteMessage']);
-
 });
 // Instructor routes
 Route::middleware(['auth' , 'check.instructor'])->group(function(){
@@ -191,4 +190,14 @@ Route::middleware(['auth' , 'check.instructor'])->group(function(){
     Route::get('instructor/chats/{community}', [InstructorController::class, 'chatShow']);
 
     Route::delete('/instructor/chats/delete/{Id}' , [InstructorController::class , 'destroy']);
+
+    //points
+    Route::get('/instructor/students' , [InstructorController::class , 'students'])
+        ->name('instructor.students');
+
+    Route::get('/instructor/add/points/{student}' , [InstructorController::class , 'addPoints'])
+        ->name('instructor.addPoints');
+
+    Route::post('/instructor/add/points/{student}', [InstructorController::class, 'savePoints'])
+        ->name('instructor.savePoints');
 });

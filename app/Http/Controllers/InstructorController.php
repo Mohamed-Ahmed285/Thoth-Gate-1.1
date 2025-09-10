@@ -10,9 +10,13 @@ use App\Events\MessageEvent;
 use App\Models\Exam;
 use App\Models\InstructorCourse;
 use App\Models\Lecture;
+use App\Models\Student;
 use App\Events\MessageDeletedEvent;
 use App\Models\AdminNotification;
 use App\Events\AdminNotificationEvent;
+use App\Events\AddPoints;
+use App\Events\StudentNotification;
+use App\Models\PointsHistroy;
 
 class InstructorController extends Controller
 {
@@ -226,5 +230,50 @@ class InstructorController extends Controller
         broadcast(new MessageDeletedEvent($message))->toOthers();
 
         return response()->json(['success' => true]);
+    }
+    public function students(){
+
+        $insGrades = InstructorCourse::where('instructor_id', Auth::user()->instructor->id)
+            ->join('courses' , 'instructor_courses.course_id' , '=' , 'courses.id')
+            ->distinct()
+            ->pluck('courses.grade');
+
+        $students = Student::with('user')
+            ->whereIn('grade', $insGrades)
+            ->get();
+
+        return view('instructor.students' , ['grades' => $insGrades , 'students' => $students]);
+    }
+
+    public function addPoints($student_id){
+        $student = Student::findOrFail($student_id);
+        return view('instructor.add-points' , ['student' => $student]);
+    }
+    public function savePoints(Request $request, $student_id)
+    {
+        $validatedData = $request->validate([
+            'pointsAmount' => 'required|numeric|min:1',
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $student = Student::findOrFail($student_id);
+
+        $student->points += $validatedData['pointsAmount'];
+        $student->save();
+
+        $points = PointsHistroy::create([
+            'student_id' => $student_id,
+            'points' => $validatedData['pointsAmount'],
+            'reason' => $validatedData['reason'],
+        ]);
+
+        event(new AddPoints($points));
+        event(new StudentNotification($student->id, 'You have earned '. $validatedData['pointsAmount'] . ' points.'));
+
+
+        return response()->json([
+            'status' => 'success',
+        ]);
+
     }
 }

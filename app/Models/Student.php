@@ -25,4 +25,7 @@ class Student extends Model
     {
         return $this->hasMany(CommunityMessage::class);
     }
+    public function pointsHistory(){
+        return $this->hasMany(PointsHistroy::class);
+    }
 }
