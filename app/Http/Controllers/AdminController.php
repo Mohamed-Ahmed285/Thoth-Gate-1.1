@@ -73,13 +73,13 @@ class AdminController extends Controller
     {
         $instructors = DB::table('instructors')
             ->join('users', 'instructors.user_id', '=', 'users.id')
-            ->select('instructors.id' , 'users.name', 'users.email')
+            ->select('instructors.id', 'users.name', 'users.email')
             ->get();
 
-        
+
         $filename = 'instructors.csv';
         $handle = fopen($filename, 'w+');
-        fputcsv($handle, ['Name', 'Email' , 'Subject 1' , 'Subject 2']);
+        fputcsv($handle, ['Name', 'Email', 'Subject 1', 'Subject 2']);
         foreach ($instructors as $instructor) {
             $subjects = DB::table('instructor_courses')
                 ->join('courses', 'instructor_courses.course_id', '=', 'courses.id')
@@ -153,7 +153,7 @@ class AdminController extends Controller
     public function createInstructorIndex()
     {
         $courses = Course::all();
-        return view('admin.create-instructor' , ['courses' => $courses]);
+        return view('admin.create-instructor', ['courses' => $courses]);
     }
 
     public function destroyInstructor(Instructor $instructor)
@@ -191,7 +191,7 @@ class AdminController extends Controller
             ->get(['id', 'name', 'course_id', 'index']);
 
         $purchased = $student->lectures->map(function ($pl) {
-            return $pl->lecture->only(['id' , 'index' , 'course_id']);
+            return $pl->lecture->only(['id', 'index', 'course_id']);
         });
 
         return view('admin.show-student', [
@@ -222,47 +222,55 @@ class AdminController extends Controller
         $student = Student::findOrFail($student_id);
         $lecture = Lecture::with('course')->findOrFail($request->lecture_id);
 
-        PurchasedLectures::create([
-            'student_id' => $student->id,
-            'lecture_id' => $lecture->id,
-            'course_id' => $lecture->course->id,
-        ]);
+        $exists = PurchasedLectures::where('student_id', $student->id)
+            ->where('lecture_id', $lecture->id)
+            ->where('course_id', $lecture->course->id)
+            ->exists();
 
-        $community = PurchasedCommunity::where('student_id' , $student_id)->first();
-
-        if($community){
-            $community->end_date = max(Carbon::now()->addMonth() , $community->end_date);
-            $community->save();
+        if (!$exists) {
+            PurchasedLectures::create([
+                'student_id' => $student->id,
+                'lecture_id' => $lecture->id,
+                'course_id' => $lecture->course->id,
+            ]);
         }
-        else{
+
+        $community = PurchasedCommunity::where('student_id', $student_id)->first();
+
+        if ($community) {
+            $community->end_date = max(Carbon::now()->addMonth(), $community->end_date);
+            $community->save();
+        } else {
             PurchasedCommunity::create([
                 'student_id' => $student->id,
-                'community_id' => Community::where('grade' , $student->grade)->first()->id,
+                'community_id' => Community::where('grade', $student->grade)->first()->id,
                 'end_date' => Carbon::now()->addMonth(),
             ]);
         }
 
-        event(new LectureAccessGranted($student->id, $lecture->id , $lecture->course->id));
-        event(new StudentNotification($student->id , 'New lecture opened for you.'));
+        event(new LectureAccessGranted($student->id, $lecture->id, $lecture->course->id));
+        event(new StudentNotification($student->id, 'New lecture opened for you.'));
 
         return redirect()->route('students.show', [$student_id])->with('success', 'Lecture granted successfully!');
     }
 
-    public function removeAccess(Request $request , $std){
+    public function removeAccess(Request $request, $std)
+    {
         $validated = $request->validate([
             'lecture_id' => 'required|exists:lectures,id'
         ]);
-        $lecture = PurchasedLectures::where('student_id' , $std)
-            ->where('lecture_id' , $validated['lecture_id'])
+        $lecture = PurchasedLectures::where('student_id', $std)
+            ->where('lecture_id', $validated['lecture_id'])
             ->first();
-        
-        if ($lecture){
+
+        if ($lecture) {
             $lecture->delete();
-            return redirect()->route('students.show' , ['student' => $std])->with('success' , "Lecture removed successfully!");
+            return redirect()->route('students.show', ['student' => $std])->with('success', "Lecture removed successfully!");
         }
-        return redirect()->route('students.show', ['student' =>$std])->with('error', "something went wrong!");
+        return redirect()->route('students.show', ['student' => $std])->with('error', "something went wrong!");
     }
-    public function editEndDate(Request $request , $std){
+    public function editEndDate(Request $request, $std)
+    {
         $validated = $request->validate([
             'chatAccessCheckbox' => 'required',
             'chatEndDate' => 'required|date|after:today'
@@ -274,25 +282,26 @@ class AdminController extends Controller
         if ($community) {
             $community->end_date = $validated['chatEndDate'];
             $community->save();
-        } 
-        else {
+        } else {
             PurchasedCommunity::create([
                 'student_id' => $std,
                 'community_id' => Community::where('grade', $student->grade)->first()->id,
                 'end_date' => $validated['chatEndDate'],
             ]);
         }
-        return redirect()->route('students.show' , $std)->with('success' , 'community granted successfully'); 
+        return redirect()->route('students.show', $std)->with('success', 'community granted successfully');
     }
-    public function StudentExams($student){
+    public function StudentExams($student)
+    {
         $ExamSessions = ExamSession::with('exam.lecture')
-            ->where('student_id' , $student)
+            ->where('student_id', $student)
             ->whereNotNull('submitted_at')
             ->get();
-            
-        return view('admin.student-exams', ['ExamSessions'=> $ExamSessions , 'student'=>$student]);
+
+        return view('admin.student-exams', ['ExamSessions' => $ExamSessions, 'student' => $student]);
     }
-    public function StudentModel($session_id){
+    public function StudentModel($session_id)
+    {
 
         $session = ExamSession::findOrFail($session_id);
         $last_choice = SessionChoice::with('choice.question')
@@ -304,14 +313,15 @@ class AdminController extends Controller
         $questions = Question::with('choices')->where('exam_id', $exam->id)->get();
 
 
-        return view('admin.student-model' , [
+        return view('admin.student-model', [
             'session' => $session,
             'questions' => $questions,
             'last_choice' => $last_choice
         ]);
     }
 
-    public function exportStudentsExams($student_id){
+    public function exportStudentsExams($student_id)
+    {
         $student = Student::findOrFail($student_id);
         $studentsExams = DB::table('students')
             // ->join('users', 'students.user_id', '=', 'users.id')
@@ -342,30 +352,33 @@ class AdminController extends Controller
         fclose($handle);
 
         return response()->download($filename)->deleteFileAfterSend(true);
-    
+
     }
 
-    public function notifications(){
-        $unseen = AdminNotification::where('is_read' , false)
+    public function notifications()
+    {
+        $unseen = AdminNotification::where('is_read', false)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $seen = AdminNotification::where('is_read' , true)
-            ->orderBy('created_at' , 'desc')
+        $seen = AdminNotification::where('is_read', true)
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.notifications',[
+        return view('admin.notifications', [
             'unseen' => $unseen,
             'seen' => $seen,
         ]);
     }
 
-    public function readAll(){
-        AdminNotification::where('is_read' , false)->update(['is_read' => true]);
+    public function readAll()
+    {
+        AdminNotification::where('is_read', false)->update(['is_read' => true]);
         return redirect()->route('admin.notifications');
     }
 
-    public function readNotification($notification_id){
+    public function readNotification($notification_id)
+    {
         $notification = AdminNotification::findOrFail($notification_id);
 
         $notification->is_read = true;
@@ -375,22 +388,25 @@ class AdminController extends Controller
         return redirect()->route('admin.notifications');
     }
 
-    public function deleteNotification($notification_id){
+    public function deleteNotification($notification_id)
+    {
         $notification = AdminNotification::findOrFail($notification_id);
         $notification->delete();
         return redirect()->route('admin.notifications');
     }
 
-    public function messagesView(){
-        $messages = Contact::orderBy('created_at' , 'desc')
+    public function messagesView()
+    {
+        $messages = Contact::orderBy('created_at', 'desc')
             ->paginate(4);
-        return view('admin.messages' , ['messages' => $messages]);
+        return view('admin.messages', ['messages' => $messages]);
     }
 
-    public function deleteMessage($message_id){
+    public function deleteMessage($message_id)
+    {
         $message = Contact::findOrFail($message_id);
         $message->delete();
 
-        return redirect()->route('admin.messages')->with('success' , 'Message deleted successfully!');
+        return redirect()->route('admin.messages')->with('success', 'Message deleted successfully!');
     }
 }

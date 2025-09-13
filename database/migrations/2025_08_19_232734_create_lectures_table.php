@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('index');
             $table->string('description');
             $table->string('video');
-            $table->string('image');
+            $table->integer('price');
             $table->timestamps();
         });
     }

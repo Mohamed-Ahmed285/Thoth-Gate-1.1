@@ -23,48 +23,52 @@ use App\Models\StudentPackage;
 
 class InstructorController extends Controller
 {
-    public function home(){
+    public function home()
+    {
         return view('instructor.home');
     }
-    
-    public function addLecture(){
+
+    public function addLecture()
+    {
         $ins = Auth::user()->instructor;
 
-        $exams = Exam::where('instructor_id' , $ins->id)
+        $exams = Exam::where('instructor_id', $ins->id)
             ->whereNull('lecture_id')
             ->get();
 
         $courses = InstructorCourse::where('instructor_id', $ins->id)
             ->join('courses', 'instructor_courses.course_id', '=', 'courses.id')
-            ->get(['course_id' , 'grade', 'subject']);
+            ->get(['course_id', 'grade', 'subject']);
 
-        return view('instructor.add-lecture' , [
+        return view('instructor.add-lecture', [
             'exams' => $exams,
             'courses' => $courses,
         ]);
     }
-    
-    public function saveLecture(Request $request){
+
+    public function saveLecture(Request $request)
+    {
         $validated = $request->validate([
-            'video_path'          => 'required|string',
-            'lecture-title'       => 'required|string|max:255',
+            'video_path' => 'required|string',
+            'lecture-title' => 'required|string|max:255',
+            'lecture-price' => 'required|integer|min:0',
             'lecture-description' => 'required|string',
-            'quiz-name'           => 'required|exists:exams,id',
-            'grade'               => 'required|exists:courses,id',
+            'quiz-name' => 'required|exists:exams,id',
+            'grade' => 'required|exists:courses,id',
         ]);
 
         $videoPath = $validated['video_path'];
 
-        $index = Lecture::where('course_id' , $validated['grade'])->count() + 1;
+        $index = Lecture::where('course_id', $validated['grade'])->count() + 1;
 
         $lec = Lecture::create([
             'index' => $index,
-            'course_id'     => $validated['grade'],
+            'course_id' => $validated['grade'],
             'instructor_id' => Auth::user()->instructor->id,
-            'title'         => $validated['lecture-title'],
-            'video'         => $videoPath,
-            'image'         => '/',
-            'description'   => $validated['lecture-description'],
+            'title' => $validated['lecture-title'],
+            'video' => $videoPath,
+            'price' => $validated['lecture-price'],
+            'description' => $validated['lecture-description'],
         ]);
 
         $exam = Exam::findOrFail($validated['quiz-name']);
@@ -90,7 +94,7 @@ class InstructorController extends Controller
                 'student_id' => $std->student_id,
                 'lecture_id' => $lec->id,
                 'course_id' => $lec->course_id,
-                'finished'   => false,
+                'finished' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -121,7 +125,8 @@ class InstructorController extends Controller
     }
 
 
-    public function createExam(){
+    public function createExam()
+    {
         $ins = Auth::user()->instructor;
 
         $grades = InstructorCourse::where('instructor_id', $ins->id)
@@ -129,10 +134,11 @@ class InstructorController extends Controller
             ->distinct()
             ->pluck('courses.grade');
 
-        return view('instructor.create-exam' , ['grades' => $grades]);
+        return view('instructor.create-exam', ['grades' => $grades]);
     }
 
-    public function saveExam(Request $request){
+    public function saveExam(Request $request)
+    {
         $validated = $request->validate([
             'exam-title' => 'required|string|max:255',
             'exam-duration' => 'required|integer|min:1',
@@ -149,7 +155,7 @@ class InstructorController extends Controller
         foreach ($request->questions ?? [] as $qIndex => $question) {
             // Validate choices
             foreach ($question['choices'] ?? [] as $cIndex => $choice) {
-                $choiceText  = $choice['text'] ?? null;
+                $choiceText = $choice['text'] ?? null;
                 $choiceImage = $choice['image'] ?? null;
 
                 if (empty($choiceText) && empty($choiceImage)) {
@@ -162,7 +168,7 @@ class InstructorController extends Controller
             }
 
             // Validate question itself
-            $questionText  = $question['text'] ?? null;
+            $questionText = $question['text'] ?? null;
             $questionImage = $question['image'] ?? null;
 
             if (empty($questionText) && empty($questionImage)) {
@@ -178,8 +184,8 @@ class InstructorController extends Controller
 
         $exam = Exam::create([
             'instructor_id' => Auth::user()->instructor->id,
-            'title'      => $validated['exam-title'],
-            'duration'   => $validated['exam-duration'],
+            'title' => $validated['exam-title'],
+            'duration' => $validated['exam-duration'],
         ]);
 
         foreach ($request->questions as $qId => $qData) {
@@ -189,7 +195,7 @@ class InstructorController extends Controller
             }
 
             $question = $exam->questions()->create([
-                'text'  => $qData['text'] ?? null,
+                'text' => $qData['text'] ?? null,
                 'image' => $questionImagePath,
             ]);
 
@@ -200,9 +206,9 @@ class InstructorController extends Controller
                 }
 
                 $question->choices()->create([
-                    'text'       => $cData['text'] ?? null,
-                    'image'      => $choiceImagePath,
-                    'is_correct' => ((string)$cId === (string)$qData['correct_choice']),
+                    'text' => $cData['text'] ?? null,
+                    'image' => $choiceImagePath,
+                    'is_correct' => ((string) $cId === (string) $qData['correct_choice']),
                 ]);
             }
         }
@@ -212,14 +218,16 @@ class InstructorController extends Controller
     }
 
 
-    public function chatsIndex(){
+    public function chatsIndex()
+    {
         $communities = Community::all();
-        return view('instructor.chats' , ['communities' => $communities]);
+        return view('instructor.chats', ['communities' => $communities]);
     }
-    public function chatShow($community_id){
-        $messages = CommunityMessage::where('community_id' , $community_id)->get();
+    public function chatShow($community_id)
+    {
+        $messages = CommunityMessage::where('community_id', $community_id)->get();
         $community = Community::findOrFail($community_id);
-        return view('instructor.chat' , ['messages' => $messages , 'fullCommunity' => $community]);
+        return view('instructor.chat', ['messages' => $messages, 'fullCommunity' => $community]);
     }
     public function MessageStore(Request $request)
     {
@@ -266,17 +274,18 @@ class InstructorController extends Controller
         $message->update([
             'deleted' => true,
             'message' => 'This message was deleted by instructor.',
-            'image'   => null,
+            'image' => null,
         ]);
 
         broadcast(new MessageDeletedEvent($message))->toOthers();
 
         return response()->json(['success' => true]);
     }
-    public function students(){
+    public function students()
+    {
 
         $insGrades = InstructorCourse::where('instructor_id', Auth::user()->instructor->id)
-            ->join('courses' , 'instructor_courses.course_id' , '=' , 'courses.id')
+            ->join('courses', 'instructor_courses.course_id', '=', 'courses.id')
             ->distinct()
             ->pluck('courses.grade');
 
@@ -284,12 +293,13 @@ class InstructorController extends Controller
             ->whereIn('grade', $insGrades)
             ->get();
 
-        return view('instructor.students' , ['grades' => $insGrades , 'students' => $students]);
+        return view('instructor.students', ['grades' => $insGrades, 'students' => $students]);
     }
 
-    public function addPoints($student_id){
+    public function addPoints($student_id)
+    {
         $student = Student::findOrFail($student_id);
-        return view('instructor.add-points' , ['student' => $student]);
+        return view('instructor.add-points', ['student' => $student]);
     }
     public function savePoints(Request $request, $student_id)
     {
@@ -310,7 +320,7 @@ class InstructorController extends Controller
         ]);
 
         event(new AddPoints($points));
-        event(new StudentNotification($student->id, 'You have earned '. $validatedData['pointsAmount'] . ' points.'));
+        event(new StudentNotification($student->id, 'You have earned ' . $validatedData['pointsAmount'] . ' points.'));
 
 
         return response()->json([

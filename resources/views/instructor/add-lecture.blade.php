@@ -140,6 +140,11 @@
                                 <label for="lecture-title">Lecture Title</label>
                                 <input type="text" id="lecture-title" name="lecture-title" required>
                             </div>
+
+                            <div class="form-group">
+                                <label for="lecture-price">Lecture Price</label>
+                                <input type="text" id="lecture-price" name="lecture-price" required>
+                            </div>
                         </div>
 
                         <div class="form-group">

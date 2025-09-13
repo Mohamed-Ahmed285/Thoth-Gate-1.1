@@ -115,13 +115,7 @@
                     <div class="restricted-access-title">Buy now</div>
                     <div class="restricted-access-message">You have not purchased this lecture</div>
                     <div class="restricted-access-message">
-                        Price
-                        @if ($lecture->course->grade === '3prep')
-                            50
-                        @else
-                            70
-                        @endif
-                        EGP.
+                        price: {{ $lecture->price }} EGP.
                     </div>
                     <!-- <div class="restricted-access-message">Contact Us.</div> -->
                     <div class="restricted-btn-group">
