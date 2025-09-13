@@ -28,4 +28,7 @@ class Student extends Model
     public function pointsHistory(){
         return $this->hasMany(PointsHistroy::class);
     }
+    public function packages(){
+        return $this->hasMany(StudentPackage::class);
+    }
 }

@@ -16,7 +16,10 @@ use App\Models\AdminNotification;
 use App\Events\AdminNotificationEvent;
 use App\Events\AddPoints;
 use App\Events\StudentNotification;
+use App\Models\Course;
 use App\Models\PointsHistroy;
+use App\Models\PurchasedLectures;
+use App\Models\StudentPackage;
 
 class InstructorController extends Controller
 {
@@ -43,13 +46,14 @@ class InstructorController extends Controller
     
     public function saveLecture(Request $request){
         $validated = $request->validate([
-            'lecture-video'      => 'required|mimes:mp4,mov,avi,wmv|max:512000', 
+            'video_path'          => 'required|string',
             'lecture-title'       => 'required|string|max:255',
             'lecture-description' => 'required|string',
             'quiz-name'           => 'required|exists:exams,id',
             'grade'               => 'required|exists:courses,id',
         ]);
-        $videoPath = $request->file('lecture-video')->store('lectures', 'public');
+
+        $videoPath = $validated['video_path'];
 
         $index = Lecture::where('course_id' , $validated['grade'])->count() + 1;
 
@@ -58,7 +62,7 @@ class InstructorController extends Controller
             'course_id'     => $validated['grade'],
             'instructor_id' => Auth::user()->instructor->id,
             'title'         => $validated['lecture-title'],
-            'video'          => '/storage/' . $videoPath,
+            'video'         => $videoPath,
             'image'         => '/',
             'description'   => $validated['lecture-description'],
         ]);
@@ -74,8 +78,46 @@ class InstructorController extends Controller
         ]);
 
         event(new AdminNotificationEvent($notification));
-        
+
+        $students = StudentPackage::where('course_id', $validated['grade'])
+            ->where('remaining', '>', 0)
+            ->get();
+
+        $data = [];
+
+        foreach ($students as $std) {
+            $data[] = [
+                'student_id' => $std->student_id,
+                'lecture_id' => $lec->id,
+                'course_id' => $lec->course_id,
+                'finished'   => false,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        PurchasedLectures::insert($data);
+
+        StudentPackage::where('course_id', 1)
+            ->where('remaining', '>', 0)
+            ->decrement('remaining');
+
+
         return redirect()->route('instructor.addLecture')->with('success', 'Lecture added successfully!');
+    }
+
+    public function uploadVideo(Request $request)
+    {
+        $request->validate([
+            'lecture-video' => 'required|mimes:mp4,mov,avi,wmv|max:512000',
+        ]);
+
+        $videoPath = $request->file('lecture-video')->store('lectures', 'public');
+
+        return response()->json([
+            'success' => true,
+            'video_path' => '/storage/' . $videoPath,
+        ]);
     }
 
 

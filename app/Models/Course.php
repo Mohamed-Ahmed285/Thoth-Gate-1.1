@@ -19,4 +19,8 @@ class Course extends Model
     public function instructors(){
         return $this->hasMany(InstructorCourse::class);
     }
+    
+    public function packages(){
+        return $this->hasMany(StudentPackage::class);
+    }
 }

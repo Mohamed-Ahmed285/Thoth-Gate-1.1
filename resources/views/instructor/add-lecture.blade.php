@@ -125,14 +125,16 @@
                         <h2>Lecture Details</h2>
                         <p>Provide the lecture title, grade, and content.</p>
                     </div>
-                    <form class="contact-form" id="addLectureForm" method="POST" action="/instructor/add/lecture"
-                        enctype="multipart/form-data">
+                    <form class="contact-form" id="addLectureForm" method="POST" action="/instructor/add/lecture">
                         @csrf
+
+                        <!-- نخزن مسار الفيديو هنا بعد الرفع -->
+                        <input type="hidden" name="video_path" id="video_path">
+
                         <div class="form-group-group">
                             <div class="form-group">
                                 <label for="lecture-video">Upload Lecture Video</label>
-                                <input type="file" id="lecture-video" name="lecture-video" accept="video/*"
-                                    required>
+                                <input type="file" id="lecture-video" accept="video/*" required>
                             </div>
                             <div class="form-group">
                                 <label for="lecture-title">Lecture Title</label>
@@ -144,6 +146,7 @@
                             <label for="lecture-description">Lecture Description</label>
                             <textarea id="lecture-description" name="lecture-description" rows="3" required></textarea>
                         </div>
+
                         <div class="form-group">
                             <label for="quiz-name">Quiz Name</label>
                             <select id="quiz-name" name="quiz-name" required>
@@ -153,24 +156,99 @@
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="grade">Grade & Subject</label>
                             <select id="grade" name="grade" required>
                                 <option value="">Select grade and subject</option>
                                 @foreach ($courses as $course)
                                     <option value="{{ $course->course_id }}">{{ $course->subject }},
-                                        {{ $course->grade }}
-                                    </option>
+                                        {{ $course->grade }}</option>
                                 @endforeach
-                                <!-- Add more grades as needed -->
                             </select>
                         </div>
-                        <button type="submit" class="submit-btn">Add Lecture</button>
+
+                        <button type="submit" class="submit-btn" id="submit-btn" disabled>Add Lecture</button>
                     </form>
+
+                    <!-- Overlay -->
+                    <div id="overlay"
+                        style="display:none;
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.8); color:white;
+    display:none; flex-direction:column;
+    align-items:center; justify-content:center;
+    z-index:9999;">
+                        <h2>Uploading video...</h2>
+                        <progress id="upload-progress" value="0" max="100" style="width:60%;"></progress>
+                        <span id="progress-text">0%</span>
+                        <button type="button" id="cancel-upload"
+                            style="margin-top:20px; padding:10px 20px;">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    <script>
+        let xhr;
+
+        document.getElementById("lecture-video").addEventListener("change", function() {
+            let file = this.files[0];
+            if (!file) return;
+
+            let formData = new FormData();
+            formData.append("lecture-video", file);
+            formData.append("_token", document.querySelector('input[name="_token"]').value);
+
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "/instructor/upload-video", true);
+
+            document.getElementById("overlay").style.display = "flex";
+
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    let percent = Math.round((e.loaded / e.total) * 100);
+                    document.getElementById("upload-progress").value = percent;
+                    document.getElementById("progress-text").textContent = percent + "%";
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        document.getElementById("video_path").value = response.video_path;
+                        document.getElementById("submit-btn").disabled = false;
+                    } else {
+                        alert("Upload failed!");
+                        document.getElementById("lecture-video").value = "";
+                    }
+                } else {
+                    alert("Error while uploading!");
+                    document.getElementById("lecture-video").value = "";
+                }
+
+                document.getElementById("overlay").style.display = "none";
+            };
+
+            xhr.onerror = function() {
+                alert("Network error during upload!");
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("lecture-video").value = "";
+            };
+
+            xhr.send(formData);
+        });
+
+        document.getElementById("cancel-upload").addEventListener("click", function() {
+            if (xhr) {
+                xhr.abort();
+                alert("Upload canceled!");
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("lecture-video").value = "";
+            }
+        });
+    </script>
     <script src="/script.js"></script>
     <script src="/instructor.js"></script>
 </body>

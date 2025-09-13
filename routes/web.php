@@ -163,6 +163,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 });
 // Instructor routes
 Route::middleware(['auth' , 'check.instructor'])->group(function(){
+
     // home
     Route::get('/instructor/home' , [InstructorController::class , 'home'])
         ->name('instructors.home');
@@ -170,8 +171,10 @@ Route::middleware(['auth' , 'check.instructor'])->group(function(){
     //add lecture
     Route::get('/instructor/add/lecture' , [InstructorController::class , 'addLecture'])
         ->name('instructor.addLecture');
-
+    
     Route::post('/instructor/add/lecture' , [InstructorController::class , 'saveLecture']);
+
+    Route::post('/instructor/upload-video', [InstructorController::class, 'uploadVideo']);
 
 
     //create exam
